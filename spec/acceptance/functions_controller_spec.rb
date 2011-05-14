@@ -42,6 +42,8 @@ feature "FunctionController" do
         visit @uri
         page.status_code.should == 200
         should_have_function(@resource)
+        should_have_function_property(@resource.function_properties[0])
+        should_have_function_property(@resource.function_properties[1])
         should_have_valid_json(page.body)
       end
 
@@ -51,36 +53,31 @@ feature "FunctionController" do
   end
 
 
-  ## POST /functions
-  #context ".create" do
-    #before { @uri =  "/functions/" }
+  # POST /functions
+  context ".create" do
+    before { @uri =  "/functions" }
 
-    #it_should_behave_like "protected resource", "page.driver.post(@uri)"
+    it_should_behave_like "protected resource", "page.driver.post(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth(@user) } 
-      #let(:params) {{ 
-        #name: Settings.type.name,
-        #type_uri: Settings.type.uri 
-      #}}
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      let(:params) {{ name: Settings.functions.set_intensity.name }}
 
-      #scenario "create resource" do
-        #page.driver.post(@uri, params.to_json)
-        #@resource = function.last
-        #page.status_code.should == 201
-        #should_have_function(@resource)
-        #should_have_function_properties(@resource.function_properties)
-        #should_have_function_functions(@resource.function_functions)
-        #should_have_valid_json(page.body)
-      #end
+      scenario "create resource" do
+        page.driver.post(@uri, params.to_json)
+        @resource = Function.last
+        page.status_code.should == 201
+        should_have_function(@resource)
+        should_have_valid_json(page.body)
+      end
 
-      #scenario "not valid params" do
-        #page.driver.post(@uri, {}.to_json)
-        #should_have_a_not_valid_resource
-        #should_have_valid_json(page.body)
-      #end
-    #end
-  #end
+      scenario "not valid params" do
+        page.driver.post(@uri, {}.to_json)
+        should_have_a_not_valid_resource
+        should_have_valid_json(page.body)
+      end
+    end
+  end
 
 
   ## PUT /functions/{function-id}

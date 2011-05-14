@@ -22,10 +22,14 @@ FactoryGirl.define do
   factory :function_status, class: :function_property do
     uri Settings.properties.status.uri
     value Settings.properties.status.default_value
+    secret 'false'
+    before 'false'
   end
 
   factory :function_intensity, class: :function_property do
     uri Settings.properties.intensity.uri
-    value Settings.properties.intensity.default_value
+    value ''
+    secret 'true'
+    before 'true'
   end
 end
