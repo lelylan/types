@@ -21,14 +21,33 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   # Original image dimension
-  process resize_to_limit: [512, 512]
+  process resize_to_limit: [Settings.thumbs.original, Settings.thumbs.original]
 
   # Create different versions of your uploaded files
-  version :micro  do process resize_to_limit: [16, 16]   end
-  version :small  do process resize_to_limit: [32, 32]   end
-  version :medium do process resize_to_limit: [64, 64]   end
-  version :big    do process resize_to_limit: [128, 128] end
-  version :huge   do process resize_to_limit: [256, 256] end
+  version :micro do 
+    size = Settings.thumbs.micro
+    process resize_to_limit: [size, size] 
+  end
+
+  version :small do 
+    size = Settings.thumbs.small
+    process resize_to_limit: [size, size] 
+  end
+
+  version :medium do 
+    size = Settings.thumbs.medium
+    process resize_to_limit: [size, size] 
+  end
+
+  version :big do 
+    size = Settings.thumbs.big
+    process resize_to_limit: [size, size] 
+  end
+
+  version :huge do 
+    size = Settings.thumbs.huge
+    process resize_to_limit: [size, size] 
+  end
 
   # Add a white list of extensions which are allowed to be uploaded
   def extension_white_list

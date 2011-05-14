@@ -18,12 +18,12 @@ describe Status do
       uploader = ImageUploader.new(Factory(:status), :image)
       uploader.store!(File.open("#{fixture_path}/example.png"))
 
-      uploader.micro.should have_dimensions(16, 16)
-      uploader.small.should have_dimensions(32, 32)
-      uploader.medium.should have_dimensions(64, 64)
-      uploader.big.should have_dimensions(128, 128)
-      uploader.huge.should have_dimensions(256, 256)
-      uploader.should be_no_larger_than(512, 512)
+      uploader.micro.should have_dimensions(Settings.thumbs.micro, Settings.thumbs.micro)
+      uploader.small.should have_dimensions(Settings.thumbs.small, Settings.thumbs.small)
+      uploader.medium.should have_dimensions(Settings.thumbs.medium, Settings.thumbs.medium)
+      uploader.big.should have_dimensions(Settings.thumbs.big, Settings.thumbs.big)
+      uploader.huge.should have_dimensions(Settings.thumbs.huge, Settings.thumbs.huge)
+      uploader.should be_no_larger_than(Settings.thumbs.original, Settings.thumbs.original)
     end
   end
 end

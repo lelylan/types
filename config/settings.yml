@@ -1,3 +1,10 @@
 pagination:
   page: 1
   per: 25
+thumbs:
+  micro: 16
+  small: 32
+  medium: 64
+  big: 128
+  huge: 256
+  original: 512
