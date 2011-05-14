@@ -11,7 +11,8 @@ class FunctionPropertiesController < ApplicationController
 
   def create
     @function_property = @function.function_properties.create!(json_body)
-    render 'show', status: 201, location: @function_property.connection_uri and return
+    find_connected_resource
+    render 'show', status: 201, location: @function_property.connection_uri
   end
 
   def update
@@ -48,9 +49,8 @@ class FunctionPropertiesController < ApplicationController
       render_404 "notifications.connection.not_found", {uri: @function_property.uri} unless @property
     end
 
-    def find_existing_connection_resource
+    def find_existing_connection
       @function_property = @function.function_properties.where(uri: json_body[:uri]).first
       render_422 "notifications.connection.found", {uri: json_body[:uri]} if @function_property
     end
-
 end

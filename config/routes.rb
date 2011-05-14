@@ -14,7 +14,8 @@ Devices::Application.routes.draw do
 
   resources :functions, defaults: {format: 'json'} do
     member do
-      get 'properties' => 'function_properties#show'
+      get  'properties' => 'function_properties#show'
+      post 'properties' => 'function_properties#create'
     end
   end
 end
