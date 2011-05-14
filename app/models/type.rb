@@ -6,25 +6,13 @@ class Type
   field :name
   field :uri
   field :created_from
-  attr_accessible :name
+  field :properties, type: Array, default: []
+  field :functions, type: Array, default: []
+  field :statuses, type: Array, default: []
 
-  embeds_many :type_properties
-  embeds_many :type_functions
-  embeds_many :type_statuses
+  attr_accessible :name, :properties, :functions, :statuses
 
   validates :name, presence: true
-  validates :uri, url: true
-  validates :created_from, url: true
-
-  def properties_uri
-    self.uri + "/properties"
-  end
-
-  def functions_uri
-    self.uri + "/functions"
-  end
-
-  def statuses_uri
-    self.uri + "/statuses"
-  end
+  validates :uri, presence:true, url: true
+  validates :created_from, presence: true, url: true
 end

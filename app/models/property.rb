@@ -2,7 +2,6 @@ class Property
   include Mongoid::Document
   include Mongoid::Timestamps
   include Lelylan::Document::Base
-  include Lelylan::Array::Normalize
 
   before_create :normalize_array_on_create
   before_update :normalize_array_on_update
@@ -11,11 +10,11 @@ class Property
   field :uri
   field :created_from
   field :default
-  field :values, type: Array
+  field :values, type: Array, default: []
+
   attr_accessible :name, :default, :values
 
-  validates_presence_of :name
-  validates_url :uri
-  validates_url :created_from
-
+  validates :name, presence: true
+  validates :uri, presence: true, url: true
+  validates :created_from, presence: true, url: true
 end
