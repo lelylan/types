@@ -20,7 +20,7 @@ class FunctionsController < ApplicationController
   end
 
   def update
-    if @function.update_attributes(@body)
+    if @function.update_attributes(json_body)
       render 'show'
     else
       render_422 'notifications.document.not_valid', @function.errors

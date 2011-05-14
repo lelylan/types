@@ -80,68 +80,63 @@ feature "FunctionController" do
   end
 
 
-  ## PUT /functions/{function-id}
-  ## TODO: Add a test when you update a function with another type 
-  ## uri. Another solution is that type can not be updated, and 
-  ## that in that case you probably want to create a new function.
-  #context ".update" do
-    #before { @resource = Factory(:function) }
-    #before { @uri =  "/functions/#{@resource.id.as_json}" }
-    #before { @not_owned_resource = Factory(:not_owned_function) }
+  # PUT /functions/{function-id}
+  context ".update" do
+    before { @resource = Factory(:function_complete) }
+    before { @uri =  "/functions/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_function) }
 
-    #it_should_behave_like "protected resource", "page.driver.put(@uri)"
+    it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth(@user) } 
-      #let(:params) {{ 
-        #name: "Set intensity updated",
-        #type_uri: Settings.type.uri
-      #}}
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      let(:params) {{ name: "Set intensity updated" }}
 
-      #scenario "create resource" do
-        #page.driver.put(@uri, params.to_json)
-        #page.status_code.should == 200
-        #should_have_function(@resource.reload)
-        #page.should have_content "updated"
-        #should_have_function_properties(@resource.function_properties)
-        #should_have_function_functions(@resource.function_functions)
-        #should_have_valid_json(page.body)
-      #end
+      scenario "create resource" do
+        page.driver.put(@uri, params.to_json)
+        page.status_code.should == 200
+        should_have_function(@resource.reload)
+        should_have_function_property(@resource.function_properties[0])
+        should_have_function_property(@resource.function_properties[1])
+        page.should have_content "updated"
+        should_have_valid_json(page.body)
+      end
 
-      #scenario "not valid params" do
-        #params[:type_uri] = "not-an-uri"
-        #page.driver.put(@uri, params.to_json)
-        #should_have_a_not_valid_resource
-      #end
+      scenario "not valid params" do
+        page.driver.put(@uri, {name: ''}.to_json)
+        should_have_a_not_valid_resource
+      end
 
-      #it_should_behave_like "rescued when not found",
-        #"page.driver.put(@uri)", "functions"
-    #end
-  #end
+      it_should_behave_like "rescued when not found",
+        "page.driver.put(@uri)", "functions"
+    end
+  end
 
 
-  ## DELETE /functions/{function-id}
-  #context ".destroy" do
-    #before { @resource = Factory(:function) }
-    #before { @uri =  "/functions/#{@resource.id.as_json}" }
-    #before { @not_owned_resource = Factory(:not_owned_function) }
+  # DELETE /functions/{function-id}
+  context ".destroy" do
+    before { @resource = Factory(:function_complete) }
+    before { @uri =  "/functions/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_function) }
 
-    #it_should_behave_like "protected resource", "page.driver.delete(@uri)"
+    it_should_behave_like "protected resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth(@user) } 
-      #scenario "delete resource" do
-        #lambda {
-          #page.driver.delete(@uri, {}.to_json)
-        #}.should change{ function.count }.by(-1)
-        #page.status_code.should == 200
-        #should_have_function(@resource)
-        #should_have_valid_json(page.body)
-      #end
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      scenario "delete resource" do
+        lambda {
+          page.driver.delete(@uri, {}.to_json)
+        }.should change{ Function.count }.by(-1)
+        page.status_code.should == 200
+        should_have_function(@resource)
+        should_have_function_property(@resource.function_properties[0])
+        should_have_function_property(@resource.function_properties[1])
+        should_have_valid_json(page.body)
+      end
 
-      #it_should_behave_like "rescued when not found",
-        #"page.driver.delete(@uri)", "functions"
-    #end
-  #end
+      it_should_behave_like "rescued when not found",
+        "page.driver.delete(@uri)", "functions"
+    end
+  end
 
 end
