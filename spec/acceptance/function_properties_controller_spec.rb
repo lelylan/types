@@ -107,7 +107,6 @@ feature "FunctionController" do
         function_property = @resource.function_properties.where(uri: @connection.uri).first
         @resource.function_properties.should have(2).item
         page.driver.delete(@uri, {}.to_json)
-        save_and_open_page
         @resource.reload.function_properties.should have(1).item
         page.status_code.should == 200
         should_have_function_property_detailed(function_property, @connection)
