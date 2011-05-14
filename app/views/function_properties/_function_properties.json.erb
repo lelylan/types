@@ -1,0 +1,7 @@
+{ 
+  "uri": "<%=connection.connection_uri%>", 
+  "value": "<%=connection.value%>",
+  "secret": <%=connection.secret%>,
+  "before": <%=connection.before%>,
+  "property":
+<%= render :partial => "/properties/property", locals: { property: @property } %>}

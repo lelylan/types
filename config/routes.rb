@@ -2,7 +2,6 @@ Devices::Application.routes.draw do
   root to: "users#new"
 
   # Authentication
-
   get "logout" => "sessions#destroy", as: "logout"
   get "login"  => "sessions#new",     as: "login"
   get "signup" => "users#new",        as: "signup"
@@ -11,18 +10,11 @@ Devices::Application.routes.draw do
   resources :sessions
 
   # API Resources
-
-  resources :functions, defaults: {format: 'json'}
-    #resources :pendings, only: 'index'
-    #resources :histories, only: 'index'
-    #get 'consumptions' => 'consumptions#index'
-    #member do
-      #put    "functions"  => "functions#update"
-      #put    "properties" => "properties#update"
-      #post   "physical"   => "physicals#create"
-      #delete "physical"   => "physicals#destroy"
-    #end
-  #end
-
-  #resources :consumptions, except: 'update', defaults: {format: 'json'}
+  resources :functions, defaults: {format: 'json'} do
+    member do
+      get    'properties' => 'function_properties#show'
+      post   'properties' => 'function_properties#create'
+      delete 'properties' => 'function_properties#destroy'
+    end
+  end
 end

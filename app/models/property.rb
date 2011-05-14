@@ -3,9 +3,6 @@ class Property
   include Mongoid::Timestamps
   include Lelylan::Document::Base
 
-  before_create :normalize_array_on_create
-  before_update :normalize_array_on_update
-
   field :name
   field :uri
   field :created_from

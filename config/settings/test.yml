@@ -18,11 +18,13 @@ properties:
     name: 'Status'
     default_value: '<%= default_status_value = 'off' %>'
     new_value: '<%= new_status_value = 'on' %>'
+    values: ['on', 'off']
   intensity:
     uri: <%= intensity_uri = "#{host}/properties/intensity" %> 
     name: 'Intensity'
     default_value: '<%= default_intensity_value = 0.0 %>'
     new_value: '<%= new_intensity_value = 10.0 %>'
+    values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
 functions:
   set_intensity:
     id: <%= set_intensity_id = "set_intensity" %>

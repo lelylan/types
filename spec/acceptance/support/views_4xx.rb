@@ -8,6 +8,15 @@ module View4xxMethods
     page.should have_content "not found"
   end
 
+  # Connection not found
+  def should_have_a_not_found_connection(uri)
+    page.status_code.should == 404
+    page.should have_content "404"
+    page.should have_content uri
+    page.should have_content "notifications.connection.not_found"
+    page.should have_content " not found"
+  end
+
   # Resource not valid
   def should_have_a_not_valid_resource
     page.status_code.should == 422
