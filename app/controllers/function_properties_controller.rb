@@ -19,16 +19,9 @@ class FunctionPropertiesController < ApplicationController
     end
   end
 
-  def update
-    if @function_property.update_attributes(@body)
-      render 'show'
-    else
-      render_422 'notifications.document.not_valid', @function_property.errors
-    end
-  end
-
   def destroy
     @function_property.destroy
+    @property = Property.where(created_from: current_user.uri, uri: @function_property.uri).first
     render 'show'
   end
 

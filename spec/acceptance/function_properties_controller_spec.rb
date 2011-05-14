@@ -19,8 +19,8 @@ feature "FunctionController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      before { visit @uri }
       scenario "view all resources" do
+        visit @uri
         page.status_code.should == 200
         function_property = @resource.function_properties.where(uri: @connection.uri).first
         should_have_function_property_detailed(function_property, @connection)
@@ -95,63 +95,30 @@ feature "FunctionController" do
   end
 
 
-  ## PUT /functions/{function-id}
-  #context ".update" do
-    #before { @resource = Factory(:function_complete) }
-    #before { @uri =  "/functions/#{@resource.id.as_json}" }
-    #before { @not_owned_resource = Factory(:not_owned_function) }
+  # DELETE /functions/{function-id}/properties?uri={property-uri}
+  context ".destroy" do
+    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
-    #it_should_behave_like "protected resource", "page.driver.put(@uri)"
+    it_should_behave_like "protected resource", "visit(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth(@user) } 
-      #let(:params) {{ name: "Set intensity updated" }}
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      scenario "view all resources" do
+        function_property = @resource.function_properties.where(uri: @connection.uri).first
+        @resource.function_properties.should have(2).item
+        page.driver.delete(@uri, {}.to_json)
+        save_and_open_page
+        @resource.reload.function_properties.should have(1).item
+        page.status_code.should == 200
+        should_have_function_property_detailed(function_property, @connection)
+        should_have_valid_json(page.body)
+      end
 
-      #scenario "create resource" do
-        #page.driver.put(@uri, params.to_json)
-        #page.status_code.should == 200
-        #should_have_function(@resource.reload)
-        #should_have_function_property(@resource.function_properties[0])
-        #should_have_function_property(@resource.function_properties[1])
-        #page.should have_content "updated"
-        #should_have_valid_json(page.body)
-      #end
-
-      #scenario "not valid params" do
-        #page.driver.put(@uri, {name: ''}.to_json)
-        #should_have_a_not_valid_resource
-      #end
-
-      #it_should_behave_like "rescued when not found",
-        #"page.driver.put(@uri)", "functions"
-    #end
-  #end
-
-
-  ## DELETE /functions/{function-id}
-  #context ".destroy" do
-    #before { @resource = Factory(:function_complete) }
-    #before { @uri =  "/functions/#{@resource.id.as_json}" }
-    #before { @not_owned_resource = Factory(:not_owned_function) }
-
-    #it_should_behave_like "protected resource", "page.driver.delete(@uri)"
-
-    #context "when logged in" do
-      #before { basic_auth(@user) } 
-      #scenario "delete resource" do
-        #lambda {
-          #page.driver.delete(@uri, {}.to_json)
-        #}.should change{ Function.count }.by(-1)
-        #page.status_code.should == 200
-        #should_have_function(@resource)
-        #should_have_function_property(@resource.function_properties[0])
-        #should_have_function_property(@resource.function_properties[1])
-        #should_have_valid_json(page.body)
-      #end
-
-      #it_should_behave_like "rescued when not found",
-        #"page.driver.delete(@uri)", "functions"
-    #end
-  #end
-
+      it_should_behave_like "rescued when resource not found", 
+                            "visit @uri", "functions", "/properties"
+ 
+      it_should_behave_like "rescued when connection not found", 
+                            "visit @uri", "functions", "/properties"
+    end
+  end
 end
