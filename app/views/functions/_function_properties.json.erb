@@ -1,0 +1,10 @@
+
+<% connections.each_with_index do |connection, index| %>
+    { 
+      "name": "<%=connection.name%>",
+      "uri": "<%=connection.uri%>", 
+      "value": "<%=connection.value%>",
+      "secret": <%=connection.secret%>,
+      "before": <%=connection.before%> 
+    }<% if (connections.length - 1 > index) %>,<%end%>
+<% end %>

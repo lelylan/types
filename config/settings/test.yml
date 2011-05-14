@@ -12,6 +12,30 @@ user:
 another_user: 
   uri: <%= "#{host}/users/bob" %>
   email: 'bob@example.com'
+properties:
+  status:
+    uri: <%= status_uri = "#{host}/properties/status" %> 
+    name: 'Status'
+    default_value: '<%= default_status_value = 'off' %>'
+    new_value: '<%= new_status_value = 'on' %>'
+  intensity:
+    uri: <%= intensity_uri = "#{host}/properties/intensity" %> 
+    name: 'Intensity'
+    default_value: '<%= default_intensity_value = 0.0 %>'
+    new_value: '<%= new_intensity_value = 10.0 %>'
+functions:
+  set_intensity:
+    id: <%= set_intensity_id = "set_intensity" %>
+    uri: <%= set_intensity_function_uri = "#{host}/functions/#{set_intensity_id}" %>
+    name: "Set intensity"
+  turn_on:
+    id: <%= turn_on_id = "turn_on" %>
+    uri: <%= turn_on_function_uri = "#{host}/functions/#{turn_on_id}" %>
+    name: "Turn on"
+  turn_off:
+    id: <%= turn_off_id = "turn_off" %>
+    uri: <%= turn_off_function_uri = "#{host}/functions/#{turn_off_id}" %>
+    name: "Turn off"
 status:
   uri: <%= "#{host}/staus/intensity_set" %>
   name: "Intensity set"

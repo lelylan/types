@@ -12,7 +12,7 @@ Devices::Application.routes.draw do
 
   # API Resources
 
-  #resources :devices, defaults: {format: 'json'} do
+  resources :functions, defaults: {format: 'json'}
     #resources :pendings, only: 'index'
     #resources :histories, only: 'index'
     #get 'consumptions' => 'consumptions#index'

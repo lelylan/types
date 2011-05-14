@@ -2,8 +2,9 @@ module Lelylan
   module Pagination
     module Helpers
 
-      # Redirect when the page or per params are missing and
-      # check the *all* option that show all owned resources
+      # Redirect the request when the {page} or {per} params 
+      # are missing. It also check the 'all' option used to 
+      # list all of the resources
       def set_pagination
         page, per = normalize_pagination_params
         if (page != params[:page] or per != params[:per])
@@ -22,7 +23,9 @@ module Lelylan
         [page, per]
       end
 
-      # Populate the links for the navigation between the resources
+
+      # Populate the links for the navigation 
+      # @first, @prev, @next, @last
       def paginate_navigation
         @last_uri  = page_url_for(last_page)
         @next_uri  = page_url_for(next_page(@last_page))
@@ -55,6 +58,7 @@ module Lelylan
         host = "#{request.protocol}#{request.host_with_port}/#{model_klass.to_s.downcase.pluralize}"
         host += "?page=#{page}&per=#{params[:per]}"
         host += "&type=#{params[:type]}" if params[:type]
+        return host
       end
 
 
