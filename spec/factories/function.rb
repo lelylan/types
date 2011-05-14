@@ -20,13 +20,11 @@ FactoryGirl.define do
   end
 
   factory :function_status, class: :function_property do
-    name Settings.properties.status.name
     uri Settings.properties.status.uri
     value Settings.properties.status.default_value
   end
 
   factory :function_intensity, class: :function_property do
-    name Settings.properties.intensity.name
     uri Settings.properties.intensity.uri
     value Settings.properties.intensity.default_value
   end
