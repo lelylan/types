@@ -61,10 +61,32 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
-      scenario "not valid params" do
-        page.driver.post(@uri, {}.to_json)
-        should_have_a_not_valid_resource
-        should_have_valid_json(page.body)
+      context "with existing connection" do
+        before { @resource = Factory(:function_complete) }
+        before { @uri = "#{host}/functions/#{@resource.id}/properties" }
+        scenario "get an 'existing' notification" do
+          page.driver.post(@uri, params.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+          page.should have_content 'connection.found'
+        end
+      end
+
+      context "with not owned connection" do
+        scenario "get a not found notification" do
+          params[:uri] = @not_owned_connection.uri
+          page.driver.post(@uri, params.to_json)
+          should_have_a_not_found_connection(@uri)
+          should_have_valid_json(page.body)
+        end
+      end
+
+      context "not valid params" do
+        scenario "get a not valid notification" do
+          page.driver.post(@uri, {}.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+        end
       end
 
       it_should_behave_like "rescued when resource not found", 
