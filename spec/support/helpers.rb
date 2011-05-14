@@ -1,3 +1,3 @@
-def new_device_properties
-  HashWithIndifferentAccess.new(JSON.parse(Settings.unite_node_json))[:properties]
+def fixture_path
+  File.expand_path("../../fixtures", __FILE__)
 end
