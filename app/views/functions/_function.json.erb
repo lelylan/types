@@ -1,8 +1,8 @@
   {
     "id": "<%=function.id.as_json%>",
     "uri": "<%=function.uri%>",
-    "name": "<%=function.name%>",
     "created_from": { "uri": "<%=function.created_from%>" },
+    "name": "<%=function.name%>",
     "properties": [ <%=render :partial => "/functions/function_properties",
                               :locals => { connections: function.function_properties } %>    ]
   }

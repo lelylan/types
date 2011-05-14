@@ -12,17 +12,9 @@ Devices::Application.routes.draw do
 
   # API Resources
 
-  resources :functions, defaults: {format: 'json'}
-    #resources :pendings, only: 'index'
-    #resources :histories, only: 'index'
-    #get 'consumptions' => 'consumptions#index'
-    #member do
-      #put    "functions"  => "functions#update"
-      #put    "properties" => "properties#update"
-      #post   "physical"   => "physicals#create"
-      #delete "physical"   => "physicals#destroy"
-    #end
-  #end
-
-  #resources :consumptions, except: 'update', defaults: {format: 'json'}
+  resources :functions, defaults: {format: 'json'} do
+    member do
+      get 'properties' => 'function_properties#show'
+    end
+  end
 end

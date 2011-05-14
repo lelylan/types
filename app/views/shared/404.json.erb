@@ -2,7 +2,7 @@
   "meta": 
   { 
     "status": "404",
-    "request": "<%=raw request.url%>" 
+    "request": "<%=URI.unescape(request.url)%>" 
   },
   "error": 
   {

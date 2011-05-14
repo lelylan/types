@@ -11,11 +11,27 @@ module ViewMethods
     page.should_not have_content function.created_from
   end
 
-  def should_have_function_property(property)
+  # Function property non detailed representation
+  def should_have_function_property(function_property)
+    page.should have_content function_property.uri
+    page.should have_content function_property.value
+    page.should have_content function_property.secret
+    page.should have_content function_property.before
+  end
+
+  # Function property detailed representation
+  def should_have_function_property_detailed(function_property, property)
+    should_have_function_property(function_property)
+    should_have_property(property)
+  end
+
+  # Property resource representation
+  def should_have_property(property)
+    page.should have_content property.id.as_json
     page.should have_content property.uri
-    page.should have_content property.value
-    page.should have_content property.secret
-    page.should have_content property.before
+    page.should have_content property.created_from
+    page.should have_content property.name
+    page.should have_content property.values.to_json
   end
 end
 
