@@ -18,4 +18,8 @@ class Status
   validates :name, presence: true
   validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
+
+  def default?
+    default == 'true'
+  end
 end

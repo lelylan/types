@@ -124,7 +124,7 @@ feature "StatusController" do
       before { basic_auth(@user) } 
       scenario "delete resource" do
         lambda {
-          page.driver.delete(@uri, {}.to_json)
+          page.driver.delete(@uri)
         }.should change{ Status.count }.by(-1)
         page.status_code.should == 200
         should_have_status(@resource)
