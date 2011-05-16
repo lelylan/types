@@ -47,8 +47,7 @@ feature "StatusController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "statuses"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses"
     end
   end
 
@@ -106,11 +105,11 @@ feature "StatusController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "an immutable resource", 
-                            "page.driver.put(@uri)"
+      context "when default status" do
+        it_should_behave_like "a default resource", "page.driver.put(@uri)"
+      end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.put(@uri)", "statuses"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "statuses"
     end
   end
 
@@ -135,11 +134,11 @@ feature "StatusController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "an immutable resource", 
-                            "page.driver.delete(@uri)"
+      context "when default status" do
+        it_should_behave_like "a default resource", "page.driver.delete(@uri)"
+      end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.delete(@uri)", "statuses"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "statuses"
     end
   end
 end

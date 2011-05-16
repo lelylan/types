@@ -2,6 +2,7 @@ class StatusPropertiesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
   before_filter :find_owned_resources
   before_filter :find_resource
+  before_filter :find_default, only: %w(create destroy)
   before_filter :find_connection, only: %w(show update destroy)
   before_filter :find_connected_resource, only: %w(show update destroy)
   before_filter :find_existing_connection, only: :create
@@ -36,6 +37,10 @@ class StatusPropertiesController < ApplicationController
 
     def find_resource
       @status = @statuses.find(params[:id])
+    end
+
+    def find_default
+      render_422 'notifications.document.protected', "The default status can not be updated or deleted" if @status.default?
     end
 
     def find_connection
