@@ -63,9 +63,9 @@ feature "FunctionController" do
         before { @uri = "#{host}/functions/#{@resource.id}/properties" }
         scenario "get an 'existing' notification" do
           page.driver.post(@uri, params.to_json)
+          page.should have_content 'connection.found'
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
-          page.should have_content 'connection.found'
         end
       end
 

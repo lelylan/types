@@ -8,7 +8,7 @@ feature "StatusIconController" do
   before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
   before { @image_path = "#{fixture_path}/example.png" }
  
-  GET /statuses/{status-id}/icon
+  #GET /statuses/{status-id}/icon
   context ".show" do
     before { @uri = "/statuses/#{@resource.id}/icon" }
 
@@ -69,6 +69,16 @@ feature "StatusIconController" do
         page.driver.post(@uri, {image: @file})
         page.status_code.should == 201
         @resource.reload.image_url.should_not match /default/
+      end
+
+      context "with no valid format .jpeg" do
+        before { @file = Rack::Test::UploadedFile.new("#{fixture_path}/example.jpg", "image/jpeg") }
+        scenario "get not valid notification" do
+          page.driver.post(@uri, {image: @file})
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+          save_and_open_page
+        end
       end
 
       it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses", "/properties"
