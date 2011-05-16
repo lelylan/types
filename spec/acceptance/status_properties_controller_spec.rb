@@ -1,19 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "FunctionController" do
-  before { Property.destroy_all }
-  before { Function.destroy_all }
+feature "StatusController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
-  before { @resource = Factory(:function_complete) }
-  before { @not_owned_resource = Factory(:not_owned_function) }
+  before { Property.destroy_all }
+  before { Status.destroy_all }
+
+  before { @resource = Factory(:is_setting_intensity) }
+  before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
   before { @connection = Factory(:property_intensity) }
   before { @not_owned_connection = Factory(:not_owned_property_intensity) }
 
 
-  # GET /functions/{function-id}/properties?uri={property-uri}
+  # GET /statuses/{status-id}/properties?uri={property-uri}
   context ".show" do
-    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
+    before { @uri = "#{host}/statuses/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -22,24 +23,24 @@ feature "FunctionController" do
       scenario "view all resources" do
         visit @uri
         page.status_code.should == 200
-        function_property = @resource.function_properties.where(uri: @connection.uri).first
-        should_have_function_property_detailed(function_property, @connection)
+        status_property = @resource.status_properties.where(uri: @connection.uri).first
+        should_have_status_property_detailed(status_property, @connection)
         should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions", "/properties"
+                            "visit @uri", "statuses", "/properties"
  
       it_should_behave_like "rescued when connection not found", 
-                            "visit @uri", "functions", "/properties"
+                            "visit @uri", "statuses", "/properties"
     end
   end
 
 
-  # POST /functions
+  # POST /statuses
   context ".create" do
-    before { @resource = Factory(:function) }
-    before { @uri = "#{host}/functions/#{@resource.id}/properties" }
+    before { @resource = Factory(:status) }
+    before { @uri = "#{host}/statuses/#{@resource.id}/properties" }
 
     it_should_behave_like "protected resource", "page.driver.post(@uri)"
 
@@ -47,23 +48,22 @@ feature "FunctionController" do
       before { basic_auth(@user) } 
       let(:params) {{ 
         uri: Settings.properties.intensity.uri,
-        value: Settings.properties.intensity.default_value,
-        secret: 'true',
-        before: 'false'
+        values: Settings.statuses.has_set_intensity.values,
+        pending: 'true'
       }}
 
       scenario "create resource" do
         page.driver.post(@uri, params.to_json)
         page.status_code.should == 201
-        @resource.reload.function_properties.should have(1).item
-        function_property = @resource.function_properties.first
-        should_have_function_property_detailed(function_property, @connection)
+        @resource.reload.status_properties.should have(1).item
+        status_property = @resource.status_properties.first
+        should_have_status_property_detailed(status_property, @connection)
         should_have_valid_json(page.body)
       end
 
       context "with existing connection" do
-        before { @resource = Factory(:function_complete) }
-        before { @uri = "#{host}/functions/#{@resource.id}/properties" }
+        before { @resource = Factory(:is_setting_intensity) }
+        before { @uri = "#{host}/statuses/#{@resource.id}/properties" }
         scenario "get an 'existing' notification" do
           page.driver.post(@uri, params.to_json)
           should_have_a_not_valid_resource
@@ -89,35 +89,39 @@ feature "FunctionController" do
         end
       end
 
+      context "#values" do
+        it_should_behave_like "an array field", "values", "page.driver.post(@uri, params.to_json)"
+      end
+
       it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions", "/properties"
+                            "visit @uri", "statuses", "/properties"
     end
   end
 
 
-  # DELETE /functions/{function-id}/properties?uri={property-uri}
+  # DELETE /statuses/{status-id}/properties?uri={property-uri}
   context ".destroy" do
-    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
+    before { @uri = "#{host}/statuses/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
       scenario "view all resources" do
-        function_property = @resource.function_properties.where(uri: @connection.uri).first
-        @resource.function_properties.should have(2).item
+        status_property = @resource.status_properties.where(uri: @connection.uri).first
+        @resource.status_properties.should have(1).item
         page.driver.delete(@uri, {}.to_json)
-        @resource.reload.function_properties.should have(1).item
+        @resource.reload.status_properties.should have(0).item
         page.status_code.should == 200
-        should_have_function_property_detailed(function_property, @connection)
+        should_have_status_property_detailed(status_property, @connection)
         should_have_valid_json(page.body)
       end
 
       it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions", "/properties"
+                            "visit @uri", "statuses", "/properties"
  
       it_should_behave_like "rescued when connection not found", 
-                            "visit @uri", "functions", "/properties"
+                            "visit @uri", "statuses", "/properties"
     end
   end
 end

@@ -3,8 +3,8 @@ class StatusProperty
   include Mongoid::Timestamps
 
   field :uri
-  field :pending, default: 'false'
   field :values, type: Array
+  field :pending, default: 'false'
 
   attr_accessible :uri, :pending, :values
 

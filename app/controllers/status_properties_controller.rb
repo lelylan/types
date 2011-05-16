@@ -25,7 +25,7 @@ class StatusPropertiesController < ApplicationController
   def destroy
     @status_property.destroy
     @property = find_property_from_connection(@status_property)
-    head 204 and return
+    render 'show'
   end
 
 

@@ -72,6 +72,12 @@ module ViewMethods
     page.should have_content status_property.pending
     page.should have_content status_property.values.to_json
   end
+
+  # Status property detailed resource representation
+  def should_have_status_property_detailed(function_property, property)
+    should_have_status_property(function_property)
+    should_have_property(property)
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance

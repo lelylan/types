@@ -1,0 +1,6 @@
+{ 
+  "uri": "<%=connection.connection_uri%>", 
+  "values": <%=raw connection.values.to_json%>,
+  "pending": <%=connection.pending%>,
+  "property":
+<%= render :partial => "/properties/property", locals: { property: @property } %>}

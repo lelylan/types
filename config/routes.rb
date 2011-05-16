@@ -19,6 +19,11 @@ Devices::Application.routes.draw do
       delete 'properties' => 'function_properties#destroy'
     end
   end
-
-  resources :statuses, defaults: {format: 'json'}
+  resources :statuses, defaults: {format: 'json'} do
+    member do
+      get    'properties' => 'status_properties#show'
+      post   'properties' => 'status_properties#create'
+      delete 'properties' => 'status_properties#destroy'
+    end
+  end
 end
