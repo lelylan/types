@@ -33,6 +33,11 @@ module ViewMethods
     page.should have_content property.name
     page.should have_content property.values.to_json
   end
+
+  # Property resource not represented
+  def should_not_have_property(property)
+    page.should_not have_content property.created_from
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance

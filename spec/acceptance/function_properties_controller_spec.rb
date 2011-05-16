@@ -81,7 +81,7 @@ feature "FunctionController" do
         end
       end
 
-      context "not valid params" do
+      context "with not valid params" do
         scenario "get a not valid notification" do
           page.driver.post(@uri, {}.to_json)
           should_have_a_not_valid_resource

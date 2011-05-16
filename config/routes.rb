@@ -17,4 +17,7 @@ Devices::Application.routes.draw do
       delete 'properties' => 'function_properties#destroy'
     end
   end
+
+  resources :properties, defaults: {format: 'json'}
+
 end
