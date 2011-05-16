@@ -2,6 +2,13 @@ Settings.add_source!("#{Rails.root}/config/settings/test.yml")
 Settings.reload!
 
 FactoryGirl.define do
+  # Base (without connections)
+  factory :is_setting_intensity, class: Status do
+    name Settings.statuses.is_setting_intensity.name
+    uri Settings.statuses.is_setting_intensity.uri
+    created_from Settings.user.uri
+  end
+
   # Is setting intensity/max
   factory :is_setting_intensity, class: Status do
     name Settings.statuses.is_setting_intensity.name

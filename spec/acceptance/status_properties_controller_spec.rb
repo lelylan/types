@@ -1,172 +1,124 @@
-require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-describe StatusPropertiesController do
+feature "FunctionController" do
+  before { Property.destroy_all }
+  before { Function.destroy_all }
+  before { host! "http://" + host }
+  before { @user = Factory(:user) }
+  before { @resource = Factory(:function_complete) }
+  before { @not_owned_resource = Factory(:not_owned_function) }
+  before { @connection = Factory(:property_intensity) }
+  before { @not_owned_connection = Factory(:not_owned_property_intensity) }
 
-  it { should route(:get, "statuses/1/properties").to(action: "show", format: "json", id: "1") }
-  it { should route(:post, "statuses/1/properties").to(action: "create", format: "json", id: "1") }
-  it { should route(:put, "statuses/1/properties").to(action: "update", format: "json", id: "1") }
-  it { should route(:delete, "statuses/1/properties").to(action: "destroy", format: "json", id: "1") }
 
-  let(:parent_resource_name)    { "status" }
-  let(:connected_resource_name) { "property" }
-  let(:resource_name)           { "status_property" }
-  let(:parent_resource)         { Factory.create(:status) }
-  let(:uri)                    { PROPERTY_INTENSITY_URI }
+  # GET /functions/{function-id}/properties?uri={property-uri}
+  context ".show" do
+    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
-  before(:each) { User.destroy_all }
-  let(:current_user) { Factory.create(:user) }
-
-  # -----
-  # SHOW
-  # -----
-
-  describe "GET a status property" do
-    let(:action_name) { "show" }
-    let(:resource) { parent_resource.send(resource_name.pluralize).create(uri: uri) }
-
-    def do_action(options = {})
-      options = { id: parent_resource.id.as_json, uri: uri }.merge!(options)
-      do_get(options)
-    end
+    it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
-      before(:each) do
-        controller.stub!(:current_user).and_return(current_user)
-        controller.stub!(:authenticate).and_return(true)
-        do_action
+      before { basic_auth(@user) } 
+      scenario "view all resources" do
+        visit @uri
+        page.status_code.should == 200
+        function_property = @resource.function_properties.where(uri: @connection.uri).first
+        should_have_function_property_detailed(function_property, @connection)
+        should_have_valid_json(page.body)
       end
 
-      it { should respond_with 200 }
-      it_should_behave_like "a json resource"
-      it_should_behave_like "a connected resource"
-    end
-
-    context "when not logged in" do
-      before(:each) { do_action }
-      it_should_handle "a not authenticated request"
+      it_should_behave_like "rescued when resource not found", 
+                            "visit @uri", "functions", "/properties"
+ 
+      it_should_behave_like "rescued when connection not found", 
+                            "visit @uri", "functions", "/properties"
     end
   end
 
-  # -------
-  # CREATE
-  # -------
 
-  describe "CREATE a status property" do
-    let(:action_name) { "create" }
+  # POST /functions
+  context ".create" do
+    before { @resource = Factory(:function) }
+    before { @uri = "#{host}/functions/#{@resource.id}/properties" }
 
-    def do_action(options = {})
-      options = { id: parent_resource.id.as_json, uri: uri }.merge!(options)
-      do_create(options)
-    end
+    it_should_behave_like "protected resource", "page.driver.post(@uri)"
 
     context "when logged in" do
-      before(:each) do
-        controller.stub!(:current_user).and_return(current_user)
-        controller.stub!(:authenticate).and_return(true)
+      before { basic_auth(@user) } 
+      let(:params) {{ 
+        uri: Settings.properties.intensity.uri,
+        value: Settings.properties.intensity.default_value,
+        secret: 'true',
+        before: 'false'
+      }}
+
+      scenario "create resource" do
+        page.driver.post(@uri, params.to_json)
+        page.status_code.should == 201
+        @resource.reload.function_properties.should have(1).item
+        function_property = @resource.function_properties.first
+        should_have_function_property_detailed(function_property, @connection)
+        should_have_valid_json(page.body)
       end
 
-      context "when a json resource" do
-        before(:each) do
-          do_action
-        end
-        it { should respond_with 201}
-        it_should_behave_like "a json resource"
-      end
-      it_should_behave_like "a connectable resource"
-      it_should_handle "a list of values creation"
-
-      context "with default status" do
-        before(:each) do
-          parent_resource.default = "true"
-          parent_resource.save
-          do_action
-        end
-        it "shoudl not create connections" do
-          should respond_with 422
+      context "with existing connection" do
+        before { @resource = Factory(:function_complete) }
+        before { @uri = "#{host}/functions/#{@resource.id}/properties" }
+        scenario "get an 'existing' notification" do
+          page.driver.post(@uri, params.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+          page.should have_content 'connection.found'
         end
       end
 
-    end
+      context "with not owned connection" do
+        scenario "get a not found notification" do
+          params[:uri] = @not_owned_connection.uri
+          page.driver.post(@uri, params.to_json)
+          should_have_a_not_found_connection(@uri)
+          should_have_valid_json(page.body)
+        end
+      end
 
-    context "when not logged in" do
-      before(:each) { do_action }
-      it_should_handle "a not authenticated request"
+      context "with not valid params" do
+        scenario "get a not valid notification" do
+          page.driver.post(@uri, {}.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+        end
+      end
+
+      it_should_behave_like "rescued when resource not found", 
+                            "visit @uri", "functions", "/properties"
     end
   end
 
-  # -------
-  # UPDATE
-  # -------
 
-  describe "UPDATE a status property" do
-    let(:action_name) { "update" }
-    let(:resource) { parent_resource.send(resource_name.pluralize).create(uri: uri) }
+  # DELETE /functions/{function-id}/properties?uri={property-uri}
+  context ".destroy" do
+    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
-    def do_action(options = {})
-      options = { id: parent_resource.id.as_json, uri: uri }.merge!(options)
-      do_update_connection(options)
-    end
+    it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
-      before(:each) do
-        controller.stub!(:current_user).and_return(current_user)
-        controller.stub!(:authenticate).and_return(true)
+      before { basic_auth(@user) } 
+      scenario "view all resources" do
+        function_property = @resource.function_properties.where(uri: @connection.uri).first
+        @resource.function_properties.should have(2).item
+        page.driver.delete(@uri, {}.to_json)
+        @resource.reload.function_properties.should have(1).item
+        page.status_code.should == 200
+        should_have_function_property_detailed(function_property, @connection)
+        should_have_valid_json(page.body)
       end
 
-      context "when a json resource" do
-        before(:each) { do_action }
-        it { should respond_with 200 }
-        it_should_behave_like "a json resource"
-      end
-      it_should_behave_like "an updatable connected resource"
-      it_should_handle "a list of values update"
-
-      context "when update a not valid connected resource" do
-        before(:each) do
-          parent_resource.send(resource_name.pluralize).create(uri: uri)
-          do_action(pending: "not_boolean")
-        end
-        it { should respond_with 422 }
-      end
-    end
-
-    context "when not logged in" do
-      before(:each) { do_action }
-      it_should_handle "a not authenticated request"
+      it_should_behave_like "rescued when resource not found", 
+                            "visit @uri", "functions", "/properties"
+ 
+      it_should_behave_like "rescued when connection not found", 
+                            "visit @uri", "functions", "/properties"
     end
   end
-
-  # -------
-  # DELETE
-  # -------
-
-  describe "DELETE a status property" do
-    let(:action_name) { "destroy" }
-
-    def do_action(options = {})
-      options = { id: parent_resource.id.as_json, uri: uri }.merge!(options)
-      do_delete_connection(options)
-    end
-
-    context "when logged in" do
-      before(:each) do
-        controller.stub!(:current_user).and_return(current_user)
-        controller.stub!(:authenticate).and_return(true)
-        parent_resource.send(resource_name.pluralize).create(uri: uri)
-      end
-
-      context "when a json resource" do
-        before(:each) { do_action }
-        it { should respond_with 204}
-        it_should_behave_like "a json resource"
-      end
-      it_should_behave_like "a disconnectable resource"
-    end
-
-    context "when not logged in" do
-      before(:each) { do_action }
-      it_should_handle "a not authenticated request"
-    end
-  end
-
 end
+
