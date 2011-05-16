@@ -15,9 +15,8 @@ describe Status do
 
   describe "#image" do
     it "should resizing uploaded image" do
-      uploader = ImageUploader.new(Factory(:status), :image)
+      uploader = ImageUploader.new(Factory(:is_setting_intensity), :image)
       uploader.store!(File.open("#{fixture_path}/example.png"))
-
       uploader.micro.should have_dimensions(Settings.thumbs.micro, Settings.thumbs.micro)
       uploader.small.should have_dimensions(Settings.thumbs.small, Settings.thumbs.small)
       uploader.medium.should have_dimensions(Settings.thumbs.medium, Settings.thumbs.medium)

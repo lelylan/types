@@ -51,6 +51,27 @@ module ViewMethods
   def should_not_have_type(property)
     page.should_not have_content property.created_from
   end
+
+  # Status resource representation
+  def should_have_status(status)
+    page.should have_content status.id.as_json
+    page.should have_content status.uri
+    page.should have_content status.created_from
+    page.should have_content status.name
+    page.should have_content status.message
+  end
+
+  # Status resource not represented
+  def should_not_have_status(status)
+    page.should_not have_content status.uri
+  end
+
+  # Status property resource representation
+  def should_have_status_property(status_property)
+    page.should have_content status_property.uri
+    page.should have_content status_property.pending
+    page.should have_content status_property.values.to_json
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance

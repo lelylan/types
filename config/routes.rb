@@ -20,4 +20,5 @@ Devices::Application.routes.draw do
     end
   end
 
+  resources :statuses, defaults: {format: 'json'}
 end

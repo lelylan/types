@@ -1,0 +1,6 @@
+{
+  "pagination": {
+  <%=render :partial => "/shared/navigation"%>  },
+  "resources": [
+<%=render :partial => "/statuses/status", collection: @statuses, spacer_template: "comma" %>  ]
+}

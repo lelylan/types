@@ -6,12 +6,12 @@ class Status
   field :name
   field :uri
   field :created_from
-  field :template, default: ''
+  field :message, default: ''
   field :default, default: 'false'
   field :image
   mount_uploader :image, ImageUploader
 
-  attr_accessible :name, :template, :image, :remote_image_url
+  attr_accessible :name, :message, :image, :remote_image_url
 
   embeds_many :status_properties
 

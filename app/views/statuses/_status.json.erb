@@ -1,0 +1,8 @@
+  {
+    "id": "<%=status.id.as_json%>",
+    "uri": "<%=status.uri%>",
+    "created_from": { "uri": "<%=status.created_from%>" },
+    "name": "<%=status.name%>",
+    "properties": [ <%=render :partial => "/statuses/status_properties",
+                              :locals => { connections: status.status_properties } %>    ]
+  }
