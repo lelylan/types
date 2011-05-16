@@ -2,6 +2,7 @@ pagination:
   page: 1
   per: 25
 thumbs:
+  sizes: %w(micro, small, medium, big, huge)
   micro: 16
   small: 32
   medium: 64

@@ -30,7 +30,12 @@ class ApplicationController < ActionController::Base
 
     # Check the API format
     def api_request
-      request.format == "application/json"
+      request.format == "application/json" or exceptions
+    end
+
+    # Add other cases the request is releted to an API's call
+    def exceptions
+      params[:controller] == 'status_icon'
     end
 
     # Apply the basic authentication for API requests

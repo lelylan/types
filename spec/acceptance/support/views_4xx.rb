@@ -6,6 +6,7 @@ module View4xxMethods
     page.should have_content uri
     page.should have_content "notifications.document.not_found"
     page.should have_content "not found"
+    page.should_not have_content 'translation missing'
   end
 
   # Connection not found
@@ -15,6 +16,7 @@ module View4xxMethods
     page.should have_content uri
     page.should have_content "notifications.connection.not_found"
     page.should have_content " not found"
+    page.should_not have_content 'translation missing'
   end
 
   # Resource not valid
