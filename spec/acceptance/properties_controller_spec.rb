@@ -82,7 +82,8 @@ feature "PropertyController" do
       end
 
       context "#values" do
-        it_should_behave_like "an array field", "values", "page.driver.post(@uri, params.to_json)"
+        it_should_behave_like "an array field", "values", 
+                              "page.driver.post(@uri, params.to_json)"
       end
     end
   end
@@ -117,7 +118,8 @@ feature "PropertyController" do
                             "page.driver.put(@uri)", "properties"
 
       context "#values" do
-        it_should_behave_like "an array field", "values", "page.driver.put(@uri, params.to_json)"
+        it_should_behave_like "an array field", "values", 
+                              "page.driver.put(@uri, params.to_json)"
       end
     end
   end
