@@ -21,14 +21,14 @@ feature "StatusImageController" do
         before { @resource.update_attributes(image: File.new(@image_path)) }
         scenario "redirect to the uploaded image" do
           visit @uri
-          @resource.image_url.should_not match /default/
+          current_url.should_not match /default/
           page.status_code.should == 200
         end
 
         context "with a valid version" do
           scenario "link the versioned image" do
             visit "#{@uri}?size=micro"
-            @resource.image_url.should_not match /micro/
+            current_url.should match /micro/
             page.status_code.should == 200
           end
         end
@@ -45,7 +45,7 @@ feature "StatusImageController" do
       context "with no uploaded image" do
         scenario "redirect to the default image" do
           visit @uri
-          @resource.image_url.should match /default/
+          current_url.should match /default/
           page.status_code.should == 200
         end
       end
