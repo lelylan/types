@@ -1,0 +1,5 @@
+
+<% connections.each_with_index do |connection, index| %>
+<%=render partial: '/functions/function',
+          locals: { function: connection } %>  <% if (connections.length - 1 > index) %>,<%end%>
+<% end %>

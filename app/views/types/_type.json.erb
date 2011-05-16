@@ -1,0 +1,10 @@
+{
+  "id": "<%=type.id.as_json%>",
+  "uri": "<%=type.uri%>",
+  "name": "<%=type.name%>",
+  "created_from": { "uri": "<%=type.created_from%>" },
+  "properties": [ <%=render partial: "/types/type_properties",
+                            locals: { connections: @properties } %>  ],
+  "functions": [ <%=render partial: "/types/type_functions",
+                           locals: { connections: @functions } %>  ]
+}

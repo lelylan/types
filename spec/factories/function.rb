@@ -19,6 +19,29 @@ FactoryGirl.define do
     ]}
   end
 
+  # Function specific
+  factory :set_intensity, parent: :function do |f|
+    uri Settings.functions.set_intensity.uri
+    name Settings.functions.set_intensity.name
+    f.function_properties {[
+      Factory.build(:function_status),
+      Factory.build(:function_intensity)
+    ]}
+  end
+
+  factory :turn_on, parent: :function do |f|
+    uri Settings.functions.turn_on.uri
+    name Settings.functions.turn_on.name
+    f.function_properties {[ Factory.build(:function_status, value: 'on') ]}
+  end
+
+  factory :turn_off, parent: :function do |f|
+    uri Settings.functions.turn_off.uri
+    name Settings.functions.turn_off.name
+    f.function_properties {[ Factory.build(:function_status, value: 'off') ]}
+  end
+
+  # Connections
   factory :function_status, class: :function_property do
     uri Settings.properties.status.uri
     value Settings.properties.status.default_value

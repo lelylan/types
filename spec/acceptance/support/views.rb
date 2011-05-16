@@ -38,6 +38,19 @@ module ViewMethods
   def should_not_have_property(property)
     page.should_not have_content property.created_from
   end
+
+  # Type resource representation
+  def should_have_type(property)
+    page.should have_content property.id.as_json
+    page.should have_content property.uri
+    page.should have_content property.created_from
+    page.should have_content property.name
+  end
+
+  # Type resource not represented
+  def should_not_have_type(property)
+    page.should_not have_content property.created_from
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance

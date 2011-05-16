@@ -10,6 +10,8 @@ Devices::Application.routes.draw do
   resources :sessions
 
   # API Resources
+  resources :types, defaults: {format: 'json'}
+  resources :properties, defaults: {format: 'json'}
   resources :functions, defaults: {format: 'json'} do
     member do
       get    'properties' => 'function_properties#show'
@@ -17,7 +19,5 @@ Devices::Application.routes.draw do
       delete 'properties' => 'function_properties#destroy'
     end
   end
-
-  resources :properties, defaults: {format: 'json'}
 
 end

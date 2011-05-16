@@ -12,6 +12,9 @@ user:
 another_user: 
   uri: <%= "#{host}/users/bob" %>
   email: 'bob@example.com'
+type:
+  uri: <%= type_uri = "#{host}/types/dimmer" %>
+  name: 'Dimmer'
 properties:
   status:
     uri: <%= status_uri = "#{host}/properties/status" %> 
