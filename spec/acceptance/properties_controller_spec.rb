@@ -45,8 +45,7 @@ feature "PropertyController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "properties"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "properties"
     end
   end
 
@@ -82,8 +81,7 @@ feature "PropertyController" do
       end
 
       context "#values" do
-        it_should_behave_like "an array field", "values", 
-                              "page.driver.post(@uri, params.to_json)"
+        it_should_behave_like "an array field", "values", "page.driver.post(@uri, params.to_json)"
       end
     end
   end
@@ -114,12 +112,10 @@ feature "PropertyController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.put(@uri)", "properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "properties"
 
       context "#values" do
-        it_should_behave_like "an array field", "values", 
-                              "page.driver.put(@uri, params.to_json)"
+        it_should_behave_like "an array field", "values", "page.driver.put(@uri, params.to_json)"
       end
     end
   end
@@ -144,8 +140,7 @@ feature "PropertyController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.delete(@uri)", "properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
     end
   end
 

@@ -88,7 +88,6 @@ shared_examples_for "a default resource" do |action, connection = ""|
     before { @resource = Factory(:is_setting_intensity, default: 'true') }
     before { @uri = "/statuses/#{@resource.id.as_json}#{connection}" }
     scenario "get a protected notification" do
-      puts "::::: " + action
       eval(action)
       should_have_a_not_valid_resource
       page.should have_content 'Protected resource'
