@@ -8,7 +8,7 @@ class StatusIconController < ApplicationController
   end
 
   def create
-    @status.icon = params[:icon]
+    @status.image = params[:image]
     if @status.save
       render "/statuses/show", status: 201, location: @status.uri
     else
