@@ -20,7 +20,7 @@ feature "StatusController" do
       scenario "view all resources" do
         page.status_code.should == 200
         should_have_status(@resource)
-        should_have_status_property(@resource.status_properties.first)
+        should_have_status_property(@resource.status_properties[0])
         should_not_have_status(@not_owned_resource)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
@@ -29,29 +29,28 @@ feature "StatusController" do
   end
 
 
-  ## GET /statuses/{status-id}
-  #context ".show" do
-    #before { @resource = Factory(:status_complete) }
-    #before { @uri = "/statuses/#{@resource.id.as_json}" }
-    #before { @not_owned_resource = Factory(:not_owned_status) }
+  # GET /statuses/{status-id}
+  context ".show" do
+    before { @resource = Factory(:is_setting_intensity) }
+    before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
+    before { @uri = "/statuses/#{@resource.id.as_json}" }
 
-    #it_should_behave_like "protected resource", "visit(@uri)"
+    it_should_behave_like "protected resource", "visit(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth(@user) } 
-      #scenario "view owned resource" do
-        #visit @uri
-        #page.status_code.should == 200
-        #should_have_status(@resource)
-        #should_have_status_property(@resource.status_properties[0])
-        #should_have_status_property(@resource.status_properties[1])
-        #should_have_valid_json(page.body)
-      #end
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      scenario "view owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_status(@resource)
+        should_have_status_property(@resource.status_properties[0])
+        should_have_valid_json(page.body)
+      end
 
-      #it_should_behave_like "rescued when resource not found", 
-                            #"visit @uri", "statuses"
-    #end
-  #end
+      it_should_behave_like "rescued when resource not found", 
+                            "visit @uri", "statuses"
+    end
+  end
 
 
   ## POST /statuses
