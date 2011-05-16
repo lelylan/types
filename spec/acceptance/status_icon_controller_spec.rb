@@ -18,11 +18,27 @@ feature "StatusIconController" do
            
       context "with uploaded image" do
         before { @resource.update_attributes(image: File.new("#{fixture_path}/example.png")) }
-
         scenario "link the uploaded image" do
           visit @uri
           @resource.image_url.should_not match /default/
           page.status_code.should == 200
+        end
+
+        context "with a valid version" do
+          scenario "link the versioned image" do
+            visit "#{@uri}?size=micro"
+            @resource.image_url.should_not match /micro/
+            page.status_code.should == 200
+          end
+        end
+
+        context "with a not valid version" do
+          scenario "get a not valid notification" do
+            visit "#{@uri}?size=not_existing"
+            save_and_open_page
+            should_have_a_not_found_resource("#{@uri}?size=not_existing", "notifications.icon.not_found")
+            should_have_valid_json(page.body)
+          end
         end
       end
 

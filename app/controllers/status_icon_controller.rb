@@ -4,7 +4,6 @@ class StatusIconController < ApplicationController
   before_filter :normalize_size
 
   def show
-    puts ":::::" +  @status.image_url(params[:size]).inspect
     redirect_to @status.image_url(params[:size])
   end
 
