@@ -3,6 +3,7 @@
     "uri": "<%=status.uri%>",
     "created_from": { "uri": "<%=status.created_from%>" },
     "name": "<%=status.name%>",
+    "image": "<%=status.uri%>/image",
     "properties": [ <%=render :partial => "/statuses/status_properties",
                               :locals => { connections: status.status_properties } %>    ]
   }

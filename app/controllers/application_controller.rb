@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
 
     # Add other cases the request is releted to an API's call
     def exceptions
-      params[:controller] == 'status_icon'
+      params[:controller] == 'status_image'
     end
 
     # Apply the basic authentication for API requests

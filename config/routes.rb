@@ -26,7 +26,7 @@ Devices::Application.routes.draw do
       delete 'properties' => 'status_properties#destroy'
     end
   end
-  get    'statuses/:id/icon(.:format)' => 'status_icon#show',    defaults: { format: 'png' }
-  post   'statuses/:id/icon(.:format)' => 'status_icon#create',  defaults: { format: 'png' }
-  delete 'statuses/:id/icon(.:format)' => 'status_icon#destroy', defaults: { format: 'png' }
+  get    'statuses/:id/image(.:format)' => 'status_image#show',    defaults: { format: 'png' }
+  post   'statuses/:id/image(.:format)' => 'status_image#create',  defaults: { format: 'png' }
+  delete 'statuses/:id/image(.:format)' => 'status_image#destroy', defaults: { format: 'png' }
 end

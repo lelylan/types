@@ -10,8 +10,8 @@ en:
       not_valid_uri: "Not valid connection uri"
     physical:
       not_found: "Physical device not existing (insert one)"
-    icon:
-      not_found: "Icon not found with the given size"
+    image:
+      not_found: "Image not found with the given size"
     json:
       not_valid: "Not valid JSON"
       not_array: "Not a valid JSON type associated"

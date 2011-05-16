@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "StatusIconController" do
+feature "StatusImageController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
   before { Status.destroy_all }
@@ -8,9 +8,9 @@ feature "StatusIconController" do
   before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
   before { @image_path = "#{fixture_path}/example.png" }
  
-  #GET /statuses/{status-id}/icon
+  #GET /statuses/{status-id}/image
   context ".show" do
-    before { @uri = "/statuses/#{@resource.id}/icon" }
+    before { @uri = "/statuses/#{@resource.id}/image" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -21,7 +21,7 @@ feature "StatusIconController" do
         before { @resource.update_attributes(image: File.new(@image_path)) }
         scenario "redirect to the uploaded image" do
           visit @uri
-          @resource.image_url.should_not match /default\.png/
+          @resource.image_url.should_not match /default/
           page.status_code.should == 200
         end
 
@@ -36,7 +36,7 @@ feature "StatusIconController" do
         context "with a not valid version" do
           scenario "get a not valid notification" do
             visit "#{@uri}?size=not_existing"
-            should_have_a_not_found_resource("#{@uri}?size=not_existing", "notifications.icon.not_found")
+            should_have_a_not_found_resource("#{@uri}?size=not_existing", "notifications.image.not_found")
             should_have_valid_json(page.body)
           end
         end
@@ -50,15 +50,15 @@ feature "StatusIconController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses", "/properties"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses", "/image"
     end
   end
 
 
-  # POST /statuses/{status-id}/icon
+  # POST /statuses/{status-id}/image
   context ".create" do
-    before { @uri = "/statuses/#{@resource.id}/icon" }
-    it_should_behave_like "protected resource", "visit(@uri)"
+    before { @uri = "/statuses/#{@resource.id}/image" }
+    it_should_behave_like "protected resource", "page.driver.post(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -77,11 +77,34 @@ feature "StatusIconController" do
           page.driver.post(@uri, {image: @file})
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
-          save_and_open_page
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses", "/properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.post(@uri)", "statuses", "/image"
+    end
+  end
+
+
+  #DELETE /statuses/{status-id}/image
+  context ".destroy" do
+    before { @uri = "/statuses/#{@resource.id}/image" }
+    it_should_behave_like "protected resource", "page.driver.delete(@uri)"
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+
+      context "with uploaded image" do
+        before { @resource.update_attributes(image: File.new(@image_path)) }
+
+        scenario "remove the image" do
+          page.driver.delete(@uri)
+          page.status_code.should == 302
+          @resource = Status.last
+          @resource.image_url.should match /default/
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "statuses", "/image"
     end
   end
 end
