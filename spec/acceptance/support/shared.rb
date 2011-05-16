@@ -83,3 +83,16 @@ shared_examples_for "an array field" do |field, action|
   end
 end
 
+shared_examples_for "an immutable resource" do |action|
+  context "when is the default status" do
+    before { @resource = Factory(:is_setting_intensity, default: 'true') }
+    before { @uri = "/statuses/#{@resource.id.as_json}" }
+    scenario "get a protected notification" do
+      eval(action)
+      should_have_a_not_valid_resource
+      page.should have_content 'Protected resource'
+      should_have_valid_json(page.body)
+    end
+  end
+end
+

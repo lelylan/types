@@ -2,6 +2,7 @@ class StatusesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
   before_filter :find_owned_resources
   before_filter :find_resource, only: %w(show update destroy)
+  before_filter :find_default, only: %w(update destroy)
 
   def index
     @statuses = @statuses.page(params[:page]).per(params[:per])
@@ -28,12 +29,8 @@ class StatusesController < ApplicationController
   end
 
   def destroy
-    if @status.default?
-      render_422 'notifications.document.not_deletable',  {uri: @status.uri}
-    else
-      @status.destroy
-      render 'show'
-    end
+    @status.destroy
+    render 'show'
   end
 
 
@@ -47,4 +44,7 @@ class StatusesController < ApplicationController
       @status = @statuses.find(params[:id])
     end
 
+    def find_default
+      render_422 'notifications.document.protected', "The default status can not be updated or deleted" if @status.default?
+    end
 end

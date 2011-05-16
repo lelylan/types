@@ -106,6 +106,9 @@ feature "StatusController" do
         should_have_a_not_valid_resource
       end
 
+      it_should_behave_like "an immutable resource", 
+                            "page.driver.put(@uri)"
+
       it_should_behave_like "rescued when resource not found",
                             "page.driver.put(@uri)", "statuses"
     end
@@ -131,6 +134,9 @@ feature "StatusController" do
         should_have_status_property(@resource.status_properties[0])
         should_have_valid_json(page.body)
       end
+
+      it_should_behave_like "an immutable resource", 
+                            "page.driver.delete(@uri)"
 
       it_should_behave_like "rescued when resource not found",
                             "page.driver.delete(@uri)", "statuses"

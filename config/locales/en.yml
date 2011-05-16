@@ -3,7 +3,7 @@ en:
     document:
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
-      not_protected: "This resource can not be deleted (default status)"
+      protected: "Protected resource"
     connection:
       found: "Resource connection already found"
       not_found: "Resource connection not found"
