@@ -20,7 +20,7 @@ class StatusesController < ApplicationController
   end
 
   def update
-    if @status.update_attributes(@body)
+    if @status.update_attributes(json_body)
       render 'show'
     else
       render_422 'notifications.document.not_valid', @status.errors
