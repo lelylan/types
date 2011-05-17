@@ -1,5 +1,7 @@
 host: <%= host = "http://www.iana.org/domains/example" %>
 another_host: <%= another_host = "http://www.anotherhost.com" %>
+device_host: <%= device_host = "http://device.lelylan.com" %>
+unite_node_nost: <%= unite_node_host = "http://nodes.lelylan.com" %>
 validation: 
   valid_uri: 'http://example.com'
   not_valid_uri: 'example'
@@ -31,16 +33,64 @@ properties:
 functions:
   set_intensity:
     id: <%= set_intensity_id = "set_intensity" %>
-    uri: <%= set_intensity_function_uri = "#{host}/functions/#{set_intensity_id}" %>
+    uri: <%= set_intensity_uri = "#{host}/functions/#{set_intensity_id}" %>
     name: "Set intensity"
   turn_on:
     id: <%= turn_on_id = "turn_on" %>
-    uri: <%= turn_on_function_uri = "#{host}/functions/#{turn_on_id}" %>
+    uri: <%= turn_on_uri = "#{host}/functions/#{turn_on_id}" %>
     name: "Turn on"
   turn_off:
     id: <%= turn_off_id = "turn_off" %>
-    uri: <%= turn_off_function_uri = "#{host}/functions/#{turn_off_id}" %>
+    uri: <%= turn_off_uri = "#{host}/functions/#{turn_off_id}" %>
     name: "Turn off"
-status:
-  uri: <%= "#{host}/staus/intensity_set" %>
-  name: "Intensity set"
+statuses:
+  has_set_intensity:
+    uri: <%= "#{host}/statuses/has_set_intensity" %>
+    values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
+    name: 'Intensity set'
+  is_setting_intensity:
+    uri: <%= "#{host}/statuses/is_setting_intensity" %>
+    name: 'Setting intensity'
+    values: ['0.0', '1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0', '10.0']
+  has_set_max:
+    uri: <%= "#{host}/statuses/has_set_max" %>
+    values: ['10.0']
+    name: 'Maximum set'
+  is_setting_max:
+    uri: <%= "#{host}/statuses/is_setting_max" %>
+    values: ['10.0']
+    name: 'Maximum setting'
+  default: 
+    uri: <%= "#{host}/statuses/default" %>
+    values: []
+    name: 'Default status'
+
+device_json: |
+  {
+    "id": "4dd2263ad033a97e8e000011",
+    "uri": "<%= "#{device_host}/devices/closet_dimmer" %>",
+    "name": "Closet dimmer",
+    "created_from": { "uri": "<%= "#{device_host}/users/alice" %>" },
+    "type": { "uri": "<%= "#{host}/types/dimmer" %>", "name": "Dimmer" },
+    "created_at": "2011-05-17 09:39:38 +0200",
+    "updated_at": "2011-05-17 09:39:38 +0200",
+    "properties": [ 
+    { "name": "Status",
+      "uri": "<%= status_uri %>",
+      "value": "off",
+      "pending": true },
+    { "name": "Intensity",
+      "uri": "<%= intensity_uri %>", 
+      "value": "0.0",
+      "pending": true }
+    ],
+    "functions": [ 
+      { "uri": "<%= set_intensity_uri %>", "name": "Set intensity" },
+      { "uri": "<%= turn_on_uri %>", "name": "Turn on" },
+      { "uri": "<%= turn_off_uri %>", "name": "Turn off" }
+    ],
+    "physical_device": { 
+      "physical_id": "0x3a91fb2e",
+      "unite_node_uri": "<%= "#{unite_node_host}/home_gateway" %>"
+    }
+  }

@@ -47,8 +47,7 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
     end
   end
 
@@ -107,8 +106,7 @@ feature "FunctionController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.put(@uri)", "functions"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
     end
   end
 
@@ -134,8 +132,7 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.delete(@uri)", "functions"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions"
     end
   end
 

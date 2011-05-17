@@ -4,7 +4,9 @@
   "name": "<%=type.name%>",
   "created_from": { "uri": "<%=type.created_from%>" },
   "properties": [ <%=render partial: "/types/type_properties",
-                            locals: { connections: @properties } %>  ],
+                            locals: { connections: type.connected_properties } %>  ],
   "functions": [ <%=render partial: "/types/type_functions",
-                           locals: { connections: @functions } %>  ]
+                           locals: { connections: type.connected_functions } %>  ],
+  "statuses": [ <%=render partial: "/types/type_statuses",
+                           locals: { connections: type.connected_statuses } %>  ]
 }

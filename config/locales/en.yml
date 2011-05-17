@@ -3,14 +3,15 @@ en:
     document:
       not_found: "Resource not found"
       not_valid: "Not valid attributes"
-      not_updatable: "This resource can not be updated (default status)"
-      not_deletable: "This resource can not be deleted (default status)"
+      protected: "Protected resource"
     connection:
       found: "Resource connection already found"
       not_found: "Resource connection not found"
       not_valid_uri: "Not valid connection uri"
     physical:
       not_found: "Physical device not existing (insert one)"
+    image:
+      not_found: "Image not found with the given size"
     json:
       not_valid: "Not valid JSON"
       not_array: "Not a valid JSON type associated"

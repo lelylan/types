@@ -11,11 +11,12 @@ class FunctionPropertiesController < ApplicationController
 
   def create
     @function_property = @function.function_properties.create!(json_body)
+    # TODO: find the way to reuse the find_connection function!
     @property = find_property_from_connection(@function_property)
     if @property
       render 'show', status: 201, location: @function_property.connection_uri and return
     else
-      render_404 "notifications.connection.not_found", {uri: @function_property.uri} unless @property
+      render_404 'notifications.connection.not_found', {uri: @function_property.uri}
     end
   end
 
@@ -38,20 +39,20 @@ class FunctionPropertiesController < ApplicationController
 
     def find_connection
       @function_property = @function.function_properties.where(uri: params[:uri]).first
-      render_404 "notifications.connection.not_found", {uri: params[:uri]}  unless @function_property
+      render_404 'notifications.connection.not_found', {uri: params[:uri]}  unless @function_property
     end
 
     def find_connected_resource
       @preoperty = find_property_from_connection(@function_property)
-      render_404 "notifications.connection.not_found", {uri: @function_property.uri} unless @property
+      render_404 'notifications.connection.not_found', {uri: @function_property.uri} unless @property
     end
 
     def find_existing_connection
       @function_property = @function.function_properties.where(uri: json_body[:uri]).first
-      render_422 "notifications.connection.found", "The resource #{json_body[:uri]} is already connected" if @function_property
+      render_422 'notifications.connection.found', 'The resource #{json_body[:uri]} is already connected' if @function_property
     end
 
-    # Helper methods    
+    # Helper methods
     def find_property_from_connection(function_property)
       @property = Property.where(created_from: current_user.uri, uri: function_property.uri).first
     end

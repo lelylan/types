@@ -10,7 +10,7 @@ shared_examples_for "protected resource" do |action|
 end
 
 # Not found resources
-shared_examples_for "rescued when resource not found" do |action, controller, connection = ""|
+shared_examples_for "a rescued 404 resource" do |action, controller, connection = ""|
   context "with not existing resource" do
     scenario "get a not found notification" do
       @resource.destroy
@@ -39,7 +39,7 @@ shared_examples_for "rescued when resource not found" do |action, controller, co
   end
 end
 
-shared_examples_for "rescued when connection not found" do |action, controller, connection|
+shared_examples_for "a rescued 404 connection" do |action, controller, connection|
   context "with not existing resource" do
     scenario "get a not found notification" do
       @connection.destroy
@@ -83,3 +83,15 @@ shared_examples_for "an array field" do |field, action|
   end
 end
 
+shared_examples_for "a default resource" do |action, connection = ""|
+  context "when is the default status" do
+    before { @resource = Factory(:is_setting_intensity, default: 'true') }
+    before { @uri = "/statuses/#{@resource.id.as_json}#{connection}" }
+    scenario "get a protected notification" do
+      eval(action)
+      should_have_a_not_valid_resource
+      page.should have_content 'Protected resource'
+      should_have_valid_json(page.body)
+    end
+  end
+end

@@ -6,12 +6,17 @@ feature "TypeController" do
   before { Type.destroy_all }
   before { Property.destroy_all }
   before { Function.destroy_all }
+  before { Status.destroy_all }
 
   before { @status = Factory(:property_status) }
   before { @intensity = Factory(:property_intensity) }
   before { @set_intensity = Factory(:set_intensity) }
   before { @turn_on = Factory(:turn_on) }
   before { @turn_off = Factory(:turn_off) }
+  before { @is_setting_intensity = Factory(:is_setting_intensity) }
+  before { @is_setting_max = Factory(:is_setting_max) }
+  before { @has_set_intensity = Factory(:has_set_intensity) }
+  before { @has_set_max = Factory(:has_set_max) }
 
 
   # GET /types
@@ -45,21 +50,17 @@ feature "TypeController" do
     it_should_behave_like "protected resource", "visit(@uri)"
 
     context "when logged in" do
-      before { basic_auth(@user) } 
-      scenario "view owned resource" do
-        visit @uri
+      before { basic_auth(@user) }
+      before { visit @uri }
+
+      scenario "view resource" do
         page.status_code.should == 200
         should_have_type(@resource)
-        should_have_property(@status)
-        should_have_property(@intensity)
-        should_have_function(@set_intensity)
-        should_have_function(@turn_off)
-        should_have_function(@turn_on)
+        should_have_all_status_connections
         should_have_valid_json(page.body)
       end
-
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "types"
+      
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "types"
     end
   end
 
@@ -80,20 +81,29 @@ feature "TypeController" do
         functions: [
           Settings.functions.set_intensity.uri,
           Settings.functions.turn_on.uri,
-          Settings.functions.turn_off.uri ]
-      }}
+          Settings.functions.turn_off.uri ],
+        statuses: [
+          Settings.statuses.is_setting_max.uri,
+          Settings.statuses.has_set_max.uri,
+          Settings.statuses.is_setting_intensity.uri,
+          Settings.statuses.has_set_intensity.uri ]
+        }}
 
-      scenario "create resource" do
-        page.driver.post(@uri, params.to_json)
-        @resource = Type.last
-        page.status_code.should == 201
-        should_have_type(@resource)
-        should_have_property(@status)
-        should_have_property(@intensity)
-        should_have_function(@set_intensity)
-        should_have_function(@turn_off)
-        should_have_function(@turn_on)
-        should_have_valid_json(page.body)
+      context "with valid params" do
+        before { page.driver.post(@uri, params.to_json) }
+        before { @resource = Type.last }
+
+        scenario "create resource" do
+          page.status_code.should == 201
+          should_have_type(@resource)
+          should_have_all_status_connections
+          should_have_valid_json(page.body)
+        end
+
+        scenario "create default status" do
+          default = @resource.type_statuses.where(order: Settings.statuses.default_order).first
+          default.should_not be_nil
+        end
       end
 
       context "with not valid params" do
@@ -127,21 +137,39 @@ feature "TypeController" do
       before { basic_auth(@user) } 
       let(:params) {{ 
         name: "Set intensity updated",
-        properties: [ Settings.properties.status.uri ],
-        functions: [ Settings.functions.turn_on.uri, Settings.functions.turn_off.uri ]
+        properties: [ 
+          Settings.properties.status.uri 
+        ],
+        functions: [ 
+          Settings.functions.turn_on.uri, 
+          Settings.functions.turn_off.uri 
+        ],
+        statuses: [
+          Settings.statuses.has_set_intensity.uri,
+          Settings.statuses.is_setting_intensity.uri
+        ]
       }}
 
-      scenario "create resource" do
-        page.driver.put(@uri, params.to_json)
-        page.status_code.should == 200
-        should_have_type(@resource.reload)
-        should_have_property(@status)
-        should_have_function(@turn_off)
-        should_have_function(@turn_on)
-        page.should_not have_content @intensity.reload.uri
-        page.should_not have_content @set_intensity.reload.uri 
-        page.should have_content "updated"
-        should_have_valid_json(page.body)
+      context "with valid params" do
+        before { page.driver.put(@uri, params.to_json) }
+        before { @resource.reload }
+
+        scenario "update resource" do
+          page.status_code.should == 200
+          page.should have_content "updated"
+          should_have_type(@resource)
+          should_have_valid_json(page.body)
+          should_have_property(@status)
+          should_have_function(@turn_off)
+          should_have_function(@turn_on)
+          should_have_status(@has_set_intensity)
+          should_have_status(@is_setting_intensity)
+        end
+
+        scenario "mantain default status" do
+          default = @resource.type_statuses.where(order: Settings.statuses.default_order).first
+          default.should_not be_nil
+        end
       end
 
       scenario "not valid params" do
@@ -149,8 +177,7 @@ feature "TypeController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.put(@uri)", "types"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "types"
 
       context "#properties" do
         it_should_behave_like "an array field", "properties", "page.driver.put(@uri, params.to_json)"
@@ -173,22 +200,19 @@ feature "TypeController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      scenario "delete resource" do
+
+      scenario "delete the resource" do
         lambda {
           page.driver.delete(@uri)
         }.should change{ Type.count }.by(-1)
-        page.status_code.should == 200
+
         should_have_type(@resource)
-        should_have_property(@status)
-        should_have_property(@intensity)
-        should_have_function(@set_intensity)
-        should_have_function(@turn_off)
-        should_have_function(@turn_on)
+        page.status_code.should == 200
+        should_have_all_status_connections
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found",
-                            "page.driver.delete(@uri)", "types"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "types"
     end
   end
 end

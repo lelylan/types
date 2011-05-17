@@ -27,11 +27,8 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions", "/properties"
- 
-      it_should_behave_like "rescued when connection not found", 
-                            "visit @uri", "functions", "/properties"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "functions", "/properties"
+      it_should_behave_like "a rescued 404 connection", "visit @uri", "functions", "/properties"
     end
   end
 
@@ -66,9 +63,9 @@ feature "FunctionController" do
         before { @uri = "#{host}/functions/#{@resource.id}/properties" }
         scenario "get an 'existing' notification" do
           page.driver.post(@uri, params.to_json)
+          page.should have_content 'connection.found'
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
-          page.should have_content 'connection.found'
         end
       end
 
@@ -89,8 +86,7 @@ feature "FunctionController" do
         end
       end
 
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions", "/properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.post(@uri)", "functions", "/properties"
     end
   end
 
@@ -113,11 +109,8 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "rescued when resource not found", 
-                            "visit @uri", "functions", "/properties"
- 
-      it_should_behave_like "rescued when connection not found", 
-                            "visit @uri", "functions", "/properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions", "/properties"
+      it_should_behave_like "a rescued 404 connection", "page.driver.delete(@uri)", "functions", "/properties"
     end
   end
 end
