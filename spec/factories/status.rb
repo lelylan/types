@@ -4,7 +4,7 @@ Settings.reload!
 FactoryGirl.define do
   # Default status
   factory :status do
-    name Settings.statuses.is_setting_intensity.name
+    name 'Default status'
     uri Settings.statuses.default.uri
     created_from Settings.user.uri
   end

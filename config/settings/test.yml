@@ -77,11 +77,11 @@ device_json: |
     "properties": [ 
     { "name": "Status",
       "uri": "<%= status_uri %>",
-      "value": "off",
+      "value": "on",
       "pending": true },
     { "name": "Intensity",
       "uri": "<%= intensity_uri %>", 
-      "value": "0.0",
+      "value": "5.0",
       "pending": true }
     ],
     "functions": [ 
