@@ -9,3 +9,5 @@ thumbs:
   big: 128
   huge: 256
   original: 512
+status:
+  default_order: 1000000

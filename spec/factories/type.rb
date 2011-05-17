@@ -13,6 +13,11 @@ FactoryGirl.define do
       Settings.functions.set_intensity.uri,
       Settings.functions.turn_on.uri,
       Settings.functions.turn_off.uri ]
+    statuses [
+      Settings.statuses.is_setting_max.uri,
+      Settings.statuses.has_set_max.uri,
+      Settings.statuses.is_setting_intensity.uri,
+      Settings.statuses.has_set_intensity.uri ]
   end
 
   factory :not_owned_type, parent: :type do

@@ -3,7 +3,7 @@ class TypeStatus
 
   field :uri
   field :order, type: Integer, default: 0
-  attr_accessible :uri, :order
+  attr_accessible :uri
 
   embedded_in :type
 

@@ -13,6 +13,7 @@ describe Status do
   it { should allow_value(Settings.validation.valid_uri).for(:created_from) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:created_from) }
 
+
   describe "#image" do
     it "should resizing uploaded image" do
       uploader = ImageUploader.new(Factory(:is_setting_intensity), :image)
