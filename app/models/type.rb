@@ -8,9 +8,10 @@ class Type
   field :created_from
   field :properties, type: Array, default: []
   field :functions, type: Array, default: []
-  field :statuses, type: Array, default: []
 
-  attr_accessible :name, :properties, :functions, :statuses
+  embeds_many :type_statuses
+
+  attr_accessible :name, :properties, :functions
 
   validates :name, presence: true
   validates :uri, presence:true, url: true
