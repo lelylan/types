@@ -48,10 +48,34 @@ describe Type do
             @type.type_statuses.should have(1).connection
           end
         end
+
+        context "with not valid statuses" do
+          it "should raise and exception" do
+            lambda{
+              Factory(:type, statuses: {})
+            }.should raise_error(Mongoid::Errors::InvalidType)
+          end
+        end
       end
     end
 
     context "when #updating" do
+
+      context "with different order" do
+        before do
+          @type.update_attributes(statuses:[
+            Settings.statuses.has_set_intensity.uri,
+            Settings.statuses.is_setting_intensity.uri,
+            Settings.statuses.has_set_max.uri,
+            Settings.statuses.is_setting_max.uri ])
+        end
+        describe "#first element" do
+          subject { @type_statuses.first }
+          its(:uri) { should == Settings.statuses.has_set_intensity.uri }
+          its(:order) { should == 1 }
+        end
+      end
+
       context "with nil statuses" do
         before { @type.update_attributes(statuses: nil) }
         it "should not delete previous stautses" do
@@ -65,17 +89,14 @@ describe Type do
           @type.type_statuses.should have(1).connection
         end
       end
-    end
 
-    it "raise error with not Array statuses" do
-    end
-    context "when updated" do
-      it "leave default status" do
-      end
-      it "destroy previous stauses" do
-      end
-      it "creates a new ordered statuses list" do
-      end
+      context "with not valid statuses" do
+        it "should raise and exception" do
+          lambda{
+            @type.update_attributes(statuses: {})
+          }.should raise_error(Mongoid::Errors::InvalidType)
+        end
+      end  
     end
   end
 end

@@ -28,9 +28,8 @@ class Type
       if statuses.is_a?(Array)
         delete_type_statuses_except_default
         create_type_statuses_from(statuses)
-      else
-        raise Mongoid::Errors::InvalidType
-          #"Field was defined as a(n) Array, but received a #{statuses.class.to_s} with the value #{statuses}.")
+      elsif not statuses.nil?
+        raise Mongoid::Errors::InvalidType.new(::Array, statuses)
       end
     end
 
