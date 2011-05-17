@@ -20,6 +20,7 @@ class Type
 
   before_save :create_type_statuses
 
+
   def connected_properties
     Property.any_in(uri: properties).where(created_from: created_from)
   end

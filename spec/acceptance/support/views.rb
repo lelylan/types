@@ -78,6 +78,22 @@ module ViewMethods
     should_have_status_property(function_property)
     should_have_property(property)
   end
+
+  # Status property connections
+  def should_have_all_status_connections
+    # properties
+    should_have_property(@status)
+    should_have_property(@intensity)
+    # functions
+    should_have_function(@set_intensity)
+    should_have_function(@turn_off)
+    should_have_function(@turn_on)
+    # statuses
+    should_have_status(@is_setting_intensity)
+    should_have_status(@is_setting_max)
+    should_have_status(@has_set_intensity)
+    should_have_status(@has_set_max)
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance
