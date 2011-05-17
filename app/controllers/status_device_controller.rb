@@ -6,7 +6,7 @@ class StatusDeviceController < ApplicationController
   before_filter :find_connections
   before_filter :find_connection
 
-  def create
+  def update
     render '/statuses/show'
   end
 
@@ -15,6 +15,9 @@ class StatusDeviceController < ApplicationController
 
     def find_device
       @device = json_body[:device]
+      if @device.nil? or @device[:properties].nil?
+        render_422 'notifications.json.not_valid', "The JSON device structure is not valid."
+      end
     end
 
     def find_owned_resources
@@ -31,8 +34,6 @@ class StatusDeviceController < ApplicationController
     end
 
     def find_connection
-      puts "::::properties::::" + @device[:properties].inspect
       @status = Status.find_matching_status(@device[:properties], @statuses).first
-      puts "::::status::::" + @status.inspect
     end
 end

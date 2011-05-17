@@ -14,29 +14,60 @@ feature "StatusDeviceController" do
   before { @default = Factory(:status) }
 
 
-  # POST /statuses/device
-  context ".create" do
+  # PUT /statuses/device
+  context ".update" do
     before { @uri = "/statuses/device" }
 
-    #it_should_behave_like "protected resource", "page.driver.post(@uri)"
+    #it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) }
-      let(:params) {{ device: JSON.parse(Settings.device_json) }}
+      let(:params) {{ device: HashWithIndifferentAccess.new(JSON.parse(Settings.device_json)) }}
 
       scenario "create resource" do
-        page.driver.post(@uri, params.to_json)
-        #save_and_open_page
+        page.driver.put(@uri, params.to_json)
+        page.status_code.should == 200
+        page.should have_content Settings.statuses.is_setting_intensity.uri
+        should_have_valid_json(page.body)
       end
 
-      #context "with not valid params" do
-        #scenario "get a not valid notification" do
-          #page.driver.post(@uri, {}.to_json)
-          #should_have_a_not_valid_resource
-          #should_have_valid_json(page.body)
-        #end
-      #end
+      context "with intensity to 10.0" do
+        before { params[:device][:properties][1][:value] = '10.0' }
+        scenario "should have 'setting max' status" do
+          page.driver.put(@uri, params.to_json)
+          page.status_code.should == 200
+          page.should have_content Settings.statuses.is_setting_max.uri
+          should_have_valid_json(page.body)
+        end
 
+        context "with pending to false" do
+          before { params[:device][:properties][1][:pending] = false }
+          scenario "should have 'has set max' status" do
+            page.driver.put(@uri, params.to_json)
+            page.status_code.should == 200
+            page.should have_content Settings.statuses.has_set_max.uri
+            should_have_valid_json(page.body)
+          end
+        end
+      end
+
+      context "with values not found on statuses" do
+        before { params[:device][:properties][1][:value] = 'not_existing' }
+        scenario "should have default status" do
+          page.driver.put(@uri, params.to_json)
+          page.status_code.should == 200
+          page.should have_content Settings.statuses.default.uri
+          should_have_valid_json(page.body)
+        end
+      end
+
+      context "with not valid params" do
+        scenario "get a not valid notification" do
+          page.driver.put(@uri, {}.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+        end
+      end
     end
   end
 end

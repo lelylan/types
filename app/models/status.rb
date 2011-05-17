@@ -44,16 +44,15 @@ class Status
 
 
   # Find the matching status representing a specific device
+  # TODO: uber refactoring !
   def self.find_matching_status(properties, statuses) 
     result = []
     statuses.each do |status|
       passed = [true]
       passed += status.status_properties.collect do |status_property|
-        puts "::::examine::::#{status_property.uri} with values #{status_property.values.inspect} pending #{status_property.pending}"
         property = properties.find {|p| p.has_value?(status_property.uri) }
         match_conditions?(status_property, property)
       end
-      puts "::::elaborated #{status.name} with results #{passed.inspect} (complessive #{passed.inject(:&)})" 
       result << status if passed.inject(:&)
     end
     return result
@@ -62,9 +61,6 @@ class Status
   private
 
     def self.match_conditions?(status_property, property)
-      puts "::::::MATCH VALUE" + match_value?(status_property, property).inspect
-      puts "::::::MATCH PENDING" + match_pending?(status_property, property).inspect
-
       match_value?(status_property, property) and match_pending?(status_property, property)
     end
 
@@ -74,10 +70,6 @@ class Status
     end
 
     def self.match_pending?(status_property, property)
-      puts "::::PENDING DETAILS STATUS:::" + status_property.pending.inspect
-      puts "::::GRRRRRRRRR" + property.inspect
-      puts "::::PENDING DETAILS device:::" + property[:pending].inspect
-
       status_property.pending == property[:pending].to_s or status_property.pending.empty?
     end
 end
