@@ -23,7 +23,9 @@ class Type
 
   private
 
-    # Create the statuses into the embedding document.
+    # Create the statuses into the embedding document. It does
+    # not delete the default status and raise an errorsimilar to 
+    # the one given from MongoID when a wrong tipe is given
     def create_type_statuses
       if statuses.is_a?(Array)
         delete_type_statuses_except_default

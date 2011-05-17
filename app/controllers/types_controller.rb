@@ -14,8 +14,8 @@ class TypesController < ApplicationController
   def create
     @type = Type.base(json_body, request, current_user)
     if @type.save
+      create_default_status(@type)
       find_connections
-      #create_default_status(@type)
       render 'show', status: 201, location: @type.uri
     else
       render_422 'notifications.document.not_valid', @type.errors
@@ -53,7 +53,9 @@ class TypesController < ApplicationController
     end
 
     def create_default_status(type)
-      #@status = Status.base_default({name: "Default"}, request, current_user)
-      #type.type_statuses.create(uri: @status.uri)
+      @status = Status.base({name: 'Default status'}, request, current_user)
+      @status.default = true
+      @status.save
+      type.type_statuses.create(uri: @status.uri, order: Settings.statuses.default_order)
     end
 end

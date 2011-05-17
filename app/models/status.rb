@@ -22,4 +22,22 @@ class Status
   def default?
     default == 'true'
   end
+
+  def self.base_default(type, params, request, current_user)
+    status = self.base(params, request, current_user)
+    status.default!
+    status.connect!(type)
+    return status
+  end
+
+  private
+
+    def default!
+      self.default = true
+      save
+    end
+
+    def connect(type)
+      type.type_statuses.create(uri: uri, order: Settings.statuses.default_order)
+    end
 end
