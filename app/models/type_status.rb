@@ -9,4 +9,6 @@ class TypeStatus
 
   validates :uri, presence: true, url: true
   validates :order, presence: true
+  
+  default_scope asc(:order)
 end

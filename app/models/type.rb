@@ -19,9 +19,8 @@ class Type
   validates :created_from, presence: true, url: true
 
   before_save :create_type_statuses
-  before_save :create_default_status
+  before_create :create_default_status
 
-  
   private
 
     # Create the statuses into the embedding document.

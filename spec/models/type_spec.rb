@@ -14,12 +14,15 @@ describe Type do
   
   describe "#type_statuses" do
     before { @type = Factory(:type) }
-    it "create a default status" do
-      default = Settings.status.default_order
-      status = Type.where('type_statuses.order' => default).first
-      status.should_not be_nil 
-    end
+    #it "create a default status" do
+      #default = Settings.status.default_order
+      #status = Type.where('type_statuses.order' => default).first
+      #status.should_not be_nil 
+    #end
     it "create an ordered statuses list" do
+      @type.type_statuses.should have(4).connections
+      @type.type_statuses.first.uri.should == Settings.statuses.is_setting_max.uri
+      @type.type_statuses.last.uri.should  == Settings.statuses.has_set_intensity.uri
     end
     it "do not change with empty statuses Array" do
     end
