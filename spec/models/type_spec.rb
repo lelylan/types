@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Type do
+  before { Status.destroy_all }
+
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:uri) }
@@ -16,6 +18,7 @@ describe Type do
     before { @type = Factory(:type) }
     before { @status = Factory(:property_status) }
     before { @intensity = Factory(:property_intensity) }
+
     it "get all connected properties" do
       @properties = @type.connected_properties
       @properties.should include @status
@@ -28,6 +31,7 @@ describe Type do
     before { @set_intensity = Factory(:set_intensity) }
     before { @turn_on = Factory(:turn_on) }
     before { @turn_off = Factory(:turn_off) }
+
     it "get all connected functions" do
       @functions = @type.connected_functions
       @functions.should include @set_intensity
@@ -42,14 +46,29 @@ describe Type do
     before { @has_set_intensity = Factory(:has_set_intensity) }
     before { @is_setting_max = Factory(:is_setting_max) }
     before { @has_set_max = Factory(:has_set_max) }
+    before { @default = Factory(:status) }
+
     it "get all connected statuses without default" do
       @statuses = @type.connected_statuses
       @statuses.should include @is_setting_intensity
       @statuses.should include @has_set_intensity
       @statuses.should include @is_setting_max
       @statuses.should include @has_set_max
+      @statuses.first.should == @is_setting_max
+    end
+
+    it "get all connected statuses with default" do
+      @statuses = @type.connected_statuses(true)
+      @statuses.should have(5).connections
+      @statuses.first.should == @is_setting_max
+      @statuses.last.should == @default
+    end
+
+    it "get an ordered list" do
+       @statuses = @type.connected_statuses
     end
   end
+
 
   describe "#statuses_uri" do
     before { @type = Factory(:type) }

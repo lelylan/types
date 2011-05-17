@@ -2,10 +2,10 @@ Settings.add_source!("#{Rails.root}/config/settings/test.yml")
 Settings.reload!
 
 FactoryGirl.define do
-  # Base (without connections)
+  # Default status
   factory :status do
     name Settings.statuses.is_setting_intensity.name
-    uri Settings.statuses.is_setting_intensity.uri
+    uri Settings.statuses.default.uri
     created_from Settings.user.uri
   end
 

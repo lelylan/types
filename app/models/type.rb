@@ -28,8 +28,13 @@ class Type
     Function.any_in(uri: functions).where(created_from: created_from)
   end
 
+  # Get the status resources and order them. Mongoid do not
+  # retrieve documents following the key order.
   def connected_statuses(with_default=false)
-    Status.any_in(uri: statuses_uri(with_default)).where(created_from: created_from)
+    statuses = Status.any_in(uri: statuses_uri(with_default)).where(created_from: created_from).to_a
+    statuses_uri(with_default).collect do |uri|
+      statuses.find { |status| status.uri == uri }
+    end
   end
 
   def statuses_uri(with_default=false)
