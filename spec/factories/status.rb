@@ -18,6 +18,8 @@ FactoryGirl.define do
   end
 
   factory :is_setting_max, parent: :is_setting_intensity do
+    name Settings.statuses.is_setting_max.name
+    uri Settings.statuses.is_setting_max.uri
     status_properties {[ Factory.build(:status_property_is_setting_max) ]}
   end
 
@@ -35,7 +37,9 @@ FactoryGirl.define do
   end
 
   factory :has_set_max, parent: :has_set_intensity do
-    status_properties {[ Factory.build(:status_property_has_get_max) ]}
+    name Settings.statuses.has_set_max.name
+    uri Settings.statuses.has_set_max.uri
+    status_properties {[ Factory.build(:status_property_has_set_max) ]}
   end
 
   factory :not_owned_has_set_intensity, parent: :has_set_intensity do

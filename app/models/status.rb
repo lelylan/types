@@ -30,14 +30,12 @@ class Status
     return status
   end
 
-  private
+  def default!
+    self.default = true
+    save
+  end
 
-    def default!
-      self.default = true
-      save
-    end
-
-    def connect(type)
-      type.type_statuses.create(uri: uri, order: Settings.statuses.default_order)
-    end
+  def connect!(type)
+    type.type_statuses.create(uri: uri, order: Settings.statuses.default_order)
+  end
 end

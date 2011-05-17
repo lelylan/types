@@ -13,8 +13,8 @@ class TypesController < ApplicationController
 
   def create
     @type = Type.base(json_body, request, current_user)
+    default_status_for(@type)
     if @type.save
-      create_default_status(@type)
       find_connections
       render 'show', status: 201, location: @type.uri
     else
@@ -48,14 +48,13 @@ class TypesController < ApplicationController
     end
 
     def find_connections
-      @properties = Property.any_in(uri: @type.properties)
-      @functions = Function.any_in(uri: @type.functions)
+      status_uri = @type.type_statuses.excludes(order: Settings.statuses.default_order).asc(:order).collect(&:uri)
+      @properties = Property.any_in(uri: @type.properties).where(created_from: current_user.uri)
+      @functions  = Function.any_in(uri: @type.functions).where(created_from: current_user.uri)
+      @statuses   = Status.any_in(uri: status_uri).where(created_from: current_user.uri)
     end
 
-    def create_default_status(type)
-      @status = Status.base({name: 'Default status'}, request, current_user)
-      @status.default = true
-      @status.save
-      type.type_statuses.create(uri: @status.uri, order: Settings.statuses.default_order)
+    def default_status_for(type)
+      @status = Status.base_default(type, {name: 'Default status'}, request, current_user)
     end
 end

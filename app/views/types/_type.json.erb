@@ -6,5 +6,7 @@
   "properties": [ <%=render partial: "/types/type_properties",
                             locals: { connections: @properties } %>  ],
   "functions": [ <%=render partial: "/types/type_functions",
-                           locals: { connections: @functions } %>  ]
+                           locals: { connections: @functions } %>  ],
+  "statuses": [ <%=render partial: "/types/type_statuses",
+                           locals: { connections: @statuses } %>  ]
 }

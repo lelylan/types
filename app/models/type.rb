@@ -20,6 +20,23 @@ class Type
 
   before_save :create_type_statuses
 
+  def connected_properties
+    Property.any_in(uri: properties).where(created_from: created_from)
+  end
+
+  def connected_functions
+    Function.any_in(uri: functions).where(created_from: created_from)
+  end
+
+  def connected_statuses(with_default=false)
+    Status.any_in(uri: statuses_uri(with_default)).where(created_from: created_from)
+  end
+
+  def statuses_uri(with_default=false)
+    list = type_statuses.asc('order')
+    list = type_statuses.excludes(order: Settings.statuses.default_order) unless with_default
+    list.collect(&:uri)
+  end
 
   private
 
