@@ -3,13 +3,13 @@ class StatusProperty
   include Mongoid::Timestamps
 
   field :uri
-  field :values, type: Array
-  field :pending, default: 'false'
+  field :values, type: Array, default: []
+  field :pending, default: ''
 
   attr_accessible :uri, :pending, :values
 
   validates :uri, presence: true, url: true
-  validates :pending, inclusion: { in: %w(true false) }
+  validates :pending, inclusion: { in: %w(true false), allow_blank: true }
 
   embedded_in :status
 
