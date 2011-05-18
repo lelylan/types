@@ -3,6 +3,8 @@
   "uri": "<%=type.uri%>",
   "name": "<%=type.name%>",
   "created_from": { "uri": "<%=type.created_from%>" },
+  "categories": [ <%=render partial: "/types/type_categories",
+                            locals: { connections: type.connected_categories } %>  ],
   "properties": [ <%=render partial: "/types/type_properties",
                             locals: { connections: type.connected_properties } %>  ],
   "functions": [ <%=render partial: "/types/type_functions",

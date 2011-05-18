@@ -81,6 +81,8 @@ module ViewMethods
 
   # Status property connections
   def should_have_all_status_connections
+    # categories 
+    should_have_category(@category)
     # properties
     should_have_property(@status)
     should_have_property(@intensity)

@@ -15,7 +15,17 @@ describe Type do
 
 
   describe "#properties" do
-    subject { Factory(:type, properties: ["uri", {key: 'value'}, ['item']]) }
+    before { @type = Factory(:type, properties: ["uri", {key: 'value'}, ['item']]) }
+    it "should not retrieve properties" do
+      @type.connected_properties.should be_empty
+    end
+  end
+
+  describe "#connected_categories" do
+    before { @type = Factory(:type) }
+    before { @category = Factory(:category) }
+    subject { @type.connected_categories }
+    it { should include @category }
   end
 
   describe "#connected_properties" do

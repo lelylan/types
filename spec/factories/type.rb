@@ -6,6 +6,7 @@ FactoryGirl.define do
     uri Settings.type.uri
     created_from Settings.user.uri
     name Settings.type.name
+    categories [ Settings.category.uri ]
     properties [
       Settings.properties.intensity.uri,
       Settings.properties.status.uri ]
