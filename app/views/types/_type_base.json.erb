@@ -1,6 +1,7 @@
   {
-    "id": "<%=type_base.id.as_json%>",
-    "uri": "<%=type_base.uri%>",
     "name": "<%=type_base.name%>",
+    "uri": "<%=type_base.uri%>",
+    "id": "<%=type_base.id.as_json%>",
+    "public": <%=raw type_base.public.to_json%>,
     "created_from": { "uri": "<%=type_base.created_from%>" }
   }

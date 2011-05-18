@@ -12,7 +12,7 @@ module HelperMethods
   # Not authorized behavior
   def should_not_be_authorized
     page.status_code.should == 401
-    page.should have_content Settings.messages.access_denied
+    page.should have_content 'Access denied'
   end
 
   # Valid JSON

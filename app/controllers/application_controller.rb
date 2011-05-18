@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Lelylan::Rescue::Helpers
   include Lelylan::View::Helpers
   include Lelylan::Pagination::Helpers
+  include Lelylan::Resources::Public
 
   protect_from_forgery
   before_filter :authenticate
@@ -45,10 +46,11 @@ class ApplicationController < ActionController::Base
         if user and user.verify(password)
           @current_user = user
         else
-          false
+          allow_public_resources('types')
         end
       end
     end
+
 
     # Apply the session authentication for web pages requests
     def session_auth

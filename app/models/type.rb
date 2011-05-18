@@ -6,20 +6,21 @@ class Type
   field :name
   field :uri
   field :created_from
+  field :public, type: Boolean, default: false
+  field :categories, type: Array, default: []
   field :properties, type: Array, default: []
   field :functions, type: Array, default: []
-  field :categories, type: Array, default: []
 
-  embeds_many   :type_statuses
   attr_accessor :statuses
+  embeds_many :type_statuses
+  before_save :create_type_statuses
 
   attr_accessible :name, :properties, :functions, :statuses, :categories
 
   validates :name, presence: true
   validates :uri, presence:true, url: true
   validates :created_from, presence: true, url: true
-
-  before_save :create_type_statuses
+  validates :public, inclusion: { in: [true, false] }
 
 
   def connected_categories

@@ -13,6 +13,9 @@ describe Type do
   it { should allow_value(Settings.validation.valid_uri).for(:created_from) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:created_from) }
 
+  it { should allow_value(true).for(:public) }
+  it { should allow_value(false).for(:public) }
+  it { should_not allow_value('example').for(:public) }
 
   describe "#properties" do
     before { @type = Factory(:type, properties: ["uri", {key: 'value'}, ['item']]) }

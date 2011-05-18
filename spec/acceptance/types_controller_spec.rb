@@ -27,7 +27,18 @@ feature "TypeController" do
     before { @resource = Factory(:type) }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
-    it_should_behave_like "protected resource", "visit(@uri)"
+    context "with no public resources" do
+      before { basic_auth_cleanup }
+      before { visit @uri }
+      scenario { should_not_have_type(@resource) }
+    end
+
+    context "with public resources" do
+      before { basic_auth_cleanup }
+      before { @resource = Factory(:type_public) }
+      before { visit @uri }
+      scenario { should_have_type(@resource) }
+    end
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -51,6 +62,19 @@ feature "TypeController" do
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
+    context "when resource is public" do
+      before { basic_auth_cleanup }
+      before { @resource = Factory(:type_public) }
+      before { @uri = "/types/#{@resource.id.as_json}" }
+      before { visit @uri }
+      scenario "view resource" do
+        page.status_code.should == 200
+        should_have_type(@resource)
+        should_have_all_status_connections
+        should_have_valid_json(page.body)
+      end
+    end
+
     context "when logged in" do
       before { basic_auth(@user) }
       before { visit @uri }
@@ -61,7 +85,7 @@ feature "TypeController" do
         should_have_all_status_connections
         should_have_valid_json(page.body)
       end
-      
+
       it_should_behave_like "a rescued 404 resource", "visit @uri", "types"
     end
   end
@@ -134,7 +158,7 @@ feature "TypeController" do
 
   # PUT /types/{type-id}
   context ".update" do
-    before { @resource = Factory(:type) }
+    before { @resource = Factory(:type_public) }
     before { @uri = "/types/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
@@ -217,7 +241,7 @@ feature "TypeController" do
 
   # DELETE /types/{type-id}
   context ".destroy" do
-    before { @resource = Factory(:type) }
+    before { @resource = Factory(:type_public) }
     before { @uri = "/types/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
