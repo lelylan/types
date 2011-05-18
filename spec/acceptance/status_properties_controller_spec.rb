@@ -8,8 +8,8 @@ feature "StatusPropertiesController" do
 
   before { @resource = Factory(:is_setting_intensity) }
   before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
-  before { @connection = Factory(:property_intensity) }
-  before { @not_owned_connection = Factory(:not_owned_property_intensity) }
+  before { @connection = Factory(:intensity) }
+  before { @not_owned_connection = Factory(:not_owned_intensity) }
 
 
   # GET /statuses/{status-id}/properties?uri={property-uri}
@@ -37,7 +37,7 @@ feature "StatusPropertiesController" do
 
   # POST /statuses
   context ".create" do
-    before { @resource = Factory(:status) }
+    before { @resource = Factory(:default_status) }
     before { @uri = "#{host}/statuses/#{@resource.id}/properties" }
 
     it_should_behave_like "protected resource", "page.driver.post(@uri)"

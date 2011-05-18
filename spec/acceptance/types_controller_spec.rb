@@ -8,8 +8,8 @@ feature "TypeController" do
   before { Function.destroy_all }
   before { Status.destroy_all }
 
-  before { @status = Factory(:property_status) }
-  before { @intensity = Factory(:property_intensity) }
+  before { @status = Factory(:status) }
+  before { @intensity = Factory(:intensity) }
   before { @set_intensity = Factory(:set_intensity) }
   before { @turn_on = Factory(:turn_on) }
   before { @turn_off = Factory(:turn_off) }

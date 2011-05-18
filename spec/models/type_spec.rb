@@ -16,8 +16,8 @@ describe Type do
 
   describe "#connected_properties" do
     before { @type = Factory(:type) }
-    before { @status = Factory(:property_status) }
-    before { @intensity = Factory(:property_intensity) }
+    before { @status = Factory(:status) }
+    before { @intensity = Factory(:intensity) }
 
     it "get all connected properties" do
       @properties = @type.connected_properties
