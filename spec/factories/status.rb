@@ -52,22 +52,22 @@ FactoryGirl.define do
   factory :status_property_has_set_intensity, class: StatusProperty do
     uri Settings.properties.intensity.uri
     values Settings.statuses.has_set_intensity.values
-    pending 'false'
+    pending nil
   end
 
   factory :status_property_is_setting_intensity, parent: :status_property_has_set_intensity do
     values Settings.statuses.is_setting_intensity.values
-    pending 'true'
+    pending true
   end
 
   factory :status_property_has_set_max, class: StatusProperty do
     uri Settings.properties.intensity.uri
     values Settings.statuses.has_set_max.values
-    pending 'false'
+    pending false
   end
 
   factory :status_property_is_setting_max, parent: :status_property_has_set_max do
     values Settings.statuses.is_setting_max.values
-    pending 'true'
+    pending true
   end
 end  

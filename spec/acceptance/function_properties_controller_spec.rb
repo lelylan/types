@@ -45,8 +45,8 @@ feature "FunctionController" do
       let(:params) {{ 
         uri: Settings.properties.intensity.uri,
         value: Settings.properties.intensity.default_value,
-        secret: 'true',
-        before: 'false'
+        secret: true,
+        before: false
       }}
 
       scenario "create resource" do

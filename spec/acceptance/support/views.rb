@@ -15,8 +15,8 @@ module ViewMethods
   def should_have_function_property(function_property)
     page.should have_content function_property.uri
     page.should have_content function_property.value
-    page.should have_content function_property.secret
-    page.should have_content function_property.before
+    page.should have_content function_property.secret.to_s
+    page.should have_content function_property.before.to_s
   end
 
   # Function property detailed representation
@@ -69,7 +69,7 @@ module ViewMethods
   # Status property resource representation
   def should_have_status_property(status_property)
     page.should have_content status_property.uri
-    page.should have_content status_property.pending
+    page.should have_content status_property.pending.to_s
     page.should have_content status_property.values.to_json
   end
 

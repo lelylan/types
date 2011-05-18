@@ -170,6 +170,20 @@ feature "TypeController" do
           default = @resource.type_statuses.where(order: Settings.statuses.default_order).first
           default.should_not be_nil
         end
+
+        context "with empty properties" do
+          before { params.delete(:properties) }
+          before { page.driver.put(@uri, params.to_json) }
+          before { @resource.reload }
+
+          scenario "do not delete previous properties" do
+            page.status_code.should == 200
+            should_have_type(@resource)
+            should_have_function(@turn_off)
+            should_have_function(@turn_on)
+            should_have_valid_json(page.body)
+          end
+        end
       end
 
       scenario "not valid params" do

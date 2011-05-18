@@ -7,7 +7,7 @@ class Status
   field :uri
   field :created_from
   field :message, default: ''
-  field :default, default: 'false'
+  field :default, type: Boolean, default: false
   field :image
   mount_uploader :image, ImageUploader
 
@@ -22,7 +22,7 @@ class Status
 
   # Rturn true if it is the default status, false otherwise
   def default?
-    default == 'true'
+    default
   end
 
   # Create the default status for the new type instance
@@ -70,6 +70,6 @@ class Status
     end
 
     def self.match_pending?(status_property, property)
-      status_property.pending == property[:pending].to_s or status_property.pending.empty?
+      status_property.pending == property[:pending] or status_property.pending.nil?
     end
 end

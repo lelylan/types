@@ -4,12 +4,12 @@ class StatusProperty
 
   field :uri
   field :values, type: Array, default: []
-  field :pending, default: ''
+  field :pending, type: Boolean
 
   attr_accessible :uri, :pending, :values
 
   validates :uri, presence: true, url: true
-  validates :pending, inclusion: { in: %w(true false), allow_blank: true }
+  validates :pending, inclusion: { in: [true, false], allow_nil: true }
 
   embedded_in :status
 

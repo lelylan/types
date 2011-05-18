@@ -31,6 +31,16 @@ feature "StatusDeviceController" do
         should_have_valid_json(page.body)
       end
 
+      context "with pending to false" do
+        before { params[:device][:properties][1][:pending] = false }
+        scenario "should have 'has set intensity' status" do
+          page.driver.put(@uri, params.to_json)
+          page.status_code.should == 200
+          save_and_open_page
+          page.should have_content Settings.statuses.has_set_intensity.uri
+        end
+      end
+
       context "with intensity to 10.0" do
         before { params[:device][:properties][1][:value] = '10.0' }
         scenario "should have 'setting max' status" do
