@@ -4,6 +4,7 @@ shared_examples_for "protected resource" do |action|
     before { basic_auth_cleanup }
     scenario "is not authorized" do
       eval(action)
+      save_and_open_page
       should_not_be_authorized
     end
   end

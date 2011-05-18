@@ -45,10 +45,25 @@ class ApplicationController < ActionController::Base
         if user and user.verify(password)
           @current_user = user
         else
-          false
+          continue_with_public_resources
         end
       end
     end
+
+    # Check for public resources
+    def continue_with_public_resources
+      controllers = ['types']
+      if params[:controller] == 'types'
+        if params[:action] == 'show'
+          @types = Type.where(public: true)
+          @type = @types.where(_id: params[:id]).first
+          @type ? true : false
+        end
+      end
+    end
+
+
+
 
     # Apply the session authentication for web pages requests
     def session_auth
