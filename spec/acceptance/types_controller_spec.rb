@@ -51,6 +51,19 @@ feature "TypeController" do
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
+    context "when public" do
+      before { @resource = Factory(:type_public) }
+      before { @uri = "/types/#{@resource.id.as_json}" }
+      before { visit @uri }
+      scenario "view resource" do
+        save_and_open_page
+        page.status_code.should == 200
+        should_have_type(@resource)
+        should_have_all_status_connections
+        should_have_valid_json(page.body)
+      end
+    end
+
     context "when logged in" do
       before { basic_auth(@user) }
       before { visit @uri }
@@ -61,7 +74,7 @@ feature "TypeController" do
         should_have_all_status_connections
         should_have_valid_json(page.body)
       end
-      
+
       it_should_behave_like "a rescued 404 resource", "visit @uri", "types"
     end
   end

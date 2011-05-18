@@ -1,7 +1,8 @@
 {
-  "id": "<%=type.id.as_json%>",
-  "uri": "<%=type.uri%>",
   "name": "<%=type.name%>",
+  "uri": "<%=type.uri%>",
+  "id": "<%=type.id.as_json%>",
+  "public": <%=raw type.public.to_json%>,
   "created_from": { "uri": "<%=type.created_from%>" },
   "categories": [ <%=render partial: "/types/type_categories",
                             locals: { connections: type.connected_categories } %>  ],

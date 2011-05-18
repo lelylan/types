@@ -40,11 +40,12 @@ module ViewMethods
   end
 
   # Type resource representation
-  def should_have_type(property)
-    page.should have_content property.id.as_json
-    page.should have_content property.uri
-    page.should have_content property.created_from
-    page.should have_content property.name
+  def should_have_type(type)
+    page.should have_content type.id.as_json
+    page.should have_content type.uri
+    page.should have_content type.created_from
+    page.should have_content type.name
+    page.should have_content type.public.to_s
   end
 
   # Type resource not represented

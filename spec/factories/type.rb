@@ -31,5 +31,9 @@ FactoryGirl.define do
     uri Settings.statuses.default.uri
     order Settings.statuses.default_order
   end
+
+  factory :type_public, parent: :type do
+    public true
+  end
 end
 
