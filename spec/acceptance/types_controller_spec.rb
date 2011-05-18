@@ -27,7 +27,21 @@ feature "TypeController" do
     before { @resource = Factory(:type) }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
-    it_should_behave_like "protected resource", "visit(@uri)"
+    context "with no public resources" do
+      before { basic_auth_cleanup }
+      before { visit @uri }
+      scenario { should_not_have_type(@resource) }
+    end
+
+    context "with public resources" do
+      before { basic_auth_cleanup }
+      before { @resource = Factory(:type_public) }
+      before { visit @uri }
+      scenario { 
+        save_and_open_page
+        should_have_type(@resource) 
+      }
+    end
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -51,12 +65,12 @@ feature "TypeController" do
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
-    context "when public" do
+    context "when resource is public" do
+      before { basic_auth_cleanup }
       before { @resource = Factory(:type_public) }
       before { @uri = "/types/#{@resource.id.as_json}" }
       before { visit @uri }
       scenario "view resource" do
-        save_and_open_page
         page.status_code.should == 200
         should_have_type(@resource)
         should_have_all_status_connections

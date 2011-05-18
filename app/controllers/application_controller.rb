@@ -52,12 +52,14 @@ class ApplicationController < ActionController::Base
 
     # Check for public resources
     def continue_with_public_resources
-      controllers = ['types']
       if params[:controller] == 'types'
-        if params[:action] == 'show'
+        if params[:action] == 'index' or params[:action] == 'show'
           @types = Type.where(public: true)
-          @type = @types.where(_id: params[:id]).first
-          @type ? true : false
+          if params[:action] == 'show'
+            @type = @types.where(_id: params[:id]).first
+            return @type ? true : false
+          end
+          return true
         end
       end
     end

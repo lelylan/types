@@ -65,7 +65,11 @@ module Lelylan
       # Shared helpers      
       def resources_count
         klass = model_klass
-        klass.where(created_from: current_user.uri).count
+        if current_user
+          klass.where(created_from: current_user.uri).count
+        else
+          klass.count
+        end
       end
 
       def model_klass
