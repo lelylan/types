@@ -37,10 +37,7 @@ feature "TypeController" do
       before { basic_auth_cleanup }
       before { @resource = Factory(:type_public) }
       before { visit @uri }
-      scenario { 
-        save_and_open_page
-        should_have_type(@resource) 
-      }
+      scenario { should_have_type(@resource) }
     end
 
     context "when logged in" do
@@ -69,6 +66,7 @@ feature "TypeController" do
       before { basic_auth_cleanup }
       before { @resource = Factory(:type_public) }
       before { @uri = "/types/#{@resource.id.as_json}" }
+      before { puts "-----------------------" }
       before { visit @uri }
       scenario "view resource" do
         page.status_code.should == 200

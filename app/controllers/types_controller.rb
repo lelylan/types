@@ -4,32 +4,32 @@ class TypesController < ApplicationController
   before_filter :find_resource, only: %w(show update destroy)
 
   def index
-    @types = @types.page(params[:page]).per(params[:per])
+    @resources = @resources.page(params[:page]).per(params[:per])
   end
 
   def show
   end
 
   def create
-    @type = Type.base(json_body, request, current_user)
-    default_status_for(@type)
-    if @type.save
-      render 'show', status: 201, location: @type.uri
+    @resource = Type.base(json_body, request, current_user)
+    default_status_for(@resource)
+    if @resource.save
+      render 'show', status: 201, location: @resource.uri
     else
-      render_422 'notifications.document.not_valid', @type.errors
+      render_422 'notifications.document.not_valid', @resource.errors
     end
   end
 
   def update
-    if @type.update_attributes(json_body)
+    if @resource.update_attributes(json_body)
       render 'show'
     else
-      render_422 'notifications.document.not_valid', @type.errors
+      render_422 'notifications.document.not_valid', @resource.errors
     end
   end
 
   def destroy
-    @type.destroy
+    @resource.destroy
     render 'show'
   end
 
@@ -37,11 +37,11 @@ class TypesController < ApplicationController
   private
 
     def find_owned_resources
-      @types = Type.where(created_from: current_user.uri) unless @types
+      @resources = Type.where(created_from: current_user.uri) unless @resources
     end
 
     def find_resource
-      @type = @types.find(params[:id]) unless @type
+      @resource = @resources.find(params[:id]) unless @resource
     end
 
     def default_status_for(type)

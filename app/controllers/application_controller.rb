@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Lelylan::Rescue::Helpers
   include Lelylan::View::Helpers
   include Lelylan::Pagination::Helpers
+  include Lelylan::Resources::Public
 
   protect_from_forgery
   before_filter :authenticate
@@ -45,26 +46,10 @@ class ApplicationController < ActionController::Base
         if user and user.verify(password)
           @current_user = user
         else
-          continue_with_public_resources
+          allow_public_resources('types')
         end
       end
     end
-
-    # Check for public resources
-    def continue_with_public_resources
-      if params[:controller] == 'types'
-        if params[:action] == 'index' or params[:action] == 'show'
-          @types = Type.where(public: true)
-          if params[:action] == 'show'
-            @type = @types.where(_id: params[:id]).first
-            return @type ? true : false
-          end
-          return true
-        end
-      end
-    end
-
-
 
 
     # Apply the session authentication for web pages requests
