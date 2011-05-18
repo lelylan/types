@@ -1,16 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "PropertyController" do
+feature "CategoryController" do
   before { host! "http://" + host }
   before { @user = Factory(:user) }
-  before { Property.destroy_all }
+  before { Category.destroy_all }
 
 
-  # GET /properties
+  # GET /categories
   context ".index" do
-    before { @uri = "/properties?page=1&per=100" }
-    before { @resource = Factory(:intensity) }
-    before { @not_owned_resource = Factory(:not_owned_intensity) }
+    before { @uri = "/categories?page=1&per=100" }
+    before { @resource = Factory(:category) }
+    before { @not_owned_resource = Factory(:not_owned_category) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -19,8 +19,8 @@ feature "PropertyController" do
       before { visit @uri }
       scenario "view all resources" do
         page.status_code.should == 200
-        should_have_property(@resource)
-        should_not_have_property(@not_owned_resource)
+        should_have_category(@resource)
+        should_not_have_category(@not_owned_resource)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end
@@ -28,11 +28,11 @@ feature "PropertyController" do
   end
 
 
-  # GET /properties/{property-id}
+  # GET /categories/{category-id}
   context ".show" do
-    before { @resource = Factory(:intensity) }
-    before { @uri = "/properties/#{@resource.id.as_json}" }
-    before { @not_owned_resource = Factory(:not_owned_intensity) }
+    before { @resource = Factory(:category) }
+    before { @uri = "/categories/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_category) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -41,30 +41,30 @@ feature "PropertyController" do
       scenario "view owned resource" do
         visit @uri
         page.status_code.should == 200
-        should_have_property(@resource)
+        should_have_category(@resource)
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "properties"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "categories"
     end
   end
 
 
-  # POST /properties
+  # POST /categories
   context ".create" do
-    before { @uri =  "/properties" }
+    before { @uri =  "/categories" }
 
     it_should_behave_like "protected resource", "page.driver.post(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      let(:params) {{ name: Settings.category.name }}
+      let(:params) {{ name: Settings.category.name }} 
 
       scenario "create resource" do
         page.driver.post(@uri, params.to_json)
-        @resource = Property.last
+        @resource = Category.last
         page.status_code.should == 201
-        should_have_property(@resource)
+        should_have_category(@resource)
         should_have_valid_json(page.body)
       end
 
@@ -75,30 +75,26 @@ feature "PropertyController" do
           should_have_valid_json(page.body)
         end
       end
-
-      context "#values" do
-        it_should_behave_like "an array field", "values", "page.driver.post(@uri, params.to_json)"
-      end
     end
   end
 
 
-  # PUT /properties/{property-id}
+  # PUT /categories/{category-id}
   context ".update" do
-    before { @resource = Factory(:intensity) }
-    before { @uri =  "/properties/#{@resource.id.as_json}" }
-    before { @not_owned_resource = Factory(:not_owned_intensity) }
+    before { @resource = Factory(:category) }
+    before { @uri =  "/categories/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_category) }
 
     it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      let(:params) {{ name: "Set intensity updated" }}
+      let(:params) {{ name: "Set category updated" }}
 
       scenario "create resource" do
         page.driver.put(@uri, params.to_json)
         page.status_code.should == 200
-        should_have_property(@resource.reload)
+        should_have_category(@resource.reload)
         page.should have_content "updated"
         should_have_valid_json(page.body)
       end
@@ -108,20 +104,16 @@ feature "PropertyController" do
         should_have_a_not_valid_resource
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "properties"
-
-      context "#values" do
-        it_should_behave_like "an array field", "values", "page.driver.put(@uri, params.to_json)"
-      end
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "categories"
     end
   end
 
 
-  # DELETE /properties/{property-id}
+  # DELETE /categories/{category-id}
   context ".destroy" do
-    before { @resource = Factory(:intensity) }
-    before { @uri =  "/properties/#{@resource.id.as_json}" }
-    before { @not_owned_resource = Factory(:not_owned_intensity) }
+    before { @resource = Factory(:category) }
+    before { @uri =  "/categories/#{@resource.id.as_json}" }
+    before { @not_owned_resource = Factory(:not_owned_category) }
 
     it_should_behave_like "protected resource", "page.driver.delete(@uri)"
 
@@ -130,15 +122,16 @@ feature "PropertyController" do
       scenario "delete resource" do
         lambda {
           page.driver.delete(@uri, {}.to_json)
-        }.should change{ Property.count }.by(-1)
+        }.should change{ Category.count }.by(-1)
         page.status_code.should == 200
-        should_have_property(@resource)
+        should_have_category(@resource)
         should_have_valid_json(page.body)
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "categories"
     end
   end
 
 end
+
 

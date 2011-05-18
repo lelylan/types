@@ -7,6 +7,7 @@ feature "TypeController" do
   before { Property.destroy_all }
   before { Function.destroy_all }
   before { Status.destroy_all }
+  before { Category.destroy_all }
 
   before { @status = Factory(:status) }
   before { @intensity = Factory(:intensity) }
@@ -17,6 +18,7 @@ feature "TypeController" do
   before { @is_setting_max = Factory(:is_setting_max) }
   before { @has_set_intensity = Factory(:has_set_intensity) }
   before { @has_set_max = Factory(:has_set_max) }
+  before { @category = Factory(:category) }
 
 
   # GET /types
@@ -75,6 +77,7 @@ feature "TypeController" do
       before { basic_auth(@user) } 
       let(:params) {{ 
         name: Settings.type.name,
+        categories: [ Settings.category.uri ],
         properties: [
           Settings.properties.status.uri, 
           Settings.properties.intensity.uri ],
@@ -112,6 +115,10 @@ feature "TypeController" do
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
         end
+      end
+
+      context "#categories" do
+        it_should_behave_like "an array field", "categories", "page.driver.post(@uri, params.to_json)"
       end
 
       context "#properties" do
@@ -193,6 +200,10 @@ feature "TypeController" do
 
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "types"
 
+      context "#categories" do
+        it_should_behave_like "an array field", "categories", "page.driver.put(@uri, params.to_json)"
+      end
+ 
       context "#properties" do
         it_should_behave_like "an array field", "properties", "page.driver.put(@uri, params.to_json)"
       end

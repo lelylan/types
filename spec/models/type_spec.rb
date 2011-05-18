@@ -14,16 +14,27 @@ describe Type do
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:created_from) }
 
 
+  describe "#properties" do
+    before { @type = Factory(:type, properties: ["uri", {key: 'value'}, ['item']]) }
+    it "should not retrieve properties" do
+      @type.connected_properties.should be_empty
+    end
+  end
+
+  describe "#connected_categories" do
+    before { @type = Factory(:type) }
+    before { @category = Factory(:category) }
+    subject { @type.connected_categories }
+    it { should include @category }
+  end
+
   describe "#connected_properties" do
     before { @type = Factory(:type) }
     before { @status = Factory(:status) }
     before { @intensity = Factory(:intensity) }
-
-    it "get all connected properties" do
-      @properties = @type.connected_properties
-      @properties.should include @status
-      @properties.should include @intensity
-    end
+    subject { @type.connected_properties }
+    it { should include @status }
+    it { should include @intensity }
   end
 
   describe "#connected_functions" do
@@ -31,13 +42,10 @@ describe Type do
     before { @set_intensity = Factory(:set_intensity) }
     before { @turn_on = Factory(:turn_on) }
     before { @turn_off = Factory(:turn_off) }
-
-    it "get all connected functions" do
-      @functions = @type.connected_functions
-      @functions.should include @set_intensity
-      @functions.should include @turn_on
-      @functions.should include @turn_off
-    end
+    subject { @type.connected_functions }
+    it { should include @set_intensity }
+    it { should include @turn_on }
+    it { should include @turn_off }
   end
 
   describe "#connected_statuses" do
@@ -48,24 +56,20 @@ describe Type do
     before { @has_set_max = Factory(:has_set_max) }
     before { @default = Factory(:default_status) }
 
-    it "get all connected statuses without default" do
-      @statuses = @type.connected_statuses
-      @statuses.should include @is_setting_intensity
-      @statuses.should include @has_set_intensity
-      @statuses.should include @is_setting_max
-      @statuses.should include @has_set_max
-      @statuses.first.should == @is_setting_max
+    context "with no default" do
+      subject { @type.connected_statuses }
+      it { should include @is_setting_intensity }
+      it { should include @has_set_intensity }
+      it { should include @is_setting_max }
+      it { should include @has_set_max }
+      its(:first) { should == @is_setting_max }
     end
 
-    it "get all connected statuses with default" do
-      @statuses = @type.connected_statuses(true)
-      @statuses.should have(5).connections
-      @statuses.first.should == @is_setting_max
-      @statuses.last.should == @default
-    end
-
-    it "get an ordered list" do
-       @statuses = @type.connected_statuses
+    context "with default" do
+      subject { @type.connected_statuses(true) }
+      it { should have(5).connections }
+      its(:first) { should == @is_setting_max }
+      its(:last) { should == @default }
     end
   end
 

@@ -8,11 +8,12 @@ class Type
   field :created_from
   field :properties, type: Array, default: []
   field :functions, type: Array, default: []
+  field :categories, type: Array, default: []
 
   embeds_many   :type_statuses
   attr_accessor :statuses
 
-  attr_accessible :name, :properties, :functions, :statuses
+  attr_accessible :name, :properties, :functions, :statuses, :categories
 
   validates :name, presence: true
   validates :uri, presence:true, url: true
@@ -20,6 +21,10 @@ class Type
 
   before_save :create_type_statuses
 
+
+  def connected_categories
+    Category.any_in(uri: categories).where(created_from: created_from)
+  end
 
   def connected_properties
     Property.any_in(uri: properties).where(created_from: created_from)

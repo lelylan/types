@@ -17,6 +17,9 @@ another_user:
 type:
   uri: <%= type_uri = "#{host}/types/dimmer" %>
   name: 'Dimmer'
+category:
+  uri: <%= category_uri = "#{host}/categories/lighting" %>
+  name: 'Lighting'
 properties:
   status:
     uri: <%= status_uri = "#{host}/properties/status" %> 
@@ -64,7 +67,6 @@ statuses:
     uri: <%= "#{host}/statuses/default" %>
     values: []
     name: 'Default status'
-
 device_json: |
   {
     "id": "4dd2263ad033a97e8e000011",
