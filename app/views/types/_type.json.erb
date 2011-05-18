@@ -1,15 +1,15 @@
 {
-  "name": "<%=resource.name%>",
-  "uri": "<%=resource.uri%>",
-  "id": "<%=resource.id.as_json%>",
-  "public": <%=raw resource.public.to_json%>,
-  "created_from": { "uri": "<%=resource.created_from%>" },
+  "name": "<%=type.name%>",
+  "uri": "<%=type.uri%>",
+  "id": "<%=type.id.as_json%>",
+  "public": <%=raw type.public.to_json%>,
+  "created_from": { "uri": "<%=type.created_from%>" },
   "categories": [ <%=render partial: "/types/type_categories",
-                            locals: { connections: resource.connected_categories } %>  ],
+                            locals: { connections: type.connected_categories } %>  ],
   "properties": [ <%=render partial: "/types/type_properties",
-                            locals: { connections: resource.connected_properties } %>  ],
+                            locals: { connections: type.connected_properties } %>  ],
   "functions": [ <%=render partial: "/types/type_functions",
-                           locals: { connections: resource.connected_functions } %>  ],
+                           locals: { connections: type.connected_functions } %>  ],
   "statuses": [ <%=render partial: "/types/type_statuses",
-                           locals: { connections: resource.connected_statuses } %>  ]
+                           locals: { connections: type.connected_statuses } %>  ]
 }

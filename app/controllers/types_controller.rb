@@ -6,32 +6,32 @@ class TypesController < ApplicationController
   before_filter :find_owned_resource, only: %w(show update destroy)
 
   def index
-    @resources = @resources.page(params[:page]).per(params[:per])
+    @types = @types.page(params[:page]).per(params[:per])
   end
 
   def show
   end
 
   def create
-    @resource = Type.base(json_body, request, current_user)
-    default_status_for(@resource)
-    if @resource.save
-      render 'show', status: 201, location: @resource.uri
+    @type = Type.base(json_body, request, current_user)
+    default_status_for(@type)
+    if @type.save
+      render 'show', status: 201, location: @type.uri
     else
-      render_422 'notifications.document.not_valid', @resource.errors
+      render_422 'notifications.document.not_valid', @type.errors
     end
   end
 
   def update
-    if @resource.update_attributes(json_body)
+    if @type.update_attributes(json_body)
       render 'show'
     else
-      render_422 'notifications.document.not_valid', @resource.errors
+      render_422 'notifications.document.not_valid', @type.errors
     end
   end
 
   def destroy
-    @resource.destroy
+    @type.destroy
     render 'show'
   end
 
@@ -40,26 +40,26 @@ class TypesController < ApplicationController
     
     def find_public_resources
       if accessing_public_resource?
-        @resources = Type.where(public: true)
+        @types = Type.where(public: true)
       end
     end
 
     def find_public_resource
       if accessing_public_resource?
-        @resource = @resources.where(_id: params[:id]).first
-        render_401 if @resource.nil?
+        @type = @types.where(_id: params[:id]).first
+        render_401 if @type.nil?
       end
     end
     
     def find_owned_resources
       if not accessing_public_resource?
-        @resources = Type.where(created_from: current_user.uri)
+        @types = Type.where(created_from: current_user.uri)
       end
     end
 
     def find_owned_resource
       if not accessing_public_resource?
-        @resource = @resources.find(params[:id])
+        @type = @types.find(params[:id])
       end
     end
 

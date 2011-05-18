@@ -158,7 +158,7 @@ feature "TypeController" do
 
   # PUT /types/{type-id}
   context ".update" do
-    before { @resource = Factory(:type) }
+    before { @resource = Factory(:type_public) }
     before { @uri = "/types/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
@@ -241,7 +241,7 @@ feature "TypeController" do
 
   # DELETE /types/{type-id}
   context ".destroy" do
-    before { @resource = Factory(:type) }
+    before { @resource = Factory(:type_public) }
     before { @uri = "/types/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
