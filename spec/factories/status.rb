@@ -3,7 +3,7 @@ Settings.reload!
 
 FactoryGirl.define do
   # Default status
-  factory :status do
+  factory :default_status, class: :status do
     name 'Default status'
     uri Settings.statuses.default.uri
     created_from Settings.user.uri

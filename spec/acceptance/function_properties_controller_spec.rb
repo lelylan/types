@@ -7,8 +7,8 @@ feature "FunctionController" do
   before { @user = Factory(:user) }
   before { @resource = Factory(:function_complete) }
   before { @not_owned_resource = Factory(:not_owned_function) }
-  before { @connection = Factory(:property_intensity) }
-  before { @not_owned_connection = Factory(:not_owned_property_intensity) }
+  before { @connection = Factory(:intensity) }
+  before { @not_owned_connection = Factory(:not_owned_intensity) }
 
 
   # GET /functions/{function-id}/properties?uri={property-uri}

@@ -11,7 +11,7 @@ feature "StatusDeviceController" do
   before { @is_setting_max = Factory(:is_setting_max) }
   before { @has_set_intensity = Factory(:has_set_intensity) }
   before { @has_set_max = Factory(:has_set_max) }
-  before { @default = Factory(:status) }
+  before { @default = Factory(:default_status) }
 
 
   # PUT /statuses/device
@@ -36,7 +36,6 @@ feature "StatusDeviceController" do
         scenario "should have 'has set intensity' status" do
           page.driver.put(@uri, params.to_json)
           page.status_code.should == 200
-          save_and_open_page
           page.should have_content Settings.statuses.has_set_intensity.uri
         end
       end

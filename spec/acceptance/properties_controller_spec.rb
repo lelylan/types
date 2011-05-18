@@ -9,8 +9,8 @@ feature "PropertyController" do
   # GET /properties
   context ".index" do
     before { @uri = "/properties?page=1&per=100" }
-    before { @resource = Factory(:property_intensity) }
-    before { @not_owned_resource = Factory(:not_owned_property_intensity) }
+    before { @resource = Factory(:intensity) }
+    before { @not_owned_resource = Factory(:not_owned_intensity) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -30,9 +30,9 @@ feature "PropertyController" do
 
   # GET /properties/{property-id}
   context ".show" do
-    before { @resource = Factory(:property_intensity) }
+    before { @resource = Factory(:intensity) }
     before { @uri = "/properties/#{@resource.id.as_json}" }
-    before { @not_owned_resource = Factory(:not_owned_property_intensity) }
+    before { @not_owned_resource = Factory(:not_owned_intensity) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 
@@ -89,9 +89,9 @@ feature "PropertyController" do
 
   # PUT /properties/{property-id}
   context ".update" do
-    before { @resource = Factory(:property_intensity) }
+    before { @resource = Factory(:intensity) }
     before { @uri =  "/properties/#{@resource.id.as_json}" }
-    before { @not_owned_resource = Factory(:not_owned_property_intensity) }
+    before { @not_owned_resource = Factory(:not_owned_intensity) }
 
     it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
@@ -123,9 +123,9 @@ feature "PropertyController" do
 
   # DELETE /properties/{property-id}
   context ".destroy" do
-    before { @resource = Factory(:property_intensity) }
+    before { @resource = Factory(:intensity) }
     before { @uri =  "/properties/#{@resource.id.as_json}" }
-    before { @not_owned_resource = Factory(:not_owned_property_intensity) }
+    before { @not_owned_resource = Factory(:not_owned_intensity) }
 
     it_should_behave_like "protected resource", "page.driver.delete(@uri)"
 

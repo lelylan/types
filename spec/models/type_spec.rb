@@ -16,8 +16,8 @@ describe Type do
 
   describe "#connected_properties" do
     before { @type = Factory(:type) }
-    before { @status = Factory(:property_status) }
-    before { @intensity = Factory(:property_intensity) }
+    before { @status = Factory(:status) }
+    before { @intensity = Factory(:intensity) }
 
     it "get all connected properties" do
       @properties = @type.connected_properties
@@ -46,7 +46,7 @@ describe Type do
     before { @has_set_intensity = Factory(:has_set_intensity) }
     before { @is_setting_max = Factory(:is_setting_max) }
     before { @has_set_max = Factory(:has_set_max) }
-    before { @default = Factory(:status) }
+    before { @default = Factory(:default_status) }
 
     it "get all connected statuses without default" do
       @statuses = @type.connected_statuses
