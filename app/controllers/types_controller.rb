@@ -37,11 +37,11 @@ class TypesController < ApplicationController
   private
 
     def find_owned_resources
-      @resources = Type.where(created_from: current_user.uri) unless @resources
+      @resources = Type.where(created_from: current_user.uri) unless public_resource
     end
 
     def find_resource
-      @resource = @resources.find(params[:id]) unless @resource
+      @resource = @resources.find(params[:id]) unless public_resource
     end
 
     def default_status_for(type)

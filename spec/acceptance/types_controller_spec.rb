@@ -66,7 +66,6 @@ feature "TypeController" do
       before { basic_auth_cleanup }
       before { @resource = Factory(:type_public) }
       before { @uri = "/types/#{@resource.id.as_json}" }
-      before { puts "-----------------------" }
       before { visit @uri }
       scenario "view resource" do
         page.status_code.should == 200

@@ -1,14 +1,21 @@
 module Lelylan
   module Resources
     module Public
+      def self.included(base)
+        base.send(:helper_method, :public_resource)
+      end
 
-      # Logic to retrive public resources
       def allow_public_resources(*resources)
         if resources.include?(params[:controller])
           if %w(index show).include?(params[:action])
+            @public_resource = true
             params[:action] == 'show' ? find_public_resource : find_public_resources
           end
         end
+      end
+
+      def public_resource
+        @public_resource
       end
 
       private 
