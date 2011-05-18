@@ -44,8 +44,8 @@ class ImageUploader < CarrierWave::Uploader::Base
     process resize_to_limit: [size, size] 
   end
 
-  version :huge do 
-    size = Settings.thumbs.huge
+  version :large do 
+    size = Settings.thumbs.large
     process resize_to_limit: [size, size] 
   end
 

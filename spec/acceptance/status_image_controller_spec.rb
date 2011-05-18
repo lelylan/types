@@ -7,7 +7,8 @@ feature "StatusImageController" do
   before { @resource = Factory(:is_setting_intensity) }
   before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
   before { @image_path = "#{fixture_path}/example.png" }
- 
+  before { ImageUploader.enable_processing = true } 
+
   #GET /statuses/{status-id}/image
   context ".show" do
     before { @uri = "/statuses/#{@resource.id}/image" }

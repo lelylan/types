@@ -15,6 +15,7 @@ describe Status do
 
 
   describe "#image" do
+    before { ImageUploader.enable_processing = true }
     it "should resizing uploaded image" do
       uploader = ImageUploader.new(Factory(:is_setting_intensity), :image)
       uploader.store!(File.open("#{fixture_path}/example.png"))
@@ -24,7 +25,7 @@ describe Status do
       uploader.small.should  have_dimensions(Settings.thumbs.small, Settings.thumbs.small)
       uploader.medium.should have_dimensions(Settings.thumbs.medium, Settings.thumbs.medium)
       uploader.big.should    have_dimensions(Settings.thumbs.big, Settings.thumbs.big)
-      uploader.huge.should   have_dimensions(Settings.thumbs.huge, Settings.thumbs.huge)
+      uploader.large.should  have_dimensions(Settings.thumbs.large, Settings.thumbs.large)
     end
   end
 end

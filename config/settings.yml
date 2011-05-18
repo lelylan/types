@@ -2,12 +2,12 @@ pagination:
   page: 1
   per: 25
 thumbs:
-  sizes: %w(micro, small, medium, big, huge)
+  sizes: %w(micro, small, medium, big, large)
   micro: 16
   small: 32
   medium: 64
   big: 128
-  huge: 256
+  large: 256
   original: 512
 statuses:
   default_order: 1000000
