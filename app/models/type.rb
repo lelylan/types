@@ -12,14 +12,13 @@ class Type
 
   embeds_many   :type_statuses
   attr_accessor :statuses
+  before_save :create_type_statuses
 
   attr_accessible :name, :properties, :functions, :statuses, :categories
 
   validates :name, presence: true
   validates :uri, presence:true, url: true
   validates :created_from, presence: true, url: true
-
-  before_save :create_type_statuses
 
 
   def connected_categories
