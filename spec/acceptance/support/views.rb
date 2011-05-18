@@ -94,6 +94,19 @@ module ViewMethods
     should_have_status(@has_set_intensity)
     should_have_status(@has_set_max)
   end
+
+  # Category resource representation 
+  def should_have_category(category)
+    page.should have_content category.name
+    page.should have_content category.uri
+    page.should have_content category.id.as_json
+    page.should have_content category.created_from
+  end
+
+  # Category resource not represented
+  def should_not_have_category(category)
+    page.should_not have_content category.uri
+  end
 end
 
 RSpec.configuration.include ViewMethods, :type => :acceptance

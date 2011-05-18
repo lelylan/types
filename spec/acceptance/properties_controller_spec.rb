@@ -58,11 +58,7 @@ feature "PropertyController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      let(:params) {{ 
-        name: Settings.properties.intensity.name,
-        default: '0.0',
-        values: Settings.properties.intensity.values
-      }}
+      let(:params) {{ name: Settings.category.name }}
 
       scenario "create resource" do
         page.driver.post(@uri, params.to_json)
