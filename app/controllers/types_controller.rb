@@ -1,7 +1,9 @@
 class TypesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
+  before_filter :find_public_resources
+  before_filter :find_public_resource, only: :show
   before_filter :find_owned_resources
-  before_filter :find_resource, only: %w(show update destroy)
+  before_filter :find_owned_resource, only: %w(show update destroy)
 
   def index
     @resources = @resources.page(params[:page]).per(params[:per])
@@ -35,13 +37,30 @@ class TypesController < ApplicationController
 
 
   private
-
-    def find_owned_resources
-      @resources = Type.where(created_from: current_user.uri) unless public_resource
+    
+    def find_public_resources
+      if accessing_public_resource?
+        @resources = Type.where(public: true)
+      end
     end
 
-    def find_resource
-      @resource = @resources.find(params[:id]) unless public_resource
+    def find_public_resource
+      if accessing_public_resource?
+        @resource = @resources.where(_id: params[:id]).first
+        render_401 if @resource.nil?
+      end
+    end
+    
+    def find_owned_resources
+      if not accessing_public_resource?
+        @resources = Type.where(created_from: current_user.uri)
+      end
+    end
+
+    def find_owned_resource
+      if not accessing_public_resource?
+        @resource = @resources.find(params[:id])
+      end
     end
 
     def default_status_for(type)
