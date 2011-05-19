@@ -25,10 +25,10 @@ Devices::Application.routes.draw do
       get    'properties' => 'status_properties#show'
       post   'properties' => 'status_properties#create'
       delete 'properties' => 'status_properties#destroy'
-      get    'image' => 'status_image#show'
-      post   'image' => 'status_image#create'
-      delete 'image' => 'status_image#destroy'
     end
   end
+  get    'statuses/:id/image(.:format)' => 'status_image#show',    defaults: { format: 'png' }
+  post   'statuses/:id/image(.:format)' => 'status_image#create',  defaults: { format: 'png' }
+  delete 'statuses/:id/image(.:format)' => 'status_image#destroy', defaults: { format: 'png' }
   resources :categories, defaults: {format: 'json'}
 end
