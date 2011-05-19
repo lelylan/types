@@ -3,7 +3,7 @@ class FunctionProperty
   include Mongoid::Timestamps
 
   field :uri
-  field :value
+  field :value, default: ''
   field :secret, type: Boolean, default: false
   field :before, type: Boolean, default: false
 
