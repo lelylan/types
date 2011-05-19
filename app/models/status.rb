@@ -11,7 +11,7 @@ class Status
   field :image
   mount_uploader :image, ImageUploader
 
-  attr_accessible :name, :message, :image, :remote_image_url
+  attr_accessible :name, :message, :image
 
   embeds_many :status_properties
 

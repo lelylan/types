@@ -1,15 +1,19 @@
 class StatusImageController < ApplicationController
   before_filter :find_owned_resources
   before_filter :find_resource
-  before_filter :normalize_size
+  before_filter :normalize_size, only: :show
 
   def show
     redirect_to @status.image_url(params[:size])
   end
 
   def create
-    @status.image = params[:image]
-    if @status.save
+    uploader = ImageUploader.new(@status, :image)
+    uploader.store!(params[:image])
+    puts ":::::::::::" + uploader.inspect
+    @status.image = uploader
+    if @status.save!
+      puts ":::::::" + @status.image.url.inspect
       render '/statuses/show', status: 201, location: @status.uri
     else
       render_422 'notifications.document.not_valid', @status.errors
