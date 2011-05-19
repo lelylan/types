@@ -8,12 +8,11 @@ class StatusImageController < ApplicationController
   end
 
   def create
-    uploader = ImageUploader.new(@status, :image)
-    uploader.store!(params[:image])
-    puts ":::::::::::" + uploader.inspect
-    @status.image = uploader
+    #uploader = ImageUploader.new(@status, :image)
+    #uploader.store!(params[:image])
+    #@status.image = uploader
+    @status.image = params[:image]
     if @status.save!
-      puts ":::::::" + @status.image.url.inspect
       render '/statuses/show', status: 201, location: @status.uri
     else
       render_422 'notifications.document.not_valid', @status.errors
