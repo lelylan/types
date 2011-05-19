@@ -12,7 +12,7 @@ class StatusImageController < ApplicationController
     #uploader.store!(params[:image])
     #@status.image = uploader
     @status.image = params[:image]
-    if @status.save!
+    if @status.save
       render '/statuses/show', status: 201, location: @status.uri
     else
       render_422 'notifications.document.not_valid', @status.errors
