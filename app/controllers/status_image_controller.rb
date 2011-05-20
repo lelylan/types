@@ -7,10 +7,15 @@ class StatusImageController < ApplicationController
     redirect_to @status.image_url(params[:size])
   end
 
-  def create
-    #uploader = ImageUploader.new(@status, :image)
-    #uploader.store!(params[:image])
-    #@status.image = uploader
+  # @note: this method can be called through curl using the following command lines:
+  # curl -u alice@example.com:example -s -F "image=@spec/fixtures/example.png;type=image/png" -X POST http://localhost:3000/statuses/4dd17ee8d033a93983000001/image
+  # curl -u alice@example.com:example -s -F "image=@spec/fixtures/example.png" -X POST http://localhost:3000/statuses/4dd17ee8d033a93983000001/image
+  #
+  # The as content-type (which is defined after the file name) you can put also application/json
+  # and it will work, because the important part is that the file is encoded raw multipart data.
+  # As explained here http://www.ietf.org/rfc/rfc2388.txt the multipart data encoding give all
+  # the needed information for the uploading system. 
+  def update
     @status.image = params[:image]
     if @status.save
       render '/statuses/show', status: 201, location: @status.uri

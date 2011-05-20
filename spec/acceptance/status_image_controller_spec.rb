@@ -56,10 +56,10 @@ feature "StatusImageController" do
   end
 
 
-  # POST /statuses/{status-id}/image
-  context ".create" do
+  # PUT /statuses/{status-id}/image
+  context ".update" do
     before { @uri = "/statuses/#{@resource.id}/image" }
-    #it_should_behave_like "protected resource", "page.driver.post(@uri)"
+    #it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -67,7 +67,7 @@ feature "StatusImageController" do
 
       scenario "upload the image" do
         @resource.image_url.should match /default/
-        page.driver.post(@uri, {image: @file})
+        page.driver.put(@uri, {image: @file})
         page.status_code.should == 201
         @resource.reload.image_url.should_not match /default/
         File.exist?("#{Rails.root}/public#{@resource.reload.image_url}").should be_true 
@@ -76,13 +76,13 @@ feature "StatusImageController" do
       context "with no valid format .jpeg" do
         before { @file = Rack::Test::UploadedFile.new("#{fixture_path}/example.jpg", "image/jpeg") }
         scenario "get not valid notification" do
-          page.driver.post(@uri, {image: @file})
+          page.driver.putt(@uri, {image: @file})
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.post(@uri)", "statuses", "/image"
+      it_should_behave_like "a rescued 404 resource", "page.driver.putt(@uri)", "statuses", "/image"
     end
   end
 
