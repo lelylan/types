@@ -23,7 +23,7 @@ feature "TypeController" do
 
   # GET /types
   context ".index" do
-    before { @uri = "/types?page=1&per=100" }
+    before { @uri = "/types" }
     before { @resource = Factory(:type) }
     before { @not_owned_resource = Factory(:not_owned_type) }
 
@@ -47,6 +47,7 @@ feature "TypeController" do
         page.status_code.should == 200
         should_have_type(@resource)
         should_not_have_type(@not_owned_resource)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end

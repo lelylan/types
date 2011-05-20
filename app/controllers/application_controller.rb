@@ -1,12 +1,12 @@
 class ApplicationController < ActionController::Base
   include Lelylan::Rescue::Helpers
   include Lelylan::View::Helpers
-  include Lelylan::Pagination::Helpers
   include Lelylan::Resources::Public
+  include Lelylan::Pagination::Helpers
 
   protect_from_forgery
   before_filter :authenticate
-  before_filter :set_pagination, only: 'index'
+  before_filter :paginate, only: 'index'
 
   helper_method :json_body
   helper_method :current_user

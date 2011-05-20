@@ -8,7 +8,7 @@ feature "CategoryController" do
 
   # GET /categories
   context ".index" do
-    before { @uri = "/categories?page=1&per=100" }
+    before { @uri = "/categories" }
     before { @resource = Factory(:category) }
     before { @not_owned_resource = Factory(:not_owned_category) }
 
@@ -21,6 +21,7 @@ feature "CategoryController" do
         page.status_code.should == 200
         should_have_category(@resource)
         should_not_have_category(@not_owned_resource)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end

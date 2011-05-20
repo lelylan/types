@@ -8,7 +8,7 @@ feature "FunctionController" do
 
   # GET /functions
   context ".index" do
-    before { @uri = "/functions?page=1&per=100" }
+    before { @uri = "/functions" }
     before { @resource = Factory(:function) }
     before { @not_owned_resource = Factory(:not_owned_function) }
 
@@ -21,6 +21,7 @@ feature "FunctionController" do
         page.status_code.should == 200
         should_have_function(@resource)
         should_not_have_function(@not_owned_resource)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end

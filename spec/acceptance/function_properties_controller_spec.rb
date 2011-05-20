@@ -13,7 +13,7 @@ feature "FunctionController" do
 
   # GET /functions/{function-id}/properties?uri={property-uri}
   context ".show" do
-    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
+    before { @uri = "/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
 

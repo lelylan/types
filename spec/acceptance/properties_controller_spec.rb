@@ -8,7 +8,7 @@ feature "PropertyController" do
 
   # GET /properties
   context ".index" do
-    before { @uri = "/properties?page=1&per=100" }
+    before { @uri = "/properties" }
     before { @resource = Factory(:intensity) }
     before { @not_owned_resource = Factory(:not_owned_intensity) }
 
@@ -21,6 +21,7 @@ feature "PropertyController" do
         page.status_code.should == 200
         should_have_property(@resource)
         should_not_have_property(@not_owned_resource)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end

@@ -12,7 +12,7 @@ module HelperMethods
   # Not authorized behavior
   def should_not_be_authorized
     page.status_code.should == 401
-    page.should have_content 'Access denied'
+    page.should have_content Settings.messages.access_denied
   end
 
   # Valid JSON
@@ -20,6 +20,7 @@ module HelperMethods
     lambda {JSON.parse(body)}.should_not raise_error
   end
 
+  # Root key for a list of resources
   def should_have_root_as(resource_name)
     page.should have_content('"' + resource_name + '"')
   end

@@ -8,7 +8,7 @@ feature "StatusController" do
 
   # GET /statuses
   context ".index" do
-    before { @uri = "/statuses?page=1&per=100" }
+    before { @uri = "/statuses" }
     before { @resource = Factory(:is_setting_intensity) }
     before { @not_owned_resource = Factory(:not_owned_is_setting_intensity) }
 
@@ -22,6 +22,7 @@ feature "StatusController" do
         should_have_status(@resource)
         should_have_status_property(@resource.status_properties[0])
         should_not_have_status(@not_owned_resource)
+        should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end
