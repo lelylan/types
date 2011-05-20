@@ -76,13 +76,13 @@ feature "StatusImageController" do
       context "with no valid format .jpeg" do
         before { @file = Rack::Test::UploadedFile.new("#{fixture_path}/example.jpg", "image/jpeg") }
         scenario "get not valid notification" do
-          page.driver.putt(@uri, {image: @file})
+          page.driver.put(@uri, {image: @file})
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.putt(@uri)", "statuses", "/image"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "statuses", "/image"
     end
   end
 
