@@ -6,10 +6,12 @@ class Category
   field :name
   field :uri
   field :created_from
+  field :public, type: Boolean, default: false
 
   attr_accessible :name
   
   validates :name, presence: true
   validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
+  validates :public, inclusion: { in: [true, false] }
 end

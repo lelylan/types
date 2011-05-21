@@ -9,9 +9,9 @@ class FunctionPropertiesController < ApplicationController
   def show
   end
 
+  # TODO: find the way to reuse the find_connection function!
   def create
     @function_property = @function.function_properties.create!(json_body)
-    # TODO: find the way to reuse the find_connection function!
     @property = find_property_from_connection(@function_property)
     if @property
       render 'show', status: 201, location: @function_property.connection_uri and return
@@ -52,7 +52,7 @@ class FunctionPropertiesController < ApplicationController
       render_422 'notifications.connection.found', 'The resource #{json_body[:uri]} is already connected' if @function_property
     end
 
-    # Helper methods
+    # Returns the property if I'm the owner
     def find_property_from_connection(function_property)
       @property = Property.where(created_from: current_user.uri, uri: function_property.uri).first
     end

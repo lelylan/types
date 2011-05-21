@@ -11,3 +11,5 @@ thumbs:
   original: 512
 statuses:
   default_order: 1000000
+public:
+  resources: %w(types categories)

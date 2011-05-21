@@ -12,7 +12,18 @@ feature "CategoryController" do
     before { @resource = Factory(:category) }
     before { @not_owned_resource = Factory(:not_owned_category) }
 
-    it_should_behave_like "protected resource", "visit(@uri)"
+    context "with no public resources" do
+      before { basic_auth_cleanup }
+      before { visit @uri }
+      scenario { should_not_have_type(@resource) }
+    end
+
+    context "with public resources" do
+      before { basic_auth_cleanup }
+      before { @resource = Factory(:category_public) }
+      before { visit @uri }
+      scenario { should_have_type(@resource) }
+    end
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -36,6 +47,18 @@ feature "CategoryController" do
     before { @not_owned_resource = Factory(:not_owned_category) }
 
     it_should_behave_like "protected resource", "visit(@uri)"
+
+    context "when resource is public" do
+      before { basic_auth_cleanup }
+      before { @resource = Factory(:category_public) }
+      before { @uri = "/categories/#{@resource.id.as_json}" }
+      before { visit @uri }
+      scenario "view resource" do
+        page.status_code.should == 200
+        should_have_category(@resource)
+        should_have_valid_json(page.body)
+      end
+    end
 
     context "when logged in" do
       before { basic_auth(@user) } 

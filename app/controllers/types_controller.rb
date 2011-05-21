@@ -37,7 +37,7 @@ class TypesController < ApplicationController
 
 
   private
-    
+
     def find_public_resources
       if accessing_public_resource?
         @types = Type.where(public: true)

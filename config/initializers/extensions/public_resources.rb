@@ -5,7 +5,7 @@ module Lelylan
         base.send(:helper_method, :public_resource)
       end
 
-      def allow_public_resources(*resources)
+      def allow_public_resources(resources)
         if resources.include?(params[:controller])
           if %w(index show).include?(params[:action])
             @public_resource = true

@@ -3,5 +3,7 @@
   "value": "<%=connection.value%>",
   "secret": <%=connection.secret%>,
   "before": <%=connection.before%>,
+  "function":
+<%= render :partial => "/functions/function", locals: { function: @function } %>  ,
   "property":
 <%= render :partial => "/properties/property", locals: { property: @property } %>}

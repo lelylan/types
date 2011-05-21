@@ -1,5 +1,7 @@
 class CategoriesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
+  before_filter :find_public_resources
+  before_filter :find_public_resource, only: :show
   before_filter :find_owned_resources
   before_filter :find_resource, only: %w(show update destroy)
 
@@ -34,12 +36,29 @@ class CategoriesController < ApplicationController
 
 
   private
+    
+    def find_public_resources
+      if accessing_public_resource?
+        @categories = Category.where(public: true)
+      end
+    end
+
+    def find_public_resource
+      if accessing_public_resource?
+        @category = @categories.where(_id: params[:id]).first
+        render_401 if @category.nil?
+      end
+    end
 
     def find_owned_resources
-      @categories = Category.where(created_from: current_user.uri)
+      if not accessing_public_resource?
+        @categories = Category.where(created_from: current_user.uri)
+      end
     end
 
     def find_resource
-      @category = @categories.find(params[:id])
+      if not accessing_public_resource?
+        @category = @categories.find(params[:id])
+      end
     end
 end

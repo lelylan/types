@@ -1,5 +1,5 @@
 
 <% connections.each_with_index do |connection, index| %>
 <%=render partial: '/categories/category',
-            locals: { category: connection } %>  <% if (connections.length - 1 > index) %>,<%end%>
+          locals: { category: connection } %>  <% if (connections.length - 1 > index) %>,<%end%>
 <% end %>

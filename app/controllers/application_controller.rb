@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
         if user and user.verify(password)
           @current_user = user
         else
-          allow_public_resources('types')
+          allow_public_resources(Settings.public.resources)
         end
       end
     end

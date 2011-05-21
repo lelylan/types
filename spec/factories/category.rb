@@ -8,6 +8,10 @@ FactoryGirl.define do
     created_from Settings.user.uri
   end
 
+  factory :category_public, parent: :category do
+    public true
+  end
+
   factory :not_owned_category, parent: :category do
     uri Settings.category.uri + 'not_owned'
     created_from Settings.another_user.uri

@@ -10,4 +10,8 @@ describe Category do
   it { should validate_presence_of(:created_from) }
   it { should allow_value(Settings.validation.valid_uri).for(:created_from) }
   it { should_not allow_value(Settings.validation.not_valid_uri).for(:created_from) }
+
+  it { should allow_value(true).for(:public) }
+  it { should allow_value(false).for(:public) }
+  it { should_not allow_value('example').for(:public) }
 end
