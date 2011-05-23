@@ -13,6 +13,7 @@ of three concepts.
 == Requirements
 
 Ruby ~> {1.9.2}[www.ruby-lang.org/en/]
+
 Mongodb ~> {1.6.4}[http://www.mongodb.org/].
 
 
