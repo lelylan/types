@@ -17,7 +17,6 @@ feature "CategoryController" do
     context "when logged in" do
       before { basic_auth(@user) } 
       before { visit @uri }
-      #before { save_and_open_page }
       scenario "view all owned resources" do
         page.status_code.should == 200
         should_have_category(@resource)
@@ -61,7 +60,6 @@ feature "CategoryController" do
       before { @uri = "/categories/#{@resource.id.as_json}" }
       scenario "view resource" do
         visit @uri
-        save_and_open_page
         page.status_code.should == 200
         should_have_category(@resource)
         should_have_valid_json(page.body)
