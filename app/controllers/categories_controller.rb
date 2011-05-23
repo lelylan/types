@@ -1,13 +1,17 @@
 class CategoriesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
-  before_filter :find_public_resources
-  before_filter :find_public_resource, only: :show
+  before_filter :find_public_resources, only: 'public'
   before_filter :find_owned_resources
   before_filter :find_resource, only: %w(show update destroy)
 
   def index
     @categories =  @categories.page(params[:page]).per(params[:per])
   end
+
+    def public
+      @categories =  @categories.page(params[:page]).per(params[:per])
+      render '/categories/index'
+    end
 
   def show
   end

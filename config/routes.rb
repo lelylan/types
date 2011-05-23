@@ -30,5 +30,6 @@ Devices::Application.routes.draw do
       delete 'image' => 'status_image#destroy'
     end
   end
+  get 'categories/public' => 'categories#public', defaults: {format: 'json'}
   resources :categories, defaults: {format: 'json'}
 end

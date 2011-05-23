@@ -36,7 +36,7 @@ module ViewMethods
 
   # Property resource not represented
   def should_not_have_property(property)
-    page.should_not have_content property.created_from
+    page.should_not have_content property.uri
   end
 
   # Type resource representation
@@ -108,7 +108,7 @@ module ViewMethods
 
   # Category resource not represented
   def should_not_have_category(category)
-    page.should_not have_content category.uri
+    page.should_not have_content "\"#{category.uri}\""
   end
 end
 

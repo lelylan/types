@@ -10,29 +10,37 @@ feature "CategoryController" do
   context ".index" do
     before { @uri = "/categories" }
     before { @resource = Factory(:category) }
+    before { @public_resource = Factory(:category_public) }
     before { @not_owned_resource = Factory(:not_owned_category) }
-
-    context "with no public resources" do
-      before { basic_auth_cleanup }
-      before { visit @uri }
-      scenario { should_not_have_type(@resource) }
-    end
-
-    context "with public resources" do
-      before { basic_auth_cleanup }
-      before { @resource = Factory(:category_public) }
-      before { visit @uri }
-      scenario { should_have_type(@resource) }
-    end
+    before { @not_owned_public_resource= Factory(:not_owned_public_category) }
 
     context "when logged in" do
       before { basic_auth(@user) } 
       before { visit @uri }
-      scenario "view all resources" do
+      #before { save_and_open_page }
+      scenario "view all owned resources" do
         page.status_code.should == 200
         should_have_category(@resource)
+        should_have_category(@public_resource)
         should_not_have_category(@not_owned_resource)
+        should_not_have_category(@not_owned_public_resource)
         should_have_pagination(@uri)
+        should_have_valid_json(page.body)
+        should_have_root_as('resources')
+      end
+    end
+
+    # GET categories/public
+    context "with public resources" do
+      before { basic_auth_cleanup }
+      before { visit "#{@uri}/public" }
+      before { save_and_open_page }
+      scenario "view all public resources" do
+        should_have_category(@public_resource)
+        should_have_category(@not_owned_public_resource)
+        should_not_have_category(@resource)
+        should_not_have_category(@not_owned_resource)
+        should_have_pagination("#{@uri}/public")
         should_have_valid_json(page.body)
         should_have_root_as('resources')
       end
@@ -50,13 +58,23 @@ feature "CategoryController" do
 
     context "when resource is public" do
       before { basic_auth_cleanup }
-      before { @resource = Factory(:category_public) }
+      before { @resource = Factory(:not_owned_public_category) }
       before { @uri = "/categories/#{@resource.id.as_json}" }
-      before { visit @uri }
       scenario "view resource" do
+        visit @uri
         page.status_code.should == 200
         should_have_category(@resource)
         should_have_valid_json(page.body)
+      end
+
+      context "when logged in" do
+        before { basic_auth(@user) } 
+        scenario "view resource" do
+          visit @uri
+          page.status_code.should == 200
+          should_have_category(@resource)
+          should_have_valid_json(page.body)
+        end
       end
     end
 

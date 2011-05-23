@@ -7,7 +7,7 @@ module Lelylan
 
       def allow_public_resources(resources)
         if resources.include?(params[:controller])
-          if %w(index show).include?(params[:action])
+          if %w(public show).include?(params[:action])
             @public_resource = true
           end
         end

@@ -44,7 +44,7 @@ module Lelylan
         def set_pagination(page, per)
           new_page, new_per = normalize_pagination_params(page, per)
           if (new_page != page or new_per != per)
-            redirect_to(action: :index, page: new_page, per: new_per)
+            redirect_to(action: params[:action], page: new_page, per: new_per)
           else
             create_navigation_links(page, per)
           end

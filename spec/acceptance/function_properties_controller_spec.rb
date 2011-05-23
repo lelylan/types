@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "FunctionController" do
+feature "FunctionPropertiesController" do
   before { Property.destroy_all }
   before { Function.destroy_all }
   before { host! "http://" + host }

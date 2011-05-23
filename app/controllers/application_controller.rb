@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_filter :authenticate
-  before_filter :paginate, only: 'index'
+  before_filter :paginate, only: %w(index public)
 
   helper_method :json_body
   helper_method :current_user

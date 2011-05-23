@@ -69,7 +69,6 @@ feature "TypeController" do
       before { @uri = "/types/#{@resource.id.as_json}" }
       before { visit @uri }
       scenario "view resource" do
-        save_and_open_page
         page.status_code.should == 200
         should_have_type(@resource)
         should_have_all_status_connections
