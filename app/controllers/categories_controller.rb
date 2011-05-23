@@ -58,8 +58,10 @@ class CategoriesController < ApplicationController
       @category = Category.where(_id: params[:id]).first
       if @category
         if not @category.public
-          if current_user and @category.created_from == current_user.uri
-            # render
+          if current_user 
+            if not @category.created_from == current_user.uri
+              render_404 'notifications.document.not_found', {id: params[:id]}
+            end
           else
             render_401
           end
