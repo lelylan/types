@@ -34,7 +34,6 @@ feature "CategoryController" do
     context "with public resources" do
       before { basic_auth_cleanup }
       before { visit "#{@uri}/public" }
-      before { save_and_open_page }
       scenario "view all public resources" do
         should_have_category(@public_resource)
         should_have_category(@not_owned_public_resource)
@@ -62,6 +61,7 @@ feature "CategoryController" do
       before { @uri = "/categories/#{@resource.id.as_json}" }
       scenario "view resource" do
         visit @uri
+        save_and_open_page
         page.status_code.should == 200
         should_have_category(@resource)
         should_have_valid_json(page.body)

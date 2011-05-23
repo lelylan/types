@@ -1,8 +1,9 @@
 class CategoriesController < ApplicationController
   before_filter :parse_json_body, only: %w(create update)
+  before_filter :find_owned_resources, only: 'index'
   before_filter :find_public_resources, only: 'public'
-  before_filter :find_owned_resources
-  before_filter :find_resource, only: %w(show update destroy)
+  before_filter :find_resource, only: 'show'
+  before_filter :find_owned_resource, only: %w(update destroy)
 
   def index
     @categories =  @categories.page(params[:page]).per(params[:per])
@@ -40,29 +41,31 @@ class CategoriesController < ApplicationController
 
 
   private
-    
-    def find_public_resources
-      if accessing_public_resource?
-        @categories = Category.where(public: true)
-      end
-    end
 
-    def find_public_resource
-      if accessing_public_resource?
-        @category = @categories.where(_id: params[:id]).first
-        render_401 if @category.nil?
-      end
+    def find_public_resources
+      @categories = Category.where(public: true)
     end
 
     def find_owned_resources
-      if not accessing_public_resource?
-        @categories = Category.where(created_from: current_user.uri)
-      end
+      @categories = Category.where(created_from: current_user.uri)
+    end
+
+    def find_owned_resource
+      @category = Category.where(created_from: current_user.uri).find(params[:id])
     end
 
     def find_resource
-      if not accessing_public_resource?
-        @category = @categories.find(params[:id])
+      @category = Category.where(_id: params[:id]).first
+      if @category
+        if not @category.public
+          if current_user and @category.created_from == current_user.uri
+            # render
+          else
+            render_401
+          end
+        end
+      else
+        render_404 'notifications.document.not_found', {id: params[:id]}
       end
     end
 end
