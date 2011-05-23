@@ -65,7 +65,8 @@ feature "TypeController" do
       scenario "view resource" do
         page.status_code.should == 200
         should_have_type(@resource)
-        should_have_all_status_connections
+        should_have_status_connections
+        should_have_status(@default_status)
         should_have_valid_json(page.body)
       end
 
@@ -106,7 +107,8 @@ feature "TypeController" do
         scenario "create resource" do
           page.status_code.should == 201
           should_have_type(@resource)
-          should_have_all_status_connections
+          should_have_status_connections
+          should_have_status(Status.last)
           should_have_valid_json(page.body)
         end
 
@@ -178,6 +180,7 @@ feature "TypeController" do
           should_have_function(@turn_on)
           should_have_status(@has_set_intensity)
           should_have_status(@is_setting_intensity)
+          should_have_status(@default_status)
         end
 
         scenario "mantain default status" do
@@ -240,7 +243,8 @@ feature "TypeController" do
 
         should_have_type(@resource)
         page.status_code.should == 200
-        should_have_all_status_connections
+        should_have_status_connections
+        should_have_status(@default_status)
         should_have_valid_json(page.body)
       end
 

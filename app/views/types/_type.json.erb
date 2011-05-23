@@ -11,5 +11,5 @@
   "functions": [ <%=render partial: "/types/type_functions",
                            locals: { connections: type.connected_functions } %>  ],
   "statuses": [ <%=render partial: "/types/type_statuses",
-                           locals: { connections: type.connected_statuses } %>  ]
+                           locals: { connections: type.connected_statuses(true) } %>  ]
 }
