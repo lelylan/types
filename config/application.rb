@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require "action_controller/railtie"
 require "action_mailer/railtie"
+require 'rack/jsonp'
 #require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -44,5 +45,8 @@ module Devices
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    # Middleware
+    config.middleware.use Rack::JSONP
   end
 end

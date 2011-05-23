@@ -17,6 +17,7 @@ gem 'carrierwave'
 gem 'fog'
 gem 'rmagick'
 gem 'radius', git: 'https://github.com/jlong/radius.git'
+gem 'rack-jsonp-middleware', git: 'https://github.com/andreareginato/rack-jsonp-middleware.git'
 
 group :development, :test do
   gem 'rspec-rails'

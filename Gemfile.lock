@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/andreareginato/rack-jsonp-middleware.git
+  revision: 9d5b74f388679d9778117568b91ba73bcffe55ac
+  specs:
+    rack-jsonp-middleware (0.0.5)
+      rack
+
+GIT
   remote: https://github.com/jlong/radius.git
   revision: d621b8ac11e9d2b99feee5ad7ab631ed19d8c7c5
   specs:
@@ -206,6 +213,7 @@ DEPENDENCIES
   kaminari
   launchy
   mongoid (~> 2.0)
+  rack-jsonp-middleware!
   radius!
   rails (= 3.0.7)
   rails_config
