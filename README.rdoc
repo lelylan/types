@@ -1,0 +1,108 @@
+= Device API
+
+The Type Service defines a set of API to define a type structure. A type identify a family of 
+devices (e.g. dimmers, alarms, cooling systems) giving them a clear and consistent structure 
+which enable you to reproduce any physical object in the web. A type is mainly a composition 
+of three concepts. 
+
+* <b>Properties</b>: what vary during time (e.g. intensity, temperature)
+* <b>Functions</b>: what a device can do (e.g set dimmer intensity, turn on light)
+* <b>Statuses</b>: the status a device can assume (e.g  light turned off, setting dimmer intensity to 10%)
+
+
+== Requirements
+
+Ruby ~> {1.9.2}[www.ruby-lang.org/en/]
+Mongodb ~> {1.6.4}[http://www.mongodb.org/].
+
+
+== Installation
+
+  git clone git://github.com/lelylan/type.git
+  bundle install
+  rails server
+
+
+== Usage
+
+Read documentation at http://dev.lelylan.com/type
+
+
+== Contribute
+
+Fork the repo on github and issue a pull request with your changes. No other means of supplying 
+code to the team will be accepted. Provide specs with your pull request if the existing specs 
+do not cover the change. Pull requests that provide new functionality without specs will not 
+be pulled in under any circumstance.
+
+=== Running specs
+
+Getting set up should require minimal effort
+
+* Fork and clone the repository.
+* Run gem install bundler to get the latest for the gemset.
+* Run bundle install for dependencies.
+* Run bundle exec spec rspec to execute all specs.
+
+The project provides a guard script as well for easy automated testing.  
+
+  bundle exec guard
+
+When running press CTRL + \ to run all tests.
+
+
+=== Spec guidelines
+
+The following doc[https://docs.google.com/document/d/1gi00-wwPaLk5VvoAJhBVNh9Htw4Rwmj-Ut88T4M2MwI/edit?hl=en#]
+demonstrates the desired way to write a spec in this project. To maintain the spec consistent, follow 
+these rules.
+
+* Use describe blocks for method names.
+* Use context blocks for conditions.
+* 1 assertion per example block.
+* When describing methods, prefix with '#' for instance methods, '.' for class methods.
+
+=== Coding guidelines
+
+* Keep method line counts small and easy to read.
+* Do not fear the use of Ruby's tap.
+* Provide API documentation in the form of YARD.
+
+
+== Feedback
+
+Use the {issue tracker}[http://github.com/lelylan/type/issues] for any bug you find and write me 
+a {mail}[mailto:andrea.reginato@gmail.com] for any feature idea that can improve the project. 
+Feedback is always welcome. Always.
+
+
+== Links 
+
+* {GIT Repository}[git://github.com/lelylan/type.git]
+* {Lelylan Web Site}[http://lelylan.com]
+* {Lelylan Type API's}[http://dev.lelylan.com/type]
+
+
+== Authors
+
+{Andrea Reginato}[flavors.me/andreareginato]
+
+
+== Thanks to
+
+All passionate about Home Automation and Internet of Things.
+
+
+== Contributors
+
+See CONTRIBUTORS
+
+
+== Changelog
+
+See CHANGELOG
+
+
+== Copyright
+
+Copyright (c) 2011 {Andrea Reginato}[flavors.me/andreareginato]. See LICENSE for details.
