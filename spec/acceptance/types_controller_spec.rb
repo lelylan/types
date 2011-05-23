@@ -18,6 +18,7 @@ feature "TypeController" do
   before { @is_setting_max = Factory(:is_setting_max) }
   before { @has_set_intensity = Factory(:has_set_intensity) }
   before { @has_set_max = Factory(:has_set_max) }
+  before { @default_status = Factory(:default_status) }
   before { @category = Factory(:category) }
 
 
@@ -26,19 +27,10 @@ feature "TypeController" do
     before { @uri = "/types" }
     before { @resource = Factory(:type) }
     before { @not_owned_resource = Factory(:not_owned_type) }
+    before { @public_resource = Factory(:type_public) }
+    before { @not_owned_public_resource = Factory(:not_owned_type_public) }
 
-    context "with no public resources" do
-      before { basic_auth_cleanup }
-      before { visit @uri }
-      scenario { should_not_have_type(@resource) }
-    end
-
-    context "with public resources" do
-      before { basic_auth_cleanup }
-      before { @resource = Factory(:type_public) }
-      before { visit @uri }
-      scenario { should_have_type(@resource) }
-    end
+    it_should_behave_like "a public list of resources", "visit(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -58,23 +50,13 @@ feature "TypeController" do
   # GET /types/{type-id}
   context ".show" do
     before { @resource = Factory(:type) }
-    before { @uri = "/types/#{@resource.id.as_json}" }
     before { @not_owned_resource = Factory(:not_owned_type) }
+    before { @not_owned_public_resource = Factory(:not_owned_type_public) }
+    before { @uri = "/types/#{@resource.id.as_json}" }
+    before { @public_uri = "/types/#{@not_owned_public_resource.id.as_json}" }
 
     it_should_behave_like "protected resource", "visit(@uri)"
-
-    context "when resource is public" do
-      before { basic_auth_cleanup }
-      before { @resource = Factory(:type_public) }
-      before { @uri = "/types/#{@resource.id.as_json}" }
-      before { visit @uri }
-      scenario "view resource" do
-        page.status_code.should == 200
-        should_have_type(@resource)
-        should_have_all_status_connections
-        should_have_valid_json(page.body)
-      end
-    end
+    it_should_behave_like "a public resource", "visit(@public_uri)"
 
     context "when logged in" do
       before { basic_auth(@user) }

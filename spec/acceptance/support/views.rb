@@ -50,7 +50,7 @@ module ViewMethods
 
   # Type resource not represented
   def should_not_have_type(property)
-    page.should_not have_content property.created_from
+    page.should_not have_content property.uri
   end
 
   # Status resource representation

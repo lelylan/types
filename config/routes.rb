@@ -10,6 +10,7 @@ Devices::Application.routes.draw do
   resources :sessions
 
   # API Resources
+  get 'types/public' => 'types#index', public: 'true', defaults: {format: 'json'}
   resources :types, defaults: {format: 'json'}
   resources :properties, defaults: {format: 'json'}
   resources :functions, defaults: {format: 'json'} do

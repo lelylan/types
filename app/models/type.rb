@@ -24,21 +24,22 @@ class Type
 
 
   def connected_categories
-    Category.any_in(uri: categories).where(created_from: created_from)
+    Category.any_in(uri: categories)
   end
 
   def connected_properties
-    Property.any_in(uri: properties).where(created_from: created_from)
+    Property.any_in(uri: properties)
   end
 
   def connected_functions
-    Function.any_in(uri: functions).where(created_from: created_from)
+    Function.any_in(uri: functions)
   end
 
   # Get the status resources and order them. Mongoid do not
   # retrieve documents following the key order.
   def connected_statuses(with_default=false)
-    statuses = Status.any_in(uri: statuses_uri(with_default)).where(created_from: created_from).to_a
+    statuses_uri(with_default)
+    statuses = Status.any_in(uri: statuses_uri(with_default)).to_a
     statuses_uri(with_default).collect do |uri|
       statuses.find { |status| status.uri == uri }
     end
