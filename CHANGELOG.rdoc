@@ -1,6 +1,12 @@
 = Changelog
 
 
+== Release v0.1.1
+
+* Changed 'before' field in 'filter' on function property connection
+* Change function property and status property representation to make it more consistent
+
+
 == Release v0.1.0 (2011/05/22)
 
 * First version Type APIs

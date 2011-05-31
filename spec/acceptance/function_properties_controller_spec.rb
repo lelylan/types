@@ -33,7 +33,7 @@ feature "FunctionPropertiesController" do
   end
 
 
-  # POST /functions
+  # POST /functions/{function-id}/properties
   context ".create" do
     before { @resource = Factory(:function) }
     before { @uri = "#{host}/functions/#{@resource.id}/properties" }
@@ -46,7 +46,7 @@ feature "FunctionPropertiesController" do
         uri: Settings.properties.intensity.uri,
         value: Settings.properties.intensity.default_value,
         secret: true,
-        before: false
+        filter: ''
       }}
 
       scenario "create resource" do
@@ -79,8 +79,51 @@ feature "FunctionPropertiesController" do
       end
 
       context "with not valid params" do
+        before { params[:filter] = 'not_existing' }
         scenario "get a not valid notification" do
-          page.driver.post(@uri, {}.to_json)
+          page.driver.post(@uri, params.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.post(@uri)", "functions", "/properties"
+    end
+  end
+
+
+  # PUT /functions/{function-id}/properties?uri={property-uri}
+  context ".update" do
+    before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
+
+    it_should_behave_like "protected resource", "page.driver.post(@uri)"
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      let(:params) {{ value: '5.0', secret: false, filter: '' }}
+
+      scenario "update resource" do
+        page.driver.put(@uri, params.to_json)
+        save_and_open_page
+        page.status_code.should == 200
+        page.should have_content '5.0'
+        page.should have_content 'false'
+        page.should have_content '"filter": ""'
+        should_have_valid_json(page.body)
+      end
+
+      context "with new URI connection" do
+        before { params[:uri] = Settings.properties.status.uri }
+        scenario "should not change URI" do
+          page.driver.put(@uri, params.to_json)
+          page.should_not have_content 'status'
+          should_have_valid_json(page.body)
+        end
+      end
+
+      context "with not valid params" do
+        scenario "get a not valid notification" do
+          page.driver.put(@uri, {filter: 'not_existing'}.to_json)
           should_have_a_not_valid_resource
           should_have_valid_json(page.body)
         end

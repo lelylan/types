@@ -17,6 +17,7 @@ Devices::Application.routes.draw do
     member do
       get    'properties' => 'function_properties#show'
       post   'properties' => 'function_properties#create'
+      put    'properties' => 'function_properties#update'
       delete 'properties' => 'function_properties#destroy'
     end
   end
@@ -25,9 +26,10 @@ Devices::Application.routes.draw do
     member do
       get    'properties' => 'status_properties#show'
       post   'properties' => 'status_properties#create'
+      put    'properties' => 'status_properties#update'
       delete 'properties' => 'status_properties#destroy'
       get    'image' => 'status_image#show'
-      put   'image' => 'status_image#update'
+      put    'image' => 'status_image#update'
       delete 'image' => 'status_image#destroy'
     end
   end

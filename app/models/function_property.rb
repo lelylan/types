@@ -7,7 +7,7 @@ class FunctionProperty
   field :secret, type: Boolean, default: false
   field :filter, default: ''
 
-  attr_accessible :uri, :value, :secret, :before
+  attr_accessible :uri, :value, :secret, :filter
 
   embedded_in :function, inverse_of: :function_properties
 
