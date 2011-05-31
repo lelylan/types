@@ -19,20 +19,25 @@ class Function
   before_save :create_function_properties
 
 
+  # Enable the bulk assignment of properties to a function
   def create_function_properties
     if properties.is_a? Array
       validates_not_duplicated_uri
-      result = properties.map do |property|
-        function_property = function_properties.new(property)
-        validate_function_property(function_property)
-      end
-      function_properties = result
+      function_properties = build_function_properties
     elsif not properties.nil?
       raise Mongoid::Errors::InvalidType.new(::Array, properties)
     end
   end
 
+
   private
+
+    def build_function_properties
+      properties.map do |property|
+        function_property = function_properties.new(property)
+        validate_function_property(function_property)
+      end
+    end
 
     def validates_not_duplicated_uri
       unless properties.length == properties.map{|p| p[:uri]}.uniq.length
