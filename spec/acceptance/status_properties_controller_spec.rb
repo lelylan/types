@@ -129,7 +129,6 @@ feature "StatusPropertiesController" do
         before { params[:uri] = Settings.properties.status.uri }
         scenario "should not change URI" do
           page.driver.put(@uri, params.to_json)
-          save_and_open_page
           page.should_not have_content Settings.properties.status.uri
           should_have_valid_json(page.body)
         end

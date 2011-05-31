@@ -3,6 +3,7 @@
 
 == Release v0.1.1
 
+* Added update service for function/property and status/property connection
 * Changed 'before' field in 'filter' on function property connection
 * Change function property and status property representation to make it more consistent
 
