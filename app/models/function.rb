@@ -22,8 +22,9 @@ class Function
   # Enable the bulk assignment of properties to a function
   def create_function_properties
     if properties.is_a? Array
+      function_properties.destroy_all
       validates_not_duplicated_uri
-      function_properties = build_function_properties
+      function_properties = build_function_properties || []
     elsif not properties.nil?
       raise Mongoid::Errors::InvalidType.new(::Array, properties)
     end
@@ -36,7 +37,7 @@ class Function
       properties.map do |property|
         function_property = function_properties.new(property)
         validate_function_property(function_property)
-      end
+      end.compact!
     end
 
     def validates_not_duplicated_uri

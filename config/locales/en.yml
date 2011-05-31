@@ -8,6 +8,7 @@ en:
       found: "Resource connection already found"
       not_found: "Resource connection not found"
       not_valid_uri: "Not valid connection uri"
+      duplicated: "Resouce connection duplicated"
     physical:
       not_found: "Physical device not existing (insert one)"
     image:
