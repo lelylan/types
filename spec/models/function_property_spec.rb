@@ -7,9 +7,9 @@ describe FunctionProperty do
 
   it { should allow_value(true).for(:secret) }
   it { should allow_value(false).for(:secret) }
-  it { should_not allow_value('example').for(:secret) }
+  it { should_not allow_value('not_valid').for(:secret) }
 
-  it { should allow_value(true).for(:before) }
-  it { should allow_value(false).for(:before) }
-  it { should_not allow_value('example').for(:before) }
+  it { should allow_value('').for(:filter) }
+  it { should allow_value('before').for(:filter) }
+  it { should_not allow_value('not_valid').for(:filter) }
 end

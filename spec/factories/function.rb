@@ -46,13 +46,13 @@ FactoryGirl.define do
     uri Settings.properties.status.uri
     value Settings.properties.status.default_value
     secret false
-    before false
+    filter ''
   end
 
   factory :function_intensity, class: :function_property do
     uri Settings.properties.intensity.uri
     value ''
     secret true
-    before true
+    filter 'before'
   end
 end

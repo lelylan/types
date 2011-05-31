@@ -16,7 +16,7 @@ module ViewMethods
     page.should have_content function_property.uri
     page.should have_content function_property.value
     page.should have_content function_property.secret.to_s
-    page.should have_content function_property.before.to_s
+    page.should have_content function_property.filter
   end
 
   # Function property detailed representation

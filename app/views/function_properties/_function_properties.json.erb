@@ -1,8 +1,8 @@
 {
   "uri": "<%=connection.connection_uri%>", 
   "value": "<%=connection.value%>",
-  "secret": <%=connection.secret%>,
-  "before": <%=connection.before%>,
+  "filter": "<%=connection.filter%>",
+  "secret": <%=raw connection.secret.to_json%>,
   "function": {"name": "<%=@function.name%>", "uri": "<%=@function.uri%>" },
   "property": {"name": "<%=@property.name%>", "uri": "<%=@property.uri%>" }
 }

@@ -3,7 +3,7 @@
     { 
       "uri": "<%=connection.uri%>", 
       "value": "<%=connection.value%>",
-      "secret": <%=connection.secret%>,
-      "before": <%=connection.before%> 
+      "filter": "<%=connection.filter%>",
+      "secret": <%=raw connection.secret.to_json%>
     }<% if (connections.length - 1 > index) %>,<%end%>
 <% end %>
