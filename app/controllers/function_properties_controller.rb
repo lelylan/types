@@ -56,6 +56,7 @@ class FunctionPropertiesController < ApplicationController
       render_422 'notifications.connection.found', json_body[:uri] if @function_property
     end
 
+
       # Returns the property only the authenticated user is the owner
       def find_property_from_connection(property_uri)
         @property = Property.where(created_from: current_user.uri, uri: property_uri).first

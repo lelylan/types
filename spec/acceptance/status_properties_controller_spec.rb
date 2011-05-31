@@ -84,15 +84,15 @@ feature "StatusPropertiesController" do
         scenario "get a not found notification" do
           params[:uri] = @not_owned_connection.uri
           page.driver.post(@uri, params.to_json)
-          should_have_a_not_found_connection(@uri)
+          should_have_a_not_found_connection(params[:uri])
           should_have_valid_json(page.body)
         end
       end
 
-      context "with not valid params" do
+      context "with not valid params (no URI)" do
         scenario "get a not valid notification" do
           page.driver.post(@uri, {}.to_json)
-          should_have_a_not_valid_resource
+          should_have_a_not_found_connection(@uri)
           should_have_valid_json(page.body)
         end
       end
@@ -103,6 +103,45 @@ feature "StatusPropertiesController" do
 
       it_should_behave_like "a default resource", "page.driver.post(@uri)", "/properties"
       it_should_behave_like "a rescued 404 resource", "page.driver.post(@uri)", "statuses", "/properties"
+    end
+  end
+
+
+  # PUT /statuses/{status-id}/properties?uri={property-uri}
+  context ".update" do
+    before { @uri = "#{host}/statuses/#{@resource.id}/properties?uri=#{@connection.uri}" }
+
+    it_should_behave_like "protected resource", "page.driver.put(@uri)"
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      let(:params) {{ values: ['100.0', '200.0'], pending: false}}
+
+      scenario "update resource" do
+        page.driver.put(@uri, params.to_json)
+        page.status_code.should == 200
+        page.should have_content '200.0'
+        page.should have_content 'false'
+        should_have_valid_json(page.body)
+      end
+
+      context "with new URI connection" do
+        before { params[:uri] = Settings.properties.status.uri }
+        scenario "should not change URI" do
+          page.driver.put(@uri, params.to_json)
+          save_and_open_page
+          page.should_not have_content Settings.properties.status.uri
+          should_have_valid_json(page.body)
+        end
+      end
+
+      context "with not valid params" do
+        scenario "get a not valid notification" do
+          # All values are optionals
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "statuses", "/properties"
     end
   end
 

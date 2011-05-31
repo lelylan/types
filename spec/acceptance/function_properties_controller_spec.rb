@@ -73,7 +73,7 @@ feature "FunctionPropertiesController" do
         scenario "get a not found notification" do
           params[:uri] = @not_owned_connection.uri
           page.driver.post(@uri, params.to_json)
-          should_have_a_not_found_connection(@uri)
+          should_have_a_not_found_connection(params[:uri])
           should_have_valid_json(page.body)
         end
       end
@@ -96,7 +96,7 @@ feature "FunctionPropertiesController" do
   context ".update" do
     before { @uri = "#{host}/functions/#{@resource.id}/properties?uri=#{@connection.uri}" }
 
-    it_should_behave_like "protected resource", "page.driver.post(@uri)"
+    it_should_behave_like "protected resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth(@user) } 
@@ -104,7 +104,6 @@ feature "FunctionPropertiesController" do
 
       scenario "update resource" do
         page.driver.put(@uri, params.to_json)
-        save_and_open_page
         page.status_code.should == 200
         page.should have_content '5.0'
         page.should have_content 'false'
@@ -116,7 +115,7 @@ feature "FunctionPropertiesController" do
         before { params[:uri] = Settings.properties.status.uri }
         scenario "should not change URI" do
           page.driver.put(@uri, params.to_json)
-          page.should_not have_content 'status'
+          page.should_not have_content Settings.properties.status.uri
           should_have_valid_json(page.body)
         end
       end
@@ -129,7 +128,7 @@ feature "FunctionPropertiesController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.post(@uri)", "functions", "/properties"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions", "/properties"
     end
   end
 

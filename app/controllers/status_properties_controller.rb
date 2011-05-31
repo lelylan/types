@@ -5,26 +5,30 @@ class StatusPropertiesController < ApplicationController
   before_filter :find_default, only: %w(create destroy)
   before_filter :find_connection, only: %w(show update destroy)
   before_filter :find_connected_resource, only: %w(show update destroy)
-  before_filter :find_existing_connection, only: :create
+  before_filter :find_existing_connection, only: 'create'
 
 
   def show
   end
 
   def create
-    @status_property = @status.status_properties.create!(json_body)
-    # TODO: find the way to reuse the find_connection status!
-    @property = find_property_from_connection(@status_property)
+    @property = find_property_from_connection(json_body[:uri])
     if @property
+      @status_property = @status.status_properties.create!(json_body)
       render 'show', status: 201, location: @status_property.connection_uri and return
     else
-      render_404 'notifications.connection.not_found', {uri: @status_property.uri}
+      render_404 'notifications.connection.not_found', {uri: json_body[:uri]}
     end
+  end
+
+  def update
+    json_body.delete(:uri) # this attribute can not be updated
+    @status_property.update_attributes!(json_body)
+    render 'show'
   end
 
   def destroy
     @status_property.destroy
-    @property = find_property_from_connection(@status_property)
     render 'show'
   end
 
@@ -49,7 +53,7 @@ class StatusPropertiesController < ApplicationController
     end
 
     def find_connected_resource
-      @preoperty = find_property_from_connection(@status_property)
+      @preoperty = find_property_from_connection(@status_property.uri)
       render_404 'notifications.connection.not_found', {uri: @status_property.uri} unless @property
     end
 
@@ -58,10 +62,9 @@ class StatusPropertiesController < ApplicationController
       render_422 'notifications.connection.found', json_body[:uri] if @status_property
     end
     
-    
-    # helper methods
 
-      def find_property_from_connection(status_property)
-        @property = Property.where(created_from: current_user.uri, uri: status_property.uri).first
+      # Returns the property only the authenticated user is the owner
+      def find_property_from_connection(property_uri)
+        @property = Property.where(created_from: current_user.uri, uri: property_uri).first
       end
 end
