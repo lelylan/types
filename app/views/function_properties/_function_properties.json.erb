@@ -1,9 +1,8 @@
-{ 
+{
   "uri": "<%=connection.connection_uri%>", 
   "value": "<%=connection.value%>",
   "secret": <%=connection.secret%>,
   "before": <%=connection.before%>,
-  "function":
-<%= render :partial => "/functions/function", locals: { function: @function } %>  ,
-  "property":
-<%= render :partial => "/properties/property", locals: { property: @property } %>}
+  "function": {"name": "<%=@function.name%>", "uri": "<%=@function.uri%>" },
+  "property": {"name": "<%=@property.name%>", "uri": "<%=@property.uri%>" }
+}

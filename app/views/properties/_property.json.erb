@@ -1,7 +1,8 @@
   {
-    "id": "<%=property.id.as_json%>",
-    "uri": "<%=property.uri%>",
-    "created_from": { "uri": "<%=property.created_from%>" },
     "name": "<%=property.name%>",
+    "uri": "<%=property.uri%>",
+    "id": "<%=property.id.as_json%>",
+    "created_from": { "uri": "<%=property.created_from%>" },
+    "default": <%=raw property.default.to_json%>,
     "values": <%=raw property.values.to_json%>
   }

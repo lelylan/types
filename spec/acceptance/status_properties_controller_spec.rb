@@ -24,7 +24,7 @@ feature "StatusPropertiesController" do
         visit @uri
         page.status_code.should == 200
         status_property = @resource.status_properties.where(uri: @connection.uri).first
-        should_have_status_property_detailed(status_property, @connection)
+        should_have_status_property_detailed(status_property, @resource, @connection)
         should_have_valid_json(page.body)
       end
 
@@ -55,8 +55,18 @@ feature "StatusPropertiesController" do
         page.status_code.should == 201
         @resource.reload.status_properties.should have(1).item
         status_property = @resource.status_properties.first
-        should_have_status_property_detailed(status_property, @connection)
+        should_have_status_property_detailed(status_property, @resource, @connection)
         should_have_valid_json(page.body)
+      end
+
+      context "with pending nil" do
+        before { params[:pending] = nil }
+        scenario "should render null" do
+          page.driver.post(@uri, params.to_json)
+          page.status_code.should == 201
+          page.should have_content 'null'
+          should_have_valid_json(page.body)
+        end
       end
 
       context "with existing connection" do
@@ -111,7 +121,7 @@ feature "StatusPropertiesController" do
         page.driver.delete(@uri)
         @resource.reload.status_properties.should have(0).item
         page.status_code.should == 200
-        should_have_status_property_detailed(status_property, @connection)
+        should_have_status_property_detailed(status_property, @resource, @connection)
         should_have_valid_json(page.body)
       end
 

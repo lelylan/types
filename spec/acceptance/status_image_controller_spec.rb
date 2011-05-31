@@ -100,8 +100,8 @@ feature "StatusImageController" do
 
         scenario "remove the image" do
           page.driver.delete(@uri)
-          page.status_code.should == 302
-          @resource = Status.last
+          page.status_code.should == 200
+          @resource = Status.last # the #reload method will not update the image URI
           @resource.image_url.should match /default/
         end
       end

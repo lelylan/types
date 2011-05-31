@@ -6,7 +6,7 @@ class Property
   field :name
   field :uri
   field :created_from
-  field :default
+  field :default, default: ''
   field :values, type: Array, default: []
 
   attr_accessible :name, :default, :values

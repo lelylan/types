@@ -22,6 +22,7 @@ module View4xxMethods
   # Resource not valid
   def should_have_a_not_valid_resource
     page.status_code.should == 422
+    page.should_not have_content 'translation missing'
   end
 end
 

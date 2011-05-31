@@ -34,7 +34,7 @@ module Lelylan
       
       # Assignation of wrong type to model field (e.g. hash instead of array)
       def mongoid_errors_invalid_type(e)
-        render_422 "notifications.json.not_valid_type", parse_error(e)
+        render_422 "notifications.json.not_valid", parse_error(e)
       end
 
       private 

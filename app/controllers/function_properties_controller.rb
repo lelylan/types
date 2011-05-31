@@ -49,7 +49,7 @@ class FunctionPropertiesController < ApplicationController
 
     def find_existing_connection
       @function_property = @function.function_properties.where(uri: json_body[:uri]).first
-      render_422 'notifications.connection.found', 'The resource #{json_body[:uri]} is already connected' if @function_property
+      render_422 'notifications.connection.found', json_body[:uri] if @function_property
     end
 
     # Returns the property if I'm the owner

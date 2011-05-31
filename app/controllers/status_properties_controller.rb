@@ -55,10 +55,10 @@ class StatusPropertiesController < ApplicationController
 
     def find_existing_connection
       @status_property = @status.status_properties.where(uri: json_body[:uri]).first
-      render_422 'notifications.connection.found', 'The resource #{json_body[:uri]} is already connected' if @status_property
+      render_422 'notifications.connection.found', json_body[:uri] if @status_property
     end
     
-
+    
     # helper methods
 
       def find_property_from_connection(status_property)

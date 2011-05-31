@@ -23,7 +23,7 @@ feature "FunctionPropertiesController" do
         visit @uri
         page.status_code.should == 200
         function_property = @resource.function_properties.where(uri: @connection.uri).first
-        should_have_function_property_detailed(function_property, @connection)
+        should_have_function_property_detailed(function_property, @resource, @connection)
         should_have_valid_json(page.body)
       end
 
@@ -54,7 +54,7 @@ feature "FunctionPropertiesController" do
         page.status_code.should == 201
         @resource.reload.function_properties.should have(1).item
         function_property = @resource.function_properties.first
-        should_have_function_property_detailed(function_property, @connection)
+        should_have_function_property_detailed(function_property, @resource, @connection)
         should_have_valid_json(page.body)
       end
 
@@ -105,7 +105,7 @@ feature "FunctionPropertiesController" do
         page.driver.delete(@uri, {}.to_json)
         @resource.reload.function_properties.should have(1).item
         page.status_code.should == 200
-        should_have_function_property_detailed(function_property, @connection)
+        should_have_function_property_detailed(function_property, @resource, @connection)
         should_have_valid_json(page.body)
       end
 

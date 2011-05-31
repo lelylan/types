@@ -11,7 +11,7 @@ module ViewMethods
     page.should_not have_content function.created_from
   end
 
-  # Function property non detailed representation
+  # Function property not detailed representation
   def should_have_function_property(function_property)
     page.should have_content function_property.uri
     page.should have_content function_property.value
@@ -20,9 +20,12 @@ module ViewMethods
   end
 
   # Function property detailed representation
-  def should_have_function_property_detailed(function_property, property)
+  def should_have_function_property_detailed(function_property, function, property)
     should_have_function_property(function_property)
-    should_have_property(property)
+    page.should have_content function.name
+    page.should have_content function.uri
+    page.should have_content property.name
+    page.should have_content property.uri
   end
 
   # Property resource representation
@@ -32,6 +35,7 @@ module ViewMethods
     page.should have_content property.created_from
     page.should have_content property.name
     page.should have_content property.values.to_json
+    page.should have_content property.default
   end
 
   # Property resource not represented
@@ -59,7 +63,6 @@ module ViewMethods
     page.should have_content status.uri
     page.should have_content status.created_from
     page.should have_content status.name
-    page.should have_content status.message
   end
 
   # Status resource not represented
@@ -75,9 +78,12 @@ module ViewMethods
   end
 
   # Status property detailed resource representation
-  def should_have_status_property_detailed(function_property, property)
+  def should_have_status_property_detailed(function_property, status, property)
     should_have_status_property(function_property)
-    should_have_property(property)
+    page.should have_content status.name
+    page.should have_content status.uri
+    page.should have_content property.name
+    page.should have_content property.uri
   end
 
   # Status property connections

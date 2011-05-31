@@ -15,7 +15,7 @@ class Type
   embeds_many :type_statuses
   before_save :create_type_statuses
 
-  attr_accessible :name, :properties, :functions, :statuses, :categories
+  attr_accessible :name, :properties, :functions, :statuses, :categories, :public
 
   validates :name, presence: true
   validates :uri, presence:true, url: true

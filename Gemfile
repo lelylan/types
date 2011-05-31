@@ -12,7 +12,7 @@ gem 'chronic'
 gem 'jquery-rails'
 gem 'httparty'
 gem 'kaminari'
-gem "rails_config"
+gem 'rails_config'
 gem 'carrierwave'
 gem 'fog'
 gem 'rmagick'

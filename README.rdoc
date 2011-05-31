@@ -1,4 +1,4 @@
-= Device API
+= Type API
 
 The Type Service defines a set of API to define a type structure. A type identify a family of 
 devices (e.g. dimmers, alarms, cooling systems) giving them a clear and consistent structure 
