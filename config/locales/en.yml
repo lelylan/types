@@ -18,3 +18,8 @@ en:
     pagination:
       not_valid_page: "Not a valid page"
       not_valid_per_page: "Not a valid per_page"
+
+  mongoid:
+    errors:
+      messages:
+        duplicated: "A resource can not be connected more than once"

@@ -8,8 +8,6 @@ module Lelylan
         base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
         base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Mongoid::Errors::InvalidType, with: :mongoid_errors_invalid_type
-        base.rescue_from WillPaginate::InvalidPage, with: :will_paginate_invalid_page
-        base.rescue_from ZeroDivisionError, with: :zero_division_error
       end
 
       # Document not valid
