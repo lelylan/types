@@ -45,7 +45,27 @@ feature "StatusController" do
         page.status_code.should == 200
         should_have_status(@resource)
         should_have_status_property(@resource.status_properties[0])
+        page.should_not have_content 'range'
         should_have_valid_json(page.body)
+      end
+
+      describe "range" do
+        context "when defined" do
+          before  { @resource.status_properties.first.update_attributes(range_start: 1000, range_end: 100000) }
+          subject { @resource.status_properties.first }
+          scenario "should be visible" do
+            visit @uri
+            should_have_status_property_range(subject)
+          end
+        end
+        context "when defined" do
+          before  { @resource.status_properties.first.update_attributes(range_start: 1000) }
+          subject { @resource.status_properties.first }
+          scenario "should be visible" do
+            visit @uri
+            page.should_not have_content "1000"
+          end
+        end
       end
 
       it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses"
@@ -78,6 +98,7 @@ feature "StatusController" do
       end
     end
   end
+
 
   # POST /statuses
   # { properties: [...] }

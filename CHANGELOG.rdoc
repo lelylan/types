@@ -3,6 +3,8 @@
 
 == Release v0.1.1
 
+* Added range definition in status properties
+* Added filter on name and category for types
 * Added bulk creation of property connections on functions and statuses
 * Added update service for function/property and status/property connection
 * Changed 'before' field in 'filter' on function property connection

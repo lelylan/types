@@ -77,6 +77,12 @@ module ViewMethods
     page.should have_content status_property.values.to_json
   end
 
+  # Status property range representation
+  def should_have_status_property_range(status_property)
+    page.should have_content status_property.range_start.to_s
+    page.should have_content status_property.range_end.to_s
+  end
+
   # Status property detailed resource representation
   def should_have_status_property_detailed(function_property, status, property)
     should_have_status_property(function_property)
