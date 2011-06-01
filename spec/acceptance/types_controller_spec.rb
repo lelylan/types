@@ -20,7 +20,6 @@ feature "TypeController" do
   before { @has_set_max = Factory(:has_set_max) }
   before { @default_status = Factory(:default_status) }
   before { @category = Factory(:category) }
-  before { @cooling_category = Factory(:cooling_category) }
 
 
   # GET /types
@@ -48,12 +47,14 @@ feature "TypeController" do
       context "with filter" do
         context "params[:category]" do
           before { @name = "Another category type"}
-          before { @cooling = Factory(:type, name: @name, categories: [Settings.category.cooling.uri])}
-          before { visit "/types?category=#{@cooling.uri}" }
+          before { @cooling_category = Factory(:type, name: @name, categories: [Settings.category.cooling.uri])}
+          before { visit "/types?category=#{@category.uri}" }
           it "should filter by category" do
+            #pp Type.all.to_a
             save_and_open_page
-            page.should have_content @cooling.uri
-            page.should_not have_content @category.uri
+            should_have_type(@resource)
+            page.should_not have_content @name
+            page.should_not have_content @resource.uri
           end
         end
       end

@@ -60,8 +60,10 @@ class TypesController < ApplicationController
     end
 
     def filter_params
-      pp params
+      pp params[:category]
+      pp @types.count
       @types.where('name' => /^#{params[:name]}/) if params[:name]
-      @types.any_in(categories: params[:category]) if params[:category]
+      @types = @types.any_in(categories: [params[:category]]) if params[:category]
+      pp @types.count
     end
 end

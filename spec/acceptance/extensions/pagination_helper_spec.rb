@@ -83,7 +83,7 @@ feature "TypesController" do
         before { @uri = 'http://www.example.com/resource' }
         before { params.merge!(type: @uri) }
         before { visit "#{path}?type=#{@uri}" }
-        it {  save_and_open_page; should_have_pagination_uri('first', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('first', params.merge({page: 1, per: 25})) }
         it { should_have_pagination_uri('prev', params.merge({page: 1, per: 25})) }
         it { should_have_pagination_uri('next', params.merge({page: 1, per: 25})) }
         it { should_have_pagination_uri('last', params.merge({page: 1, per: 25})) }
