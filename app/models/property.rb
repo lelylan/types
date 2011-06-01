@@ -14,4 +14,10 @@ class Property
   validates :name, presence: true
   validates :uri, presence: true, url: true
   validates :created_from, presence: true, url: true
+
+  before_save :parse_values
+  
+  def parse_values
+    values.map!(&:to_s)
+  end
 end

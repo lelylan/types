@@ -12,8 +12,15 @@ class StatusProperty
   validates :pending, inclusion: { in: [true, false], allow_nil: true }
 
   embedded_in :status
+  
+  before_save :parse_values
+
 
   def connection_uri
     "#{self.status.uri}/properties?uri=#{uri}"
+  end
+
+  def parse_values
+    values.map!(&:to_s)
   end
 end
