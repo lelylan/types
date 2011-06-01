@@ -9,6 +9,7 @@ thumbs:
   big: 128
   large: 256
   original: 512
+name_regexp: /^[\w\-]+$/
 statuses:
   default_order: 1000000
 public:
