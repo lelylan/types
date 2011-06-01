@@ -63,7 +63,6 @@ feature "StatusController" do
           subject { @resource.status_properties.first }
           scenario "should be visible" do
             visit @uri
-            save_and_open_page
             page.should_not have_content "1000"
           end
         end
