@@ -1,7 +1,7 @@
 = Changelog
 
 
-== Release v0.1.1
+== Release v0.1.1 (2011/06/01)
 
 * Added range definition in status properties
 * Added filter on name and category for types
