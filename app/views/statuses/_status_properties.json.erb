@@ -3,6 +3,9 @@
     { 
       "uri": "<%=connection.uri%>", 
       "pending": <%=raw connection.pending.to_json%>,
+<%- if (connection.range_start and connection.range_end) %>
+      "range": { "start": <%= connection.range_start %>, "end": <%= connection.range_end %> }, 
+<%- end %>
       "values": <%=raw connection.values.to_json%>
     }<% if (connections.length - 1 > index) %>,<%end%>
 <% end %>

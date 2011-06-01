@@ -5,8 +5,10 @@ class StatusProperty
   field :uri
   field :values, type: Array, default: []
   field :pending, type: Boolean
+  field :range_start, type: Float
+  field :range_end, type: Float
 
-  attr_accessible :uri, :pending, :values
+  attr_accessible :uri, :pending, :values, :range_start, :range_end
 
   validates :uri, presence: true, url: true
   validates :pending, inclusion: { in: [true, false], allow_nil: true }
