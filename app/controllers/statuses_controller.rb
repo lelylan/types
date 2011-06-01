@@ -12,6 +12,7 @@ class StatusesController < ApplicationController
   end
 
   def create
+    json_body
     @status = Status.base(json_body, request, current_user)
     if @status.save
       render 'show', status: 201, location: @status.uri

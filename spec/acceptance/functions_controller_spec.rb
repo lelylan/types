@@ -80,6 +80,7 @@ feature "FunctionController" do
     end
   end
 
+
   # POST /functions
   # { properties: [...] }
   context ".create with properties" do
@@ -159,6 +160,26 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
+      scenario "not valid params" do
+        page.driver.put(@uri, {name: ''}.to_json)
+        should_have_a_not_valid_resource
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
+    end
+  end
+
+
+  # PUT /functions/{function-id}
+  # { properties: [...] }
+  context ".update" do
+    before { @resource = Factory(:function_complete) }
+    before { @uri =  "/functions/#{@resource.id.as_json}" }
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      let(:params) {{ name: "Set intensity updated" }}
+
       context "when update properties" do
         scenario "with nil as value" do
           page.driver.put(@uri, params.to_json)
@@ -183,13 +204,6 @@ feature "FunctionController" do
           should_have_valid_json(page.body)
         end
       end
-
-      scenario "not valid params" do
-        page.driver.put(@uri, {name: ''}.to_json)
-        should_have_a_not_valid_resource
-      end
-
-      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
     end
   end
 
