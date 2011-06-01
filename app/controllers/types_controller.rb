@@ -3,6 +3,7 @@ class TypesController < ApplicationController
   before_filter :find_public_or_owned_resources, only: 'index'
   before_filter :find_public_or_owned_resource, only: 'show'
   before_filter :find_owned_resource, only: %w(update destroy)
+  before_filter :filter_params, only: 'index'
 
   def index
     @types = @types.page(params[:page]).per(params[:per])
@@ -56,5 +57,11 @@ class TypesController < ApplicationController
 
     def default_status_for(type)
       @status = Status.base_default(type, {name: 'Default status'}, request, current_user)
+    end
+
+    def filter_params
+      pp params
+      @types.where('name' => /^#{params[:name]}/) if params[:name]
+      @types.any_in(categories: params[:category]) if params[:category]
     end
 end

@@ -20,6 +20,8 @@ type:
 category:
   uri: <%= category_uri = "#{host}/categories/lighting" %>
   name: 'Lighting'
+  cooling: 
+    uri: <%= "#{host}/categories/cooling" %>
 properties:
   status:
     uri: <%= status_uri = "#{host}/properties/status" %> 

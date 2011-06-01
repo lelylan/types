@@ -20,6 +20,7 @@ feature "TypeController" do
   before { @has_set_max = Factory(:has_set_max) }
   before { @default_status = Factory(:default_status) }
   before { @category = Factory(:category) }
+  before { @cooling_category = Factory(:cooling_category) }
 
 
   # GET /types
@@ -34,14 +35,27 @@ feature "TypeController" do
 
     context "when logged in" do
       before { basic_auth(@user) } 
-      before { visit @uri }
       scenario "view all resources" do
+        visit @uri
         page.status_code.should == 200
         should_have_type(@resource)
         should_not_have_type(@not_owned_resource)
         should_have_pagination(@uri)
         should_have_valid_json(page.body)
         should_have_root_as('resources')
+      end
+
+      context "with filter" do
+        context "params[:category]" do
+          before { @name = "Another category type"}
+          before { @cooling = Factory(:type, name: @name, categories: [Settings.category.cooling.uri])}
+          before { visit "/types?category=#{@cooling.uri}" }
+          it "should filter by category" do
+            save_and_open_page
+            page.should have_content @cooling.uri
+            page.should_not have_content @category.uri
+          end
+        end
       end
     end
   end

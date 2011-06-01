@@ -70,6 +70,25 @@ feature "TypesController" do
         it { should_have_pagination_uri('last', params.merge({page: 3})) }
       end
 
+      context "with have extra params and no pagination" do
+        before { params.merge!(type: 'instantaneous') }
+        before { visit "#{path}?type=instantaneous" }
+        it { should_have_pagination_uri('first', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('next', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('last', params.merge({page: 1, per: 25})) }
+      end
+
+      context "with an URI" do
+        before { @uri = 'http://www.example.com/resource' }
+        before { params.merge!(type: @uri) }
+        before { visit "#{path}?type=#{@uri}" }
+        it {  save_and_open_page; should_have_pagination_uri('first', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('prev', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('next', params.merge({page: 1, per: 25})) }
+        it { should_have_pagination_uri('last', params.merge({page: 1, per: 25})) }
+      end
+
       context "when accessing a connected resource" do
         before { path = "#{path}/#{resource.id.as_json}/#{connection}" }
         before { params.merge!(path: path) }

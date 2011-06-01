@@ -8,6 +8,10 @@ FactoryGirl.define do
     created_from Settings.user.uri
   end
 
+  factory :cooling_category, parent: :category do
+    uri Settings.category.cooling.uri
+  end
+
   factory :category_public, parent: :category do
     uri Settings.category.uri + '_public'
     public true
