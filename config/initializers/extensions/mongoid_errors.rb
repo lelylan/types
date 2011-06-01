@@ -1,4 +1,4 @@
-# encoding: utf-8
+# Attempt to connect twice the same resource
 module Mongoid #:nodoc
   module Errors #:nodoc
    class Duplicated < MongoidError

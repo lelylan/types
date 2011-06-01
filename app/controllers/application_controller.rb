@@ -51,6 +51,12 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # Override the 401 notification method
+    ActionController::HttpAuthentication::Basic.module_eval do
+      def authentication_request(controller, realm)
+        controller.render_401
+      end
+    end
 
     # Apply the session authentication for web pages requests
     def session_auth
