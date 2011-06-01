@@ -1,4 +1,3 @@
-# GET categories/public
 shared_examples_for "a public list of resources" do |action|
   context "with public resources" do
     before { basic_auth_cleanup }
