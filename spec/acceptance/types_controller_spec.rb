@@ -47,14 +47,21 @@ feature "TypeController" do
       context "with filter" do
         context "params[:category]" do
           before { @name = "Another category type"}
-          before { @cooling_category = Factory(:type, name: @name, categories: [Settings.category.cooling.uri])}
+          before { @cooling_resource = Factory(:type, name: @name, categories: [Settings.category.cooling.uri])}
           before { visit "/types?category=#{@category.uri}" }
           it "should filter by category" do
-            #pp Type.all.to_a
-            save_and_open_page
             should_have_type(@resource)
-            page.should_not have_content @name
-            page.should_not have_content @resource.uri
+            page.should_not have_content @cooling_resource.name
+          end
+        end
+
+        context "params[:name]" do
+          before { @name = "A new cool name"}
+          before { @cooling_resource = Factory(:type, name: @name) }
+          before { visit "/types?name=A+new" }
+          it "should filter by match name" do
+            should_have_type(@cooling_resource)
+            page.should_not have_content @resource.name
           end
         end
       end
