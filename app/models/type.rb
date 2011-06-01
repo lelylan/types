@@ -13,7 +13,6 @@ class Type
 
   attr_accessor :statuses
   embeds_many :type_statuses
-  before_save :create_type_statuses
 
   attr_accessible :name, :properties, :functions, :statuses, :categories, :public
 
@@ -21,6 +20,8 @@ class Type
   validates :uri, presence:true, url: true
   validates :created_from, presence: true, url: true
   validates :public, inclusion: { in: [true, false] }
+
+  before_save :create_type_statuses
 
 
   def connected_categories

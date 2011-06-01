@@ -71,10 +71,68 @@ feature "FunctionController" do
         should_have_valid_json(page.body)
       end
 
+      
       scenario "not valid params" do
         page.driver.post(@uri, {}.to_json)
         should_have_a_not_valid_resource
         should_have_valid_json(page.body)
+      end
+    end
+  end
+
+
+  # POST /functions
+  # { properties: [...] }
+  context ".create with properties" do
+    before { @uri =  "/functions" }
+
+    it_should_behave_like "protected resource", "page.driver.post(@uri)"
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      before do 
+        @properties = [
+          { uri: Settings.properties.status.uri, value: 'on'},
+          { uri: Settings.properties.intensity.uri, value: '10.0'} ]
+      end
+      let(:params) {{ name: Settings.functions.set_intensity.name, properties: @properties }}
+
+      scenario "create function properties" do
+        page.driver.post(@uri, params.to_json)
+        @resource = Function.last
+        should_have_function_property(@resource.function_properties[0])
+        should_have_function_property(@resource.function_properties[1])
+      end
+
+      context "with duplicated property URI" do
+        before do 
+          @properties = [
+            { uri: Settings.properties.status.uri, value: 'on'},
+            { uri: Settings.properties.status.uri, value: 'off'} ]
+          params[:properties] = @properties
+        end
+
+        scenario "create function properties" do
+          page.driver.post(@uri, params.to_json)
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+        end
+      end
+
+      context "with one not valid property" do
+        before do 
+          @properties = [
+            { uri: Settings.properties.status.uri, value: 'on'},
+            { uri: Settings.properties.intensity.uri, value: 'off', filter: 'not valid'} ]
+          params[:properties] = @properties
+        end
+
+        scenario "create function properties" do
+          page.driver.post(@uri, params.to_json)
+          Function.count.should == 0
+          should_have_a_not_valid_resource
+          should_have_valid_json(page.body)
+        end
       end
     end
   end
@@ -92,7 +150,7 @@ feature "FunctionController" do
       before { basic_auth(@user) } 
       let(:params) {{ name: "Set intensity updated" }}
 
-      scenario "create resource" do
+      scenario "update resource" do
         page.driver.put(@uri, params.to_json)
         page.status_code.should == 200
         should_have_function(@resource.reload)
@@ -108,6 +166,44 @@ feature "FunctionController" do
       end
 
       it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
+    end
+  end
+
+
+  # PUT /functions/{function-id}
+  # { properties: [...] }
+  context ".update" do
+    before { @resource = Factory(:function_complete) }
+    before { @uri =  "/functions/#{@resource.id.as_json}" }
+
+    context "when logged in" do
+      before { basic_auth(@user) } 
+      let(:params) {{ name: "Set intensity updated" }}
+
+      context "when update properties" do
+        scenario "with nil as value" do
+          page.driver.put(@uri, params.to_json)
+          should_have_function_property(@resource.function_properties[0])
+          should_have_function_property(@resource.function_properties[1])
+          should_have_valid_json(page.body)
+        end
+
+        scenario "with [] values" do
+          params[:properties] = []
+          page.driver.put(@uri, params.to_json)
+          page.should_not have_content Settings.properties.status.uri
+          page.should_not have_content Settings.properties.intensity.uri
+          should_have_valid_json(page.body)
+        end
+
+        scenario "with one property" do
+          params[:properties] = [{uri: Settings.properties.status.uri}]
+          page.driver.put(@uri, params.to_json)
+          page.should have_content Settings.properties.status.uri
+          page.should_not have_content Settings.properties.intensity.uri
+          should_have_valid_json(page.body)
+        end
+      end
     end
   end
 

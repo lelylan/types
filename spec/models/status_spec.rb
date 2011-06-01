@@ -28,4 +28,37 @@ describe Status do
       uploader.large.should  have_dimensions(Settings.thumbs.large, Settings.thumbs.large)
     end
   end
+
+  
+  describe "#create_status_properties" do
+    context "when valid" do
+      before  { @properties = [{ uri: Settings.properties.status.uri, values: %w(on), pending: true }] }
+      subject { Factory(:default_status, properties: @properties).status_properties }
+      it { should have(1).item }
+    end
+
+    context "when not valid" do
+      # all params, except URI, which is handled differently, are optionals.
+    end
+
+    context "when has duplicated property URI" do
+      before do
+        @message = "A resource can not be connected more than once"
+        @properties = [
+          { uri: Settings.properties.status.uri, values: %w(on) },
+          { uri: Settings.properties.status.uri, values: %w(off)} ]
+      end
+
+      it "should get a not valid notification" do
+        lambda{ Factory(:default_status, properties: @properties) }.
+          should raise_error(Mongoid::Errors::Duplicated, @message)
+      end
+    end
+
+    context "with not owned properties" do
+    end
+
+    context "with not existng property" do
+    end
+  end
 end

@@ -8,6 +8,7 @@ en:
       found: "Resource connection already found"
       not_found: "Resource connection not found"
       not_valid_uri: "Not valid connection uri"
+      duplicated: "Resouce connection duplicated"
     physical:
       not_found: "Physical device not existing (insert one)"
     image:
@@ -18,3 +19,8 @@ en:
     pagination:
       not_valid_page: "Not a valid page"
       not_valid_per_page: "Not a valid per_page"
+
+  mongoid:
+    errors:
+      messages:
+        duplicated: "A resource can not be connected more than once"

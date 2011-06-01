@@ -8,8 +8,7 @@ module Lelylan
         base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
         base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Mongoid::Errors::InvalidType, with: :mongoid_errors_invalid_type
-        base.rescue_from WillPaginate::InvalidPage, with: :will_paginate_invalid_page
-        base.rescue_from ZeroDivisionError, with: :zero_division_error
+        base.rescue_from Mongoid::Errors::Duplicated, with: :mongoid_duplicated_errors
       end
 
       # Document not valid
@@ -31,11 +30,17 @@ module Lelylan
       def json_parse_error(e)
         render_422 "notifications.json.not_valid", parse_error(e)
       end
-      
+
       # Assignation of wrong type to model field (e.g. hash instead of array)
       def mongoid_errors_invalid_type(e)
         render_422 "notifications.json.not_valid", parse_error(e)
       end
+
+      # Assignation of wrong type to model field (e.g. hash instead of array)
+      def mongoid_duplicated_errors(e)
+        render_422 "notifications.connection.found", parse_error(e)
+      end
+
 
       private 
 
