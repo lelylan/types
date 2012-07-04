@@ -1,0 +1,46 @@
+device:
+  host: <%= device_host = "https://device.lelylan.com" %>
+  uri: <%= "#{device_host}/devices/closet-dimmer" %>
+  another:
+    uri: <%= "#{device_host}/devices/another-closet-dimmer" %>
+
+type:
+  host: <%= type_host = "https://type.lelylan.com" %>
+  uri: <%= "#{type_host}/types/dimmer" %>
+  another:
+    uri: <%= "#{type_host}/types/another-dimmer" %>
+
+user: 
+  host: <%= people_host = "https://people.lelylan.com" %>
+  auth: <%= "#{people_host}/authentication" %>
+  uri: <%= "#{people_host}/users/alice" %>
+  email: 'alice@example.com'
+  password: 'example'
+  another: 
+    uri: <%= "#{people_host}/users/bob" %>
+    email: 'bob@example.com'
+
+properties:
+  status:
+    uri: <%= status_uri = "#{type_host}/properties/status" %> 
+    name: 'Status'
+    default: 'off'
+    values: ['on', 'off']
+    new: 'on'
+  intensity:
+    uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
+    name: 'Intensity'
+    default: '0.0'
+    values: ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
+    new: '100.0'
+  another:
+    uri: <%= "#{type_host}/properties/another-property" %>
+    value: '25.0'
+
+functions:
+  set_status:
+    uri: <%= set_status_uri = "#{type_host}/functions/set-status" %>
+  set_intensity:
+    uri: <%= set_intensity_uri = "#{type_host}/functions/set-intensity" %>
+  another:
+    uri: <%= "#{type_host}/functions/another-function" %>
