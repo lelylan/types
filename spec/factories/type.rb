@@ -3,7 +3,7 @@ Settings.reload!
 
 FactoryGirl.define do
 
-  factory :type, class: Typee do
+  factory :type, class: Type do
     name 'Dimmer'
     created_from Settings.user.uri
     public 'true'

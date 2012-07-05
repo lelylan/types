@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Typee do
+describe Type do
 
   it { should_not allow_mass_assignment_of(:created_from) }
 
@@ -40,11 +40,11 @@ describe Typee do
 
       context "when raise an error" do
 
-        let(:count) { Typee.count }
+        let(:count) { Type.count }
         before { expect { FactoryGirl.create(:type_no_connections, properties: properties_id) }.to raise_error }
 
         it "should not add a new record" do
-          count.should == Typee.count
+          count.should == Type.count
         end
       end
     end

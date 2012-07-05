@@ -1,4 +1,4 @@
-class Typee
+class Type
   include Mongoid::Document
   include Mongoid::Timestamps
 

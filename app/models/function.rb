@@ -12,7 +12,6 @@ class Function
   validates :created_from, presence: true, url: true
 
   embeds_many :function_properties
-  has_and_belongs_to_many :typees
 
   after_save :create_function_properties
 

@@ -11,8 +11,6 @@ class Property
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
-  
-  has_and_belongs_to_many :typees
 
   before_save :parse_values
 
