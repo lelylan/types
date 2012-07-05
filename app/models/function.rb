@@ -21,7 +21,7 @@ class Function
     if properties
       properties_id(properties)
       function_properties.destroy_all
-      properties.each { |property| function_properties.create! property }
+      properties.each { |property| function_properties.create!(property) }
     end
   end
 
