@@ -1,73 +1,43 @@
-#Settings.add_source!("#{Rails.root}/config/settings/test.yml")
-#Settings.reload!
+Settings.add_source!("#{Rails.root}/config/settings/test.yml")
+Settings.reload!
 
-#FactoryGirl.define do
-  ## Default status
-  #factory :default_status, class: :status do
-    #name 'Default status'
-    #uri Settings.statuses.default.uri
-    #created_from Settings.user.uri
-  #end
+FactoryGirl.define do
 
-  ## Is setting intensity/max
-  #factory :is_setting_intensity, class: Status do
-    #name Settings.statuses.is_setting_intensity.name
-    #uri Settings.statuses.is_setting_intensity.uri
-    #created_from Settings.user.uri
-    #status_properties {[ Factory.build(:status_property_is_setting_intensity) ]}
-  #end
+  # -----------------
+  # Base factories
+  # -----------------
 
-  #factory :is_setting_max, parent: :is_setting_intensity do
-    #name Settings.statuses.is_setting_max.name
-    #uri Settings.statuses.is_setting_max.uri
-    #status_properties {[ Factory.build(:status_property_is_setting_max) ]}
-  #end
+  factory :setting_intensity, class: Status do
+    name 'Setting intensity'
+    created_from Settings.user.uri
+    status_properties {[
+      FactoryGril.build(:status_for_setting_intensity),
+      FactoryGirl.build(:intensity_for_setting_intensity)
+    ]}
+  end
 
-  #factory :not_owned_is_setting_intensity, parent: :is_setting_intensity do
-    #uri Settings.statuses.is_setting_intensity.uri + 'not_owned'
-    #created_from Settings.another_user.uri
-  #end
+  factory :status_no_connections, parent: :setting_intensity do
+    status_properties []
+  end
 
-  ## Has set intensity/max
-  #factory :has_set_intensity, class: :status do
-    #name Settings.statuses.has_set_intensity.name
-    #uri Settings.statuses.has_set_intensity.uri
-    #created_from Settings.user.uri
-    #status_properties {[ Factory.build(:status_property_has_set_intensity) ]}
-  #end
+  factory :status_not_owned, parent: :setting_intensity do
+    created_from Settings.user.another.uri
+  end
 
-  #factory :has_set_max, parent: :has_set_intensity do
-    #name Settings.statuses.has_set_max.name
-    #uri Settings.statuses.has_set_max.uri
-    #status_properties {[ Factory.build(:status_property_has_set_max) ]}
-  #end
+  # --------------
+  # Connections
+  # --------------
 
-  #factory :not_owned_has_set_intensity, parent: :has_set_intensity do
-    #uri Settings.statuses.has_set_intensity.uri + 'not_owned'
-    #created_from Settings.another_user.uri
-  #end
+  factory :status_for_setting_intensity, class: StatusProperty do
+    property_id Settings.properties.status.property_id
+    values ['on']
+    pending nil
+  end
 
-
-  ## Connections
-  #factory :status_property_has_set_intensity, class: StatusProperty do
-    #uri Settings.properties.intensity.uri
-    #values Settings.statuses.has_set_intensity.values
-    #pending nil
-  #end
-
-  #factory :status_property_is_setting_intensity, parent: :status_property_has_set_intensity do
-    #values Settings.statuses.is_setting_intensity.values
-    #pending true
-  #end
-
-  #factory :status_property_has_set_max, class: StatusProperty do
-    #uri Settings.properties.intensity.uri
-    #values Settings.statuses.has_set_max.values
-    #pending false
-  #end
-
-  #factory :status_property_is_setting_max, parent: :status_property_has_set_max do
-    #values Settings.statuses.is_setting_max.values
-    #pending true
-  #end
-#end  
+  factory :intensity_for_setting_intensity, class: StatusProperty do
+    property_id Settings.properties.intensity.property_id
+    range_start 0
+    range_end 100
+    pending true
+  end
+end

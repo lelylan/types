@@ -1,0 +1,6 @@
+{
+  "properties" : [
+    { "uri": "https://type.lelylan.com/properties/status", "pending": "false" , "values": ["on"] },
+    { "uri": "https://type.lelylan.com/properties/intensity", "pending": "true", "range_start": 75, "range_end": 100 }
+  ]
+}

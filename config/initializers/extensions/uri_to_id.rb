@@ -10,6 +10,18 @@ module Lelylan
     module URI
 
       #
+      # Gets as input an array of hash, where in each of them there
+      # is a uri field. Using this field the id is extracted and 
+      # inserted into each hash
+      #
+
+      def inject_id_to_hashes(resources, key)
+        resources.each do |resource|
+          resource[key] = find_id_from_uri(HashWithIndifferentAccess.new(resource)[:uri])
+        end
+      end
+
+      #
       # Gets all the ids starting from a list of URIs
       #
 

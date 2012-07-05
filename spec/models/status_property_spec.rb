@@ -1,25 +1,20 @@
 require 'spec_helper'
 
 describe StatusProperty do
-  it { should validate_presence_of(:uri) }
 
-  it { should validate_presence_of(:uri) }
-  it { should allow_value(Settings.validation.valid_uri).for(:uri) }
-  it { should_not allow_value(Settings.validation.not_valid_uri).for(:uri) }
+  it { should validate_presence_of(:property_id) }
+  it { ['true', 'false', nil].each { |value| should allow_value(value).for(:pending) } }
+  it { ['not_valid', ''].each { |value| should_not allow_value(value).for(:pending) } }
 
-  it { should allow_value(true).for(:pending) }
-  it { should allow_value(false).for(:pending) }
-  it { should allow_value('example').for(:pending) } # set it to nil
+  context "with duplicated property_id" do
 
-  describe "values" do
-    before  { @values = [1, {key: 'value'}, ['1']] }
-    before  { @resource = Factory(:is_setting_intensity) }
-    before  { @resource.status_properties.first.update_attributes(values: @values) }
-    subject { @resource.status_properties.first.values }
+    let(:status_property) { { property_id: 'intensity', range_start: '0', range_end: '100', pending: 'true' } }
+    let(:status)          { FactoryGirl.create(:status_no_connections) }
+    before  { status.status_properties.create!(status_property) }
+    subject { status.status_properties }
 
-    it { should have(3).itmes }
-    it { subject[0].should == "1" }
-    it { subject[1].should == {key: 'value'}.to_s }
-    it { subject[2].should == ['1'].to_s }
+    it "validates the uniqueness of property_id" do
+      expect { subject.create!(status_property) }.to raise_error(Mongoid::Errors::Validations)
+    end
   end
 end

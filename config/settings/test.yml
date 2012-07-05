@@ -56,6 +56,13 @@ functions:
   another:
     name: 'Another function'
     uri: <%= "#{type_host}/functions/another-function" %>
+
+statuses:
+  setting_intensity:
+    status_id: 'setting-intensity'
+    uri: <%= "#{type_host}/statuses/setting-intensity" %>
+    name: 'Setting intensity'
+
 validation:
   uris:
     valid: ['http://example.com', 'http://www.examle.com']
