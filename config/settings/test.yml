@@ -43,13 +43,16 @@ properties:
 functions:
   set_intensity:
     name: 'Set intensity'
+    function_id: 'set-intensity'
     uri: <%= set_intensity_uri = "#{type_host}/functions/set-intensity" %>
   turn_on:
     name: 'Turn on'
+    function_id: 'turn-on'
     uri: <%= turn_on_uri = "#{type_host}/functions/turn-on" %>
   turn_off:
     name: 'Turn off'
-    uri: <%= turn_off_uri = "#{type_host}/functions/turn-on" %>
+    function_id: 'turn-off'
+    uri: <%= turn_off_uri = "#{type_host}/functions/turn-off" %>
   another:
     name: 'Another function'
     uri: <%= "#{type_host}/functions/another-function" %>
