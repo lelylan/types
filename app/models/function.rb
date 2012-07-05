@@ -15,44 +15,11 @@ class Function
   before_save :create_function_properties
 
 
-  # ----------------
-  # Bulk assignment
-  # ----------------
-
-  # Enable bulk assignment of properties to a function
+  # property creation
   def create_function_properties
-    if properties.is_a? Array # remove this check
       function_properties.destroy_all
-      validates_not_duplicated_uri
-      function_properties = build_function_properties || []
-    elsif not properties.nil?
-      raise Mongoid::Errors::InvalidType.new(::Array, properties)
-    end
+      function_properties.each do |function_property|
+        function_properties.create! function_property
+      end
   end
-
-
-  private
-
-    # Build a new function property without saving it. In this way 
-    # we can check if it is valid or not.
-    def build_function_properties
-      properties.map do |property|
-        function_property = function_properties.new(property)
-        validate_function_property(function_property)
-      end.compact!
-    end
-
-    # Raise an error if the function property connection is not valid
-    def validate_function_property(function_property)
-      unless function_property.valid?
-        raise Mongoid::Errors::Validations.new(function_property)    
-      end
-    end
-
-    # Raise an error if the same uri is inserted twice. 
-    def validates_not_duplicated_uri
-      unless properties.length == properties.map{|p| p[:uri]}.uniq.length
-        raise Mongoid::Errors::Duplicated.new
-      end
-    end
 end

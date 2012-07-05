@@ -8,6 +8,35 @@ describe Function do
   # uri
   it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
 
+
+  describe "#create_function_properties" do
+    context "when valid JSON" do
+      context "when valid properties" do
+        it "create properties" do
+        end
+
+        it "deletes previous properties" do
+        end
+      end
+
+      context "when not valid properties" do
+        it "should not create the property" do
+        end
+      end
+
+      context "when duplicate the property" do
+        it "should not create the property" do
+        end
+      end
+    end
+
+    context "when not valid JSON" do
+      it "should raise an error" do
+      end
+    end
+  end
+end
+
   #describe "#create_function_properties" do
     #context "when valid" do
       #before  { @properties = [{ uri: Settings.properties.status.uri, value: 'on' }] }
@@ -57,4 +86,3 @@ describe Function do
     #end
 
   #end
-end
