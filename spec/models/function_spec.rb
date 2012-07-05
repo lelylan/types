@@ -49,7 +49,9 @@ describe Function do
     context "with not valid URI" do
 
       it "does not create the property" do
-        expect { FactoryGirl.create(:function_no_connections, properties: [{ }]) }.to raise_error(Lelylan::Errors::ValidURI)
+        expect { 
+          FactoryGirl.create(:function_no_connections, properties: [{ }]) 
+        }.to raise_error(Lelylan::Errors::ValidURI)
       end
     end
 
@@ -59,7 +61,9 @@ describe Function do
       before           { properties[1] = properties[0] }
 
       it "does not create the property twice" do
-        expect { FactoryGirl.create(:function, properties: properties) }.to raise_error(Mongoid::Errors::Validations)
+        expect { 
+          FactoryGirl.create(:function, properties: properties) 
+        }.to raise_error(Mongoid::Errors::Validations)
       end
     end
 
@@ -86,7 +90,9 @@ describe Function do
     context "with not valid JSON" do
 
       it "should raise an error" do
-        expect { FactoryGirl.create(:function, properties: "string") }.to raise_error
+        expect { 
+          FactoryGirl.create(:function, properties: "string") 
+        }.to raise_error
       end
     end
   end
