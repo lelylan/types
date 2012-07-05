@@ -11,7 +11,7 @@ FactoryGirl.define do
     name 'Setting intensity'
     created_from Settings.user.uri
     status_properties {[
-      FactoryGril.build(:status_for_setting_intensity),
+      FactoryGirl.build(:status_for_setting_intensity),
       FactoryGirl.build(:intensity_for_setting_intensity)
     ]}
   end
@@ -38,6 +38,6 @@ FactoryGirl.define do
     property_id Settings.properties.intensity.property_id
     range_start 0
     range_end 100
-    pending true
+    pending 'true'
   end
 end

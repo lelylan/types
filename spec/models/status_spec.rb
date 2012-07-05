@@ -16,9 +16,6 @@ describe Status do
       subject          { status.status_properties }
 
       it "creates properties" do
-        puts ":::" + status.inspect
-        puts ":::" + properties.inspect
-        puts ":::" + status.status_properties.inspect
         subject.should have(2).items
       end
 
@@ -32,24 +29,25 @@ describe Status do
       end
     end
 
-    #context "with pre-existing properties" do
+    context "with pre-existing properties" do
 
-      #let(:properties) { json_fixture('properties.json')[:properties] }
-      #let(:function)   { FactoryGirl.create(:function, properties: properties) }
-      #subject          { function.function_properties }
+      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      let(:status)     { FactoryGirl.create(:setting_intensity, properties: properties) }
+      subject          { status.status_properties }
 
-      #it "deletes previous ones" do
-        #subject.should have(2).items
-      #end
+      it "deletes previous properties" do
+        subject.should have(2).items
+      end
 
-      #it "sets the new status" do
-        #subject.where(property_id: 'status').first.value.should == 'on'
-      #end
+      it "sets the new status" do
+        subject.where(property_id: 'status').first.values.should == ['on']
+      end
 
-      #it "sets the new intensity" do
-        #subject.where(property_id: 'intensity').first.value.should == '100.0'
-      #end
-    #end
+      it "sets the new intensity" do
+        subject.where(property_id: 'intensity').first.range_start.should == 75
+        subject.where(property_id: 'intensity').first.range_end.should == 100
+      end
+    end
 
     #context "with not valid URI" do
 
