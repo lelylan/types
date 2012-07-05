@@ -15,7 +15,7 @@ FactoryGirl.define do
 
   # Function with no connections
   factory :function_no_connections, parent: :function do |f|
-    function_properties = []
+    function_properties []
   end
 
   # Function not owned
@@ -49,11 +49,11 @@ FactoryGirl.define do
 
   factory :function_status, class: :function_property do
     property_id Settings.properties.status.property_id
-    value Settings.properties.status.default_value
+    value Settings.properties.status.default
   end
 
   factory :function_intensity, class: :function_property do
     property_id Settings.properties.intensity.property_id
-    value Settings.properties.intensity.default_value
+    value Settings.properties.intensity.default
   end
 end

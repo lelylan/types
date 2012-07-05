@@ -23,21 +23,21 @@ user:
 properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 
-    property-id: 'status'
+    property_id: 'status'
     name: 'Status'
     default: 'off'
     values: ['on', 'off']
     new: 'on'
   intensity:
     uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
-    property-id: 'intensity'
+    property_id: 'intensity'
     name: 'Intensity'
     default: '0.0'
     values: ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
     new: '100.0'
   another:
     uri: <%= "#{type_host}/properties/another-property" %>
-    id: 'another-property'
+    property_id: 'another-property'
     value: '75.0'
 
 functions:
