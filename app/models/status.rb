@@ -12,15 +12,15 @@ class Status
   validates :name, presence: true
   validates :created_from, presence: true, url: true
 
-  embeds_many :status_properties, cascade_callbacks: true
+  embeds_many :status_properties
 
-  before_save :create_status_properties
+  after_save :create_status_properties
 
   def create_status_properties
     if properties
       inject_id_to_hashes(properties, 'property_id')
       status_properties.destroy_all
-      properties.each { |property| status_properties.build(property) }
+      properties.each { |property| status_properties.create!(property) }
     end
   end
 end

@@ -49,54 +49,54 @@ describe Status do
       end
     end
 
-    #context "with not valid URI" do
+    context "with not valid URI" do
 
-      #it "does not create the property" do
-        #expect { 
-          #FactoryGirl.create(:function_no_connections, properties: [{ }]) 
-        #}.to raise_error(Lelylan::Errors::ValidURI)
-      #end
-    #end
+      it "does not create the property" do
+        expect { 
+          FactoryGirl.create(:status_no_connections, properties: [{ }]) 
+        }.to raise_error(Lelylan::Errors::ValidURI)
+      end
+    end
 
-    #context "with duplicated properties" do
+    context "with duplicated properties" do
 
-      #let(:properties) { json_fixture('properties.json')[:properties] }
-      #before           { properties[1] = properties[0] }
+      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      before           { properties[1] = properties[0] }
 
-      #it "does not create the property twice" do
-        #expect { 
-          #FactoryGirl.create(:function, properties: properties) 
-        #}.to raise_error(Mongoid::Errors::Validations)
-      #end
-    #end
+      it "does not create the property twice" do
+        expect { 
+          FactoryGirl.create(:status_no_connections, properties: properties) 
+        }.to raise_error(Mongoid::Errors::Validations)
+      end
+    end
 
-    #context "with no properties" do
+    context "with no properties" do
 
-      #let(:function) { FactoryGirl.create(:function) }
-      #subject        { function.function_properties }
+      let(:status) { FactoryGirl.create(:setting_intensity) }
+      subject      { status.status_properties }
 
-      #it "should not change anything" do
-        #subject.should have(2).items
-      #end
-    #end
+      it "should not change anything" do
+        subject.should have(2).items
+      end
+    end
 
-    #context "with empty properties" do
+    context "with empty properties" do
 
-      #let(:function) { FactoryGirl.create(:function, properties: []) }
-      #subject        { function.function_properties }
+      let(:status) { FactoryGirl.create(:setting_intensity, properties: []) }
+      subject        { status.status_properties }
 
-      #it "removes all properties" do
-        #subject.should have(0).items
-      #end
-    #end
+      it "removes all properties" do
+        subject.should have(0).items
+      end
+    end
 
-    #context "with not valid JSON" do
+    context "with not valid JSON" do
 
-      #it "should raise an error" do
-        #expect { 
-          #FactoryGirl.create(:function, properties: "string") 
-        #}.to raise_error
-      #end
-    #end
+      it "should raise an error" do
+        expect { 
+          FactoryGirl.create(:status, properties: "string") 
+        }.to raise_error
+      end
+    end
   end
 end
