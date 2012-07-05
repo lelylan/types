@@ -5,55 +5,39 @@ class Function
   field :name
   field :created_from
 
-  has_and_belongs_to_many :typees
   embeds_many :function_properties
 
+  attr_accessor :properties
   attr_accessible :name, :properties
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
 
-  before_save :create_function_properties
+  after_save :create_function_properties
 
 
-  # ----------------
-  # Bulk assignment
-  # ----------------
-
-  # Enable bulk assignment of properties to a function
+  # create the function properties in the embedded doc
   def create_function_properties
-    if properties.is_a? Array
+    if properties
+      properties_id(properties)
       function_properties.destroy_all
-      validates_not_duplicated_uri
-      function_properties = build_function_properties || []
-    elsif not properties.nil?
-      raise Mongoid::Errors::InvalidType.new(::Array, properties)
+      properties.each { |property| function_properties.create!(property) }
     end
   end
 
 
-  private
+  private 
 
-    # Build a new function property without saving it. In this way 
-    # we can check if it is valid or not.
-    def build_function_properties
-      properties.map do |property|
-        function_property = function_properties.new(property)
-        validate_function_property(function_property)
-      end.compact!
+    def properties_id(properties)
+      properties.each { |property| property['property_id'] = property_id(property) }
     end
 
-    # Raise an error if the function property connection is not valid
-    def validate_function_property(function_property)
-      unless function_property.valid?
-        raise Mongoid::Errors::Validations.new(function_property)    
-      end
-    end
-
-    # Raise an error if the same uri is inserted twice. 
-    def validates_not_duplicated_uri
-      unless properties.length == properties.map{|p| p[:uri]}.uniq.length
-        raise Mongoid::Errors::Duplicated.new
+    def property_id(property)
+      begin
+        property = HashWithIndifferentAccess.new property
+        Addressable::URI.parse(property['uri']).basename
+      rescue
+        raise Lelylan::Errors::ValidURI
       end
     end
 end

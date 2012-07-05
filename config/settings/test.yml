@@ -23,24 +23,37 @@ user:
 properties:
   status:
     uri: <%= status_uri = "#{type_host}/properties/status" %> 
+    property_id: 'status'
     name: 'Status'
     default: 'off'
     values: ['on', 'off']
     new: 'on'
   intensity:
     uri: <%= intensity_uri = "#{type_host}/properties/intensity" %> 
+    property_id: 'intensity'
     name: 'Intensity'
     default: '0.0'
     values: ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
     new: '100.0'
   another:
     uri: <%= "#{type_host}/properties/another-property" %>
-    value: '25.0'
+    property_id: 'another-property'
+    value: '75.0'
 
 functions:
-  set_status:
-    uri: <%= set_status_uri = "#{type_host}/functions/set-status" %>
   set_intensity:
+    name: 'Set intensity'
     uri: <%= set_intensity_uri = "#{type_host}/functions/set-intensity" %>
+  turn_on:
+    name: 'Turn on'
+    uri: <%= turn_on_uri = "#{type_host}/functions/turn-on" %>
+  turn_off:
+    name: 'Turn off'
+    uri: <%= turn_off_uri = "#{type_host}/functions/turn-on" %>
   another:
+    name: 'Another function'
     uri: <%= "#{type_host}/functions/another-function" %>
+validation:
+  uris:
+    valid: ['http://example.com', 'http://www.examle.com']
+    not_valid: ['example', 'example.com', 'www.example.com']

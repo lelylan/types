@@ -12,12 +12,16 @@ describe Property do
   its(:default) { should == '' }
   its(:values)  { should == [] }
 
+  # values related methods
   describe "#values" do
-    context "when they are not string" do
-      before { @intensity = FactoryGirl.create(:intensity, values: [1, {key: 'value'}, ['1']]) }
 
-      it "accept any object without transforming it in a string" do
-        @intensity.values.should have(3).objects
+    context "receives objects instead of strings" do
+      let(:objects)  { [ 1, {key: 'value'}, ['1'] ] }
+      let(:strings)  { objects.map {|object| object.to_s} }
+      let(:intensity) { FactoryGirl.create(:intensity, values: objects) } 
+
+      it "normalizes the objects into strings" do
+        intensity.values.should == strings
       end
     end
   end
