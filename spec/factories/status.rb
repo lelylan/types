@@ -36,8 +36,8 @@ FactoryGirl.define do
 
   factory :intensity_for_setting_intensity, class: StatusProperty do
     property_id Settings.properties.intensity.property_id
-    range_start 0
-    range_end 100
+    range_start '0'
+    range_end '100'
     pending 'true'
   end
 end

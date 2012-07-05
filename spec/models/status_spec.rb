@@ -24,8 +24,8 @@ describe Status do
       end
 
       it "sets the intensity" do
-        subject.where(property_id: 'intensity').first.range_start.should == 75
-        subject.where(property_id: 'intensity').first.range_end.should == 100
+        subject.where(property_id: 'intensity').first.range_start.should == '75'
+        subject.where(property_id: 'intensity').first.range_end.should == '100'
       end
     end
 
@@ -44,8 +44,8 @@ describe Status do
       end
 
       it "sets the new intensity" do
-        subject.where(property_id: 'intensity').first.range_start.should == 75
-        subject.where(property_id: 'intensity').first.range_end.should == 100
+        subject.where(property_id: 'intensity').first.range_start.should == '75'
+        subject.where(property_id: 'intensity').first.range_end.should == '100'
       end
     end
 

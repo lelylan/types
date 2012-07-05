@@ -4,8 +4,8 @@ class StatusProperty
 
   field :values, type: Array, default: []
   field :pending
-  field :range_start, type: Float
-  field :range_end, type: Float
+  field :range_start
+  field :range_end
   field :property_id
 
   attr_accessible :uri, :pending, :values, :range_start, :range_end, :property_id
