@@ -18,38 +18,42 @@ describe Typee do
     context "with valid URIs" do
 
       let(:property_uris) { [Settings.properties.status.uri, Settings.properties.intensity.uri] }
-      let(:property_ids)  { [Settings.properties.status.property_id, Settings.properties.intensity.property_id] }
+      let(:properties_id)  { [Settings.properties.status.property_id, Settings.properties.intensity.property_id] }
 
       subject { FactoryGirl.create(:type_no_connections, properties: property_uris) }
 
       it "sets the properties relation with property ids" do
-        subject.properties.should == property_ids
+        subject.properties.should == properties_id
       end
 
     end
 
     context "with not valid URIs" do
 
-      let(:property_ids) { ["not_valid"] }
+      let(:properties_id) { [nil] }
 
       it "raises a not valid error" do
         expect {
-          FactoryGirl.create(:type_no_connections, properties: property_ids)) 
-        }.to raise_error(Mongoid::Errors::Validations) 
+          FactoryGirl.create(:type_no_connections, properties: properties_id)
+        }.to raise_error(Lelylan::Errors::ValidURI) 
       end
 
-      it "does not create the resource" do
-        expect {
-          FactoryGirl.create(:type_no_connections, properties: property_ids)) 
-        }.to not_change
+      context "when raise an error" do
+
+        let(:count) { Typee.count }
+        before { expect { FactoryGirl.create(:type_no_connections, properties: properties_id) }.to raise_error }
+
+        it "should not add a new record" do
+          count.should == Typee.count
+        end
       end
     end
 
     context "with empty list" do
 
-      let(:property_ids) { [] }
+      let(:properties_id) { [] }
 
-      subject { FactoryGirl.create(:type, properties: property_ids )}
+      subject { FactoryGirl.create(:type, properties: properties_id ) }
 
       it "removes all properties" do
         subject.properties.should have(0).items
