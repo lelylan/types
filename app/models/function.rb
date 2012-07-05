@@ -5,7 +5,6 @@ class Function
   field :name
   field :created_from
 
-  has_and_belongs_to_many :typees
   embeds_many :function_properties
 
   attr_accessible :name, :properties
@@ -22,7 +21,7 @@ class Function
 
   # Enable bulk assignment of properties to a function
   def create_function_properties
-    if properties.is_a? Array
+    if properties.is_a? Array # remove this check
       function_properties.destroy_all
       validates_not_duplicated_uri
       function_properties = build_function_properties || []

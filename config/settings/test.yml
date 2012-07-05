@@ -44,3 +44,7 @@ functions:
     uri: <%= set_intensity_uri = "#{type_host}/functions/set-intensity" %>
   another:
     uri: <%= "#{type_host}/functions/another-function" %>
+validation:
+  uris:
+    valid: ['http://example.com', 'http://www.examle.com']
+    not_valid: ['example', 'example.com', 'www.example.com']
