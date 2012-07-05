@@ -9,5 +9,5 @@ class FunctionProperty
 
   embedded_in :function
 
-  validates :property_id, presence: true
+  validates :property_id, presence: true, uniqueness: true
 end
