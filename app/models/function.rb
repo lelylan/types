@@ -5,13 +5,14 @@ class Function
   field :name
   field :created_from
 
-  embeds_many :function_properties
-
   attr_accessor :properties
   attr_accessible :name, :properties
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
+
+  embeds_many :function_properties
+  has_and_belongs_to_many :typees
 
   after_save :create_function_properties
 

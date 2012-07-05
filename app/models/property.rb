@@ -7,13 +7,13 @@ class Property
   field :default, default: ''
   field :values, type: Array, default: []
 
-  has_and_belongs_to_many :typees
-
   attr_accessible :name, :default, :values
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
   
+  has_and_belongs_to_many :typees
+
   before_save :parse_values
 
   private 
