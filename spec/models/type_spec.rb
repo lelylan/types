@@ -13,7 +13,7 @@ describe Type do
   its(:public) { should == 'true' }
 
 
-  context "#find_property_ids" do
+  context "#find_properties" do
 
     context "with valid URIs" do
 
@@ -61,7 +61,7 @@ describe Type do
     end
   end
 
-  context "#find_functions_id" do
+  context "#find_functions" do
 
     context "with valid URIs" do
 
