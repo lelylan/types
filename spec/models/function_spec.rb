@@ -1,21 +1,25 @@
 require 'spec_helper'
 
 describe Function do
-  # presence
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:created_from) }
 
-  # uri
   it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
 
 
   describe "#create_function_properties" do
-    context "when valid JSON" do
+    context "with valid JSON" do
+
       context "when valid properties" do
+        let(:properties) { json_fixture('properties.json')[:properties] }
+        let(:function) { FactoryGirl.create(:function_no_connections, properties: properties) }
+
         it "create properties" do
+          function.function_properties.should have(2).items
         end
 
         it "deletes previous properties" do
+          function.function_properties.where(property_id: 'status').first.value.should == 'on'
         end
       end
 
@@ -30,7 +34,7 @@ describe Function do
       end
     end
 
-    context "when not valid JSON" do
+    context "with not valid JSON" do
       it "should raise an error" do
       end
     end

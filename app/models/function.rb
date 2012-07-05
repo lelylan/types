@@ -7,19 +7,27 @@ class Function
 
   embeds_many :function_properties
 
+  attr_accessor :properties
   attr_accessible :name, :properties
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
 
-  before_save :create_function_properties
+  before_save :extract_properties_id, :create_function_properties
 
 
-  # property creation
+  # extract the property id from its uri (for all property)
+  def extract_properties_id
+    properties.each do |property|
+      property['property_id']  = Addressable::URI.parse(property['uri']).basename
+    end
+  end
+
+  # create the properties
   def create_function_properties
       function_properties.destroy_all
-      function_properties.each do |function_property|
-        function_properties.create! function_property
+      properties.each do |property|
+        function_properties.build property
       end
   end
 end
