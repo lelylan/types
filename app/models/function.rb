@@ -20,7 +20,7 @@ class Function
   # create the properties
   def create_function_properties
     if properties
-      extract_properties_id
+      properties_id(properties)
       function_properties.destroy_all
       properties.each { |property| function_properties.build property }
     else
@@ -31,9 +31,15 @@ class Function
   private 
 
     # extract the property id from its uri (for all property)
-    def extract_properties_id
-      properties.each do |property|
-        property['property_id']  = Addressable::URI.parse(property['uri']).basename
+    def properties_id(properties)
+      properties.each { |property| property['property_id'] = property_id(property) }
+    end
+
+    def property_id(property)
+      begin
+        Addressable::URI.parse(property['uri']).basename
+      rescue
+        raise Lelylan::Errors::ValidURI
       end
     end
 end

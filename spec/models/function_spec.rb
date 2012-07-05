@@ -6,7 +6,6 @@ describe Function do
 
   it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
 
-
   describe "#create_function_properties" do
 
     context "with valid properties" do
@@ -29,6 +28,7 @@ describe Function do
     end
 
     context "with existing properties" do
+
       let(:properties) { json_fixture('properties.json')[:properties] }
       let(:function)   { FactoryGirl.create(:function, properties: properties) }
       subject          { function.function_properties }
@@ -47,10 +47,11 @@ describe Function do
     end
 
     context "with not valid properties" do
+
       it "does not create properties" do
         expect {
-          FactoryGirl.create(:function_no_connections, properties: [{value: 'base'}])
-        }.to raise_error(Mongoid::Errors::Validations)
+          val = FactoryGirl.create(:function_no_connections, properties: [{value: ''}])
+        }.to raise_error(Lelylan::Errors::ValidURI)
       end
     end
 
