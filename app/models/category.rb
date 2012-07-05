@@ -6,7 +6,7 @@ class Category
   field :name
   field :public, type: Boolean, default: true
 
-  has_and_belongs_to_many :typees
+  has_and_belongs_to_many :types
 
   attr_accessible :name, :public
 

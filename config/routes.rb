@@ -1,4 +1,4 @@
-Type::Application.routes.draw do
+LelylanType::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -8,7 +8,6 @@ class Status
   attr_accessor :properties
   #mount_uploader :image, ImageUploader
 
-  has_and_belongs_to_many :typees
   embeds_many :status_properties
 
   attr_accessible :name, :properties #, :image
