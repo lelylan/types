@@ -191,26 +191,26 @@ feature "FunctionsController" do
 
 
 
-  ## ------------------------
-  ## DELETE /functions/:id
-  ## ------------------------
-  #context ".destroy" do
-    #before { @resource = FactoryGirl.create(:function) }
-    #before { @uri =  "/functions/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+  # ------------------------
+  # DELETE /functions/:id
+  # ------------------------
+  context ".destroy" do
+    before { @resource = FactoryGirl.create(:function) }
+    before { @uri =  "/functions/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth } 
+    context "when logged in" do
+      before { basic_auth } 
 
-      #scenario "delete resource" do
-        #expect{ page.driver.delete(@uri) }.to change{ Function.count }.by(-1)
-        #page.status_code.should == 200
-        #should_have_function @resource
-      #end
+      scenario "delete resource" do
+        expect{ page.driver.delete(@uri) }.to change{ Function.count }.by(-1)
+        page.status_code.should == 200
+        should_have_function @resource
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions"
+    end
+  end
 end
