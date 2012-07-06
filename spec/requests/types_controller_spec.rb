@@ -199,7 +199,6 @@ feature "TypesController" do
 
       it "updates the resource properties" do
         page.driver.put @uri, @params.to_json
-        save_and_open_page
         page.should_not have_content '"statuses":[]'
       end
 
@@ -210,26 +209,26 @@ feature "TypesController" do
 
 
 
-  ## ------------------------
-  ## DELETE /types/:id
-  ## ------------------------
-  #context ".destroy" do
-    #before { @resource = FactoryGirl.create(:type) }
-    #before { @uri =  "/types/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
+  # ------------------------
+  # DELETE /types/:id
+  # ------------------------
+  context ".destroy" do
+    before { @resource = FactoryGirl.create(:type_no_connections) }
+    before { @uri =  "/types/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth } 
+    context "when logged in" do
+      before { basic_auth } 
 
-      #scenario "delete resource" do
-        #expect{ page.driver.delete(@uri) }.to change{ Type.count }.by(-1)
-        #page.status_code.should == 200
-        #should_have_type @resource
-      #end
+      scenario "delete resource" do
+        expect{ page.driver.delete(@uri) }.to change{ Type.count }.by(-1)
+        page.status_code.should == 200
+        should_have_type @resource
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "types"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "types"
+    end
+  end
 end
