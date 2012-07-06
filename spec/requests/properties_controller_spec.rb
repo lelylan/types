@@ -197,7 +197,7 @@ feature "PropertiesController" do
       before { basic_auth } 
 
       scenario "delete resource" do
-        expect{page.driver.delete(@uri, {}.to_json)}.to change{Property.count}.by(-1)
+        expect{ page.driver.delete(@uri) }.to change{ Property.count }.by(-1)
         page.status_code.should == 200
         should_have_property @resource
       end
