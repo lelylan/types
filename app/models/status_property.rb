@@ -10,7 +10,6 @@ class StatusProperty
 
   attr_accessible :uri, :pending, :values, :range_start, :range_end, :property_id
 
-  # TODO: whatever outside of true and false seems to become nill
   validates :pending, inclusion: { in: ['true', 'false'], allow_nil: true }
   validates :property_id, presence: true, uniqueness: true
 
