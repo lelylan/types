@@ -159,6 +159,4 @@ describe Type do
       end
     end
   end
-
-
 end
