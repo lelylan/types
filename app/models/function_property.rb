@@ -2,8 +2,8 @@ class FunctionProperty
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :property_id
   field :value, default: ''
+  field :property_id
 
   attr_accessible :property_id, :value
 

@@ -1,6 +1,7 @@
 class Type
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Lelylan::Search::URI # used for find_resources
 
   field :name
   field :created_from
@@ -26,20 +27,5 @@ class Type
   def find_functions
     self.function_ids = find_resources(functions) if not functions.nil?
   end
-
-
-  private
-
-    def find_resources(uris)
-      uris.map { |uri| find_id_from_uri(uri) }
-    end
-
-    def find_id_from_uri(uri) 
-      begin
-        Addressable::URI.parse(uri).basename
-      rescue
-        raise Lelylan::Errors::ValidURI
-      end
-    end
 end
 

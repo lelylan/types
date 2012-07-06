@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe FunctionProperty do
+  
   it { should validate_presence_of(:property_id) }
 
   context "with duplicated property_id" do

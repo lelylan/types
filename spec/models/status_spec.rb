@@ -1,64 +1,102 @@
 require 'spec_helper'
 
 describe Status do
-  #include CarrierWave::Test::Matchers
+  it { should validate_presence_of(:name) }
+  it { should validate_presence_of(:created_from) }
 
-  #it { should validate_presence_of(:name) }
-
-  #it { should validate_presence_of(:uri) }
-  #it { should allow_value(Settings.validation.valid_uri).for(:uri) }
-  #it { should_not allow_value(Settings.validation.not_valid_uri).for(:uri) }
-
-  #it { should validate_presence_of(:created_from) }
-  #it { should allow_value(Settings.validation.valid_uri).for(:created_from) }
-  #it { should_not allow_value(Settings.validation.not_valid_uri).for(:created_from) }
+  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
 
 
-  #describe "#image" do
-    #before { ImageUploader.enable_processing = true }
-    #it "should resizing uploaded image" do
-      #uploader = ImageUploader.new(Factory(:is_setting_intensity), :image)
-      #uploader.store!(File.open("#{fixture_path}/example.png"))
-      #uploader.should be_no_larger_than(Settings.thumbs.original, Settings.thumbs.original)
+  describe "#create_status_properties" do
 
-      #uploader.micro.should  have_dimensions(Settings.thumbs.micro, Settings.thumbs.micro)
-      #uploader.small.should  have_dimensions(Settings.thumbs.small, Settings.thumbs.small)
-      #uploader.medium.should have_dimensions(Settings.thumbs.medium, Settings.thumbs.medium)
-      #uploader.big.should    have_dimensions(Settings.thumbs.big, Settings.thumbs.big)
-      #uploader.large.should  have_dimensions(Settings.thumbs.large, Settings.thumbs.large)
-    #end
-  #end
+    context "with valid properties" do
 
-  
-  #describe "#create_status_properties" do
-    #context "when valid" do
-      #before  { @properties = [{ uri: Settings.properties.status.uri, values: %w(on), pending: true }] }
-      #subject { Factory(:default_status, properties: @properties).status_properties }
-      #it { should have(1).item }
-    #end
+      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      let(:status)     { FactoryGirl.create(:status_no_connections, properties: properties) }
+      subject          { status.status_properties }
 
-    #context "when not valid" do
-      ## all params, except URI, which is handled differently, are optionals.
-    #end
+      it "creates properties" do
+        subject.should have(2).items
+      end
 
-    #context "when has duplicated property URI" do
-      #before do
-        #@message = "A resource can not be connected more than once"
-        #@properties = [
-          #{ uri: Settings.properties.status.uri, values: %w(on) },
-          #{ uri: Settings.properties.status.uri, values: %w(off)} ]
-      #end
+      it "sets the status" do
+        subject.where(property_id: 'status').first.values.should == ['on']
+      end
 
-      #it "should get a not valid notification" do
-        #lambda{ Factory(:default_status, properties: @properties) }.
-          #should raise_error(Mongoid::Errors::Duplicated, @message)
-      #end
-    #end
+      it "sets the intensity" do
+        subject.where(property_id: 'intensity').first.range_start.should == '75'
+        subject.where(property_id: 'intensity').first.range_end.should == '100'
+      end
+    end
 
-    #context "with not owned properties" do
-    #end
+    context "with pre-existing properties" do
 
-    #context "with not existng property" do
-    #end
-  #end
+      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      let(:status)     { FactoryGirl.create(:setting_intensity, properties: properties) }
+      subject          { status.status_properties }
+
+      it "deletes previous properties" do
+        subject.should have(2).items
+      end
+
+      it "sets the new status" do
+        subject.where(property_id: 'status').first.values.should == ['on']
+      end
+
+      it "sets the new intensity" do
+        subject.where(property_id: 'intensity').first.range_start.should == '75'
+        subject.where(property_id: 'intensity').first.range_end.should == '100'
+      end
+    end
+
+    context "with not valid URI" do
+
+      it "does not create the property" do
+        expect { 
+          FactoryGirl.create(:status_no_connections, properties: [{ }]) 
+        }.to raise_error(Lelylan::Errors::ValidURI)
+      end
+    end
+
+    context "with duplicated properties" do
+
+      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      before           { properties[1] = properties[0] }
+
+      it "does not create the property twice" do
+        expect { 
+          FactoryGirl.create(:status_no_connections, properties: properties) 
+        }.to raise_error(Mongoid::Errors::Validations)
+      end
+    end
+
+    context "with no properties" do
+
+      let(:status) { FactoryGirl.create(:setting_intensity) }
+      subject      { status.status_properties }
+
+      it "should not change anything" do
+        subject.should have(2).items
+      end
+    end
+
+    context "with empty properties" do
+
+      let(:status) { FactoryGirl.create(:setting_intensity, properties: []) }
+      subject        { status.status_properties }
+
+      it "removes all properties" do
+        subject.should have(0).items
+      end
+    end
+
+    context "with not valid JSON" do
+
+      it "should raise an error" do
+        expect { 
+          FactoryGirl.create(:status, properties: "string") 
+        }.to raise_error
+      end
+    end
+  end
 end

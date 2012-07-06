@@ -1,6 +1,7 @@
 class Function
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Lelylan::Search::URI  # used for inect_id_to_hashes
 
   field :name
   field :created_from
@@ -15,29 +16,11 @@ class Function
 
   after_save :create_function_properties
 
-
-  # create the function properties in the embedded doc
   def create_function_properties
     if properties
-      properties_id(properties)
+      inject_ids(properties, 'property_id')
       function_properties.destroy_all
       properties.each { |property| function_properties.create!(property) }
     end
   end
-
-
-  private 
-
-    def properties_id(properties)
-      properties.each { |property| property['property_id'] = property_id(property) }
-    end
-
-    def property_id(property)
-      begin
-        property = HashWithIndifferentAccess.new property
-        Addressable::URI.parse(property['uri']).basename
-      rescue
-        raise Lelylan::Errors::ValidURI
-      end
-    end
 end
