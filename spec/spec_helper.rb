@@ -23,6 +23,7 @@ Spork.prefork do
   require 'capybara/rspec'
   require 'webmock/rspec'
   require 'draper/rspec_integration'
+  require 'shoulda' # https://github.com/jimweirich/rake/issues/51
 
   RSpec.configure do |config|
     config.mock_with :rspec
