@@ -205,5 +205,4 @@ feature "PropertiesController" do
       it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
     end
   end
-
 end
