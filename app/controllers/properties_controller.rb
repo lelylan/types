@@ -53,7 +53,7 @@ class PropertiesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      @properties.where(:_id.gt => find_id_from_uri(params[:start])) if params[:start]
+      @properties = @properties.gt(_id: find_id_from_uri(params[:start])) if params[:start]
     end
 
     def search_params
