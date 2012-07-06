@@ -100,20 +100,20 @@ feature "PropertiesController" do
     context "when logged in" do
       before { basic_auth }
 
-      it "should view owned resource" do
+      it "views the owned resource" do
         visit @uri
         page.status_code.should == 200
         should_have_property @resource
       end
 
-      it "should expose the property URI" do
+      it "exposes the property URI" do
         visit @uri
         uri = "http://www.example.com/properties/#{@resource.id.as_json}"
         @resource.uri.should == uri
       end
 
       context "with host" do
-        it "should change the URI" do
+        it "changes the URI" do
           visit "#{@uri}?host=www.lelylan.com"
           @resource.uri.should match("http://www.lelylan.com/")
         end
@@ -125,79 +125,33 @@ feature "PropertiesController" do
 
 
 
-  ## ---------------
-  ## POST /properties
-  ## ---------------
-  #context ".create" do
-    #before { @uri =  "/properties" }
-    #before { stub_get(Settings.type.uri).to_return(body: fixture('type.json')) }
+  # ---------------
+  # POST /properties
+  # ---------------
+  context ".create" do
+    before { @uri =  "/properties" }
 
-    #it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
-      #before { @params = { name: 'New closet dimmer', type_uri: Settings.type.uri, physical: {uri: Settings.physical.uri} } }
+    context "when logged in" do
+      before { basic_auth }
+      before { @params = { name: 'New intensity', default: '0', values: Settings.properties.intensity.values } }
 
-      #it "should create a resource" do
-        #page.driver.post @uri, @params.to_json
-        #@resource = Property.last
-        #page.status_code.should == 201
-        #should_have_property @resource
-      #end
+      it "creates the resource" do
+        page.driver.post @uri, @params.to_json
+        @resource = Property.last
+        page.status_code.should == 201
+        should_have_property @resource
+      end
 
-      #context "when Lelylan Type" do
-        ## Reload the before_create function (removed in the property factory to have the desired properties)
-        #before { Property.before_create :synchronize_type }
+      it "stores the resource" do
+        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Property.count }.by(1)
+      end
 
-        #context "returns unauthorized access" do
-          #before { @params[:type_uri] = @params[:type_uri] + "-401" }
-          #before { stub_get(@params[:type_uri]).to_return(status: 401, body: fixture('errors/401.json')) }
-
-          #it "should not create a resource" do
-            #page.driver.post @uri, @params.to_json
-            #code = 'notifications.type.unauthorized'
-            #should_have_a_not_valid_resource code: code, error: I18n.t(code)
-          #end
-        #end
-
-        #context "returns not found resource" do
-          #before { @params[:type_uri] = @params[:type_uri] + "-404" }
-          #before { stub_get(@params[:type_uri]).to_return(status: 404, body: fixture('errors/404.json')) }
-
-          #it "should not create a resource" do
-            #page.driver.post @uri, @params.to_json
-            #code = 'notifications.type.not_found'
-            #should_have_a_not_valid_resource code: code, error: I18n.t(code)
-          #end
-        #end
-
-        #context "returns technically wrong error" do
-          #before { @params[:type_uri] = @params[:type_uri] + "-500" }
-          #before { stub_get(@params[:type_uri]).to_return(status: 500, body: fixture('errors/500.json')) }
-
-          #it "should not create a resource" do
-            #page.driver.post @uri, @params.to_json
-            #code = 'notifications.type.error'
-            #should_have_a_not_valid_resource code: code, error: I18n.t(code)
-          #end
-        #end
-
-        #context "returns service over capacity" do
-          #before { @params[:type_uri] = @params[:type_uri] + "-503" }
-          #before { stub_get(@params[:type_uri]).to_return(status: 503, body: fixture('errors/503.json')) }
-
-          #it "should not create a resource" do
-            #page.driver.post @uri, @params.to_json
-            #code = 'notifications.type.unavailable'
-            #should_have_a_not_valid_resource code: code, error: I18n.t(code)
-          #end
-        #end
-      #end
-
-      #it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", "POST"
-      #it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", "POST"
-    #end
-  #end
+      it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
+      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
+    end
+  end
 
 
 
