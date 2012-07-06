@@ -156,31 +156,38 @@ feature "FunctionsController" do
 
 
 
-  ## ---------------------
-  ## PUT /functions/:id
-  ## ---------------------
-  #context ".update" do
-    #before { @resource = FactoryGirl.create(:function) }
-    #before { @uri = "/functions/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+  # ---------------------
+  # PUT /functions/:id
+  # ---------------------
+  context ".update" do
+    before { @resource = FactoryGirl.create(:function) }
+    before { @uri = "/functions/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
-      #before { @params = { name: 'Updated', default: '20', values: ['0', '100'] } }
+    context "when logged in" do
+      before { basic_auth }
+      before { @properties = json_fixture('properties.json')[:properties] }
+      before { @params = { name: 'Updated', properties: @properties } }
 
-      #it "updates a resource" do
-        #page.driver.put @uri, @params.to_json
-        #@resource.reload
-        #page.status_code.should == 200
-        #page.should have_content "Updated"
-      #end
+      it "updates the resource" do
+        page.driver.put @uri, @params.to_json
+        @resource.reload
+        page.status_code.should == 200
+        page.should have_content "Updated"
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
-      #it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
-    #end
-  #end
+      it "updates the resource properties" do
+        page.driver.put @uri, @params.to_json
+        page.should have_content "on"
+        page.should have_content "100"
+      end
+
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
+    end
+  end
 
 
 
