@@ -21,10 +21,8 @@ module PropertiesViewMethods
     json.uri.should == property.uri
     json.id.should == property.id.as_json
     json.name.should == property.name
-    json.default.should == property.default
-    json.values.should == property.values
-    json.created_at.should == property.created_at
-    json.updated_at.should == property.updated_at
+    json[:default].should == property.default
+    json[:values].should == property.values
   end
 
   def should_not_have_not_owned_properties

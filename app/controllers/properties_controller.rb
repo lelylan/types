@@ -48,15 +48,15 @@ class PropertiesController < ApplicationController
     end
 
     def find_resource
-      @device = @devices.find(params[:id])
+      @property = @properties.find(params[:id])
     end
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      @devices.where(:_id.gt => find_id_from_uri(params[:start])) if params[:start]
+      @properties.where(:_id.gt => find_id_from_uri(params[:start])) if params[:start]
     end
 
     def search_params
-      @devices = @devices.where('name' => /.*#{params[:name]}.*/i) if params[:name]
+      @properties = @properties.where('name' => /.*#{params[:name]}.*/i) if params[:name]
     end 
 end
