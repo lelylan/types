@@ -15,7 +15,15 @@ feature "TypesController" do
     before { @intensity  = FactoryGirl.create(:intensity) }
     before { @properties = ["#{host}/properties/#{@status._id}", "#{host}/properties/#{@intensity._id}"] }
 
-    before { @resource = FactoryGirl.create(:type, properties: @properties) }
+    before { @turn_on       = FactoryGirl.create(:turn_on) }
+    before { @turn_off      = FactoryGirl.create(:turn_off) }
+    before { @set_intensity = FactoryGirl.create(:set_intensity) }
+    before { @functions     = ["#{host}/functions/#{@turn_on._id}", "#{host}/functions/#{@turn_off._id}", "#{host}/functions/#{@set_intensity._id}"] }
+
+    before { @setting_intensity = FactoryGirl.create(:setting_intensity) }
+    before { @statuses          = ["#{host}/statuses/#{@setting_intensity._id}"] }
+
+    before { @resource = FactoryGirl.create(:type, properties: @properties, functions: @functions, statuses: @statuses) }
     before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
@@ -25,7 +33,6 @@ feature "TypesController" do
 
       it "shows all owned resources" do
         visit @uri
-        #save_and_open_page
         page.status_code.should == 200
         should_have_owned_type @resource
       end

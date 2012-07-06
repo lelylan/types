@@ -21,11 +21,12 @@ module TypesViewMethods
     json.uri.should == type.uri
     json.id.should == type.id.as_json
     json.name.should == type.name
-    json.properties.each_with_index do |json_property, index|
-      property = TypePropertyDecorator.decorate(type.type_properties[index])
-      json_property.uri.should == property.uri
-      json_property.value.should == property.value
-    end
+    json.public.should == type.public
+    #json.properties.each_with_index do |json_property, index|
+      #Property.in(_id: type.property_ids).each do |property|
+        #should_have_property(property, json_property)
+      #end
+    #end
   end
 
   def should_not_have_not_owned_types
