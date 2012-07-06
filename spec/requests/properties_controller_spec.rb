@@ -155,64 +155,55 @@ feature "PropertiesController" do
 
 
 
-  ## ------------------
-  ## PUT /properties/:id
-  ## ------------------
-  #context ".update" do
-    #before { @resource = FactoryGirl.create(:property) }
-    #before { @uri = "/properties/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
+  # ---------------------
+  # PUT /properties/:id
+  # ---------------------
+  context ".update" do
+    before { @resource = FactoryGirl.create(:property) }
+    before { @uri = "/properties/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
-      #before { @params = { name: "Closet dimmer updated", physical: {uri: Settings.physical.uri + '-updated'} } }
+    context "when logged in" do
+      before { basic_auth }
+      before { @params = { name: 'Updated', default: '20', values: ['0', '100'] } }
 
-      #it "should update a resource" do
-        #page.driver.put @uri, @params.to_json
-        #@resource.reload
-        #page.status_code.should == 200
-        #page.should have_content "Closet dimmer updated"
-        #page.should have_content Settings.physical.uri + "-updated"
-      #end
+      it "updates a resource" do
+        page.driver.put @uri, @params.to_json
+        @resource.reload
+        page.status_code.should == 200
+        page.should have_content "Updated"
+      end
 
-      #context "when changing type_uri" do
-        #it "should ignore type_uri" do
-          #@params[:type_uri] = Settings.type.another.uri
-          #page.driver.put @uri, @params.to_json
-          #page.should_not have_content Settings.type.another.uri
-        #end
-      #end
-
-      #it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "properties"
-      #it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", "PUT"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "properties"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
+    end
+  end
 
 
 
-  ## ---------------------
-  ## DELETE /properties/:id
-  ## ---------------------
-  #context ".destroy" do
-    #before { @resource = FactoryGirl.create(:property) }
-    #before { @uri =  "/properties/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
+  # ------------------------
+  # DELETE /properties/:id
+  # ------------------------
+  context ".destroy" do
+    before { @resource = FactoryGirl.create(:property) }
+    before { @uri =  "/properties/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth } 
+    context "when logged in" do
+      before { basic_auth } 
 
-      #scenario "delete resource" do
-        #expect{page.driver.delete(@uri, {}.to_json)}.to change{Property.count}.by(-1)
-        #page.status_code.should == 200
-        #should_have_property @resource
-      #end
+      scenario "delete resource" do
+        expect{page.driver.delete(@uri, {}.to_json)}.to change{Property.count}.by(-1)
+        page.status_code.should == 200
+        should_have_property @resource
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
+    end
+  end
 
 end

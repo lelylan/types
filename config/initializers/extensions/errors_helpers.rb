@@ -11,7 +11,6 @@ module Lelylan
         base.rescue_from Mongoid::Errors::Validations, with: :document_not_valid
         base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Lelylan::Errors::Time, with: :lelylan_errors_time
-        #base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
       end
 
       # Document not found
@@ -23,11 +22,6 @@ module Lelylan
       def document_not_valid(e)
         render_422 "notifications.resource.not_valid", e.message, clean_body
       end
-
-      # Wrong id for mongo
-      # def bson_invalid_object_id(e)
-        # render_404 "notifications.resource.not_found"
-      # end
 
       # Parsing error on JSON body
       def json_parse_error(e)
