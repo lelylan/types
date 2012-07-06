@@ -4,6 +4,7 @@ shared_examples_for "not authorized resource" do |action|
 
     it "is not authorized" do
       eval(action)
+      save_and_open_page
       should_have_valid_json
       should_have_not_authorized_resource @uri
     end
