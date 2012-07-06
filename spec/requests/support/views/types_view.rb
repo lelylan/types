@@ -22,11 +22,21 @@ module TypesViewMethods
     json.id.should == type.id.as_json
     json.name.should == type.name
     json.public.should == type.public
-    #json.properties.each_with_index do |json_property, index|
-      #Property.in(_id: type.property_ids).each do |property|
-        #should_have_property(property, json_property)
-      #end
-    #end
+
+    properties = Property.in(_id: type.property_ids)
+    json.properties.each_with_index do |json_property, index|
+      should_have_property(properties[index], json_property)
+    end
+
+    functions = Function.in(_id: type.function_ids)
+    json.functions.each_with_index do |json_function, index|
+      should_have_function(functions[index], json_function)
+    end
+
+    statuses = Status.in(_id: type.status_ids)
+    json.statuses.each_with_index do |json_status, index|
+      should_have_status(statuses[index], json_status)
+    end
   end
 
   def should_not_have_not_owned_types
