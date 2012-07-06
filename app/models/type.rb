@@ -1,7 +1,7 @@
 class Type
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI # used for find_resources
+  include Lelylan::Search::URI
 
   field :name
   field :created_from

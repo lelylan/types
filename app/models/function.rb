@@ -1,7 +1,7 @@
 class Function
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI  # used for inect_id_to_hashes
+  include Lelylan::Search::URI
 
   field :name
   field :created_from
