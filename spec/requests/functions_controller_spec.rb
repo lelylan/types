@@ -87,71 +87,72 @@ feature "FunctionsController" do
 
 
 
-  ## ---------------------
-  ## GET /functions/:id
-  ## ---------------------
-  #context ".show" do
-    #before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
-    #before { @uri = "/functions/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+  # ---------------------
+  # GET /functions/:id
+  # ---------------------
+  context ".show" do
+    before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
+    before { @uri = "/functions/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "visit(@uri)"
+    it_should_behave_like "not authorized resource", "visit(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
+    context "when logged in" do
+      before { basic_auth }
 
-      #it "views the owned resource" do
-        #visit @uri
-        #page.status_code.should == 200
-        #should_have_function @resource
-      #end
+      it "views the owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_function @resource
+      end
 
-      #it "exposes the function URI" do
-        #visit @uri
-        #uri = "http://www.example.com/functions/#{@resource.id.as_json}"
-        #@resource.uri.should == uri
-      #end
+      it "exposes the function URI" do
+        visit @uri
+        uri = "http://www.example.com/functions/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
 
-      #context "with host" do
-        #it "changes the URI" do
-          #visit "#{@uri}?host=www.lelylan.com"
-          #@resource.uri.should match("http://www.lelylan.com/")
-        #end
-      #end
+      context "with host" do
+        it "changes the URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          @resource.uri.should match("http://www.lelylan.com/")
+        end
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
+    end
+  end
 
 
 
-  ## ---------------
-  ## POST /functions
-  ## ---------------
-  #context ".create" do
-    #before { @uri =  "/functions" }
+  # ---------------
+  # POST /functions
+  # ---------------
+  context ".create" do
+    before { @uri =  "/functions" }
 
-    #it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
-      #before { @params = { name: 'New intensity', default: '0', values: Settings.functions.intensity.values } }
+    context "when logged in" do
+      before { basic_auth }
+      before { @properties = json_fixture('properties.json')[:properties] }
+      before { @params = { name: 'New set intensity', properties: @properties } }
 
-      #it "creates the resource" do
-        #page.driver.post @uri, @params.to_json
-        #@resource = Function.last
-        #page.status_code.should == 201
-        #should_have_function @resource
-      #end
+      it "creates the resource" do
+        page.driver.post @uri, @params.to_json
+        @resource = Function.last
+        page.status_code.should == 201
+        should_have_function @resource
+      end
 
-      #it "stores the resource" do
-        #expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
-      #end
+      it "stores the resource" do
+        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
+      end
 
-      #it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
-      #it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
-    #end
-  #end
+      it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
+      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
+    end
+  end
 
 
 
