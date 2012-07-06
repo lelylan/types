@@ -53,7 +53,6 @@ feature "PropertiesController" do
         context "with :start" do
           it "shows the next page" do
             visit "#{@uri}?start=#{@resource.uri}"
-            save_and_open_page
             page.status_code.should == 200
             should_contain_property @resources.first
             page.should_not have_content @resource.name
@@ -88,41 +87,41 @@ feature "PropertiesController" do
 
 
 
-  ## ------------------
-  ## GET /properties/:id
-  ## ------------------
-  #context ".show" do
-    #before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
-    #before { @uri = "/properties/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
+  # ---------------------
+  # GET /properties/:id
+  # ---------------------
+  context ".show" do
+    before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
+    before { @uri = "/properties/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "visit(@uri)"
+    it_should_behave_like "not authorized resource", "visit(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
+    context "when logged in" do
+      before { basic_auth }
 
-      #it "should view owned resource" do
-        #visit @uri
-        #page.status_code.should == 200
-        #should_have_property @resource
-      #end
+      it "should view owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_property @resource
+      end
 
-      #it "should expose the property URI" do
-        #visit @uri
-        #uri = "http://www.example.com/properties/#{@resource.id.as_json}"
-        #@resource.uri.should == uri
-      #end
+      it "should expose the property URI" do
+        visit @uri
+        uri = "http://www.example.com/properties/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
 
-      #context "with host" do
-        #it "should change the URI" do
-          #visit "#{@uri}?host=www.lelylan.com"
-          #@resource.uri.should match("http://www.lelylan.com/")
-        #end
-      #end
+      context "with host" do
+        it "should change the URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          @resource.uri.should match("http://www.lelylan.com/")
+        end
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "visit @uri", "properties"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "properties"
+    end
+  end
 
 
 
