@@ -176,38 +176,37 @@ feature "TypesController" do
 
 
 
-  ## ---------------------
-  ## PUT /types/:id
-  ## ---------------------
-  #context ".update" do
-    #before { @resource = FactoryGirl.create(:type) }
-    #before { @uri = "/types/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
+  # ---------------------
+  # PUT /types/:id
+  # ---------------------
+  context ".update" do
+    before { @resource = FactoryGirl.create(:type, properties: @properties, functions: @functions) }
+    before { @uri = "/types/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
-      #before { @properties = json_fixture('properties.json')[:properties] }
-      #before { @params = { name: 'Updated', properties: @properties } }
+    context "when logged in" do
+      before { basic_auth }
+      before { @params = { name: 'Updated', statuses: @statuses } }
 
-      #it "updates the resource" do
-        #page.driver.put @uri, @params.to_json
-        #@resource.reload
-        #page.status_code.should == 200
-        #page.should have_content "Updated"
-      #end
+      it "updates the resource" do
+        page.driver.put @uri, @params.to_json
+        @resource.reload
+        page.status_code.should == 200
+        page.should have_content "Updated"
+      end
 
-      #it "updates the resource properties" do
-        #page.driver.put @uri, @params.to_json
-        #page.should have_content "on"
-        #page.should have_content "100"
-      #end
+      it "updates the resource properties" do
+        page.driver.put @uri, @params.to_json
+        save_and_open_page
+        page.should_not have_content '"statuses":[]'
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "types"
-      #it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "types"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
+    end
+  end
 
 
 
