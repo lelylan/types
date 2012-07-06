@@ -179,7 +179,6 @@ feature "StatusController" do
 
       it "updates the resource" do
         page.driver.put @uri, @params.to_json
-        save_and_open_page
         @resource.reload
         page.status_code.should == 200
         page.should have_content "Updated"
@@ -199,26 +198,26 @@ feature "StatusController" do
 
 
 
-  ## ------------------------
-  ## DELETE /statuses/:id
-  ## ------------------------
-  #context ".destroy" do
-    #before { @resource = FactoryGirl.create(:setting_intensity) }
-    #before { @uri =  "/statuses/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
+  # ------------------------
+  # DELETE /statuses/:id
+  # ------------------------
+  context ".destroy" do
+    before { @resource = FactoryGirl.create(:setting_intensity) }
+    before { @uri =  "/statuses/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth } 
+    context "when logged in" do
+      before { basic_auth } 
 
-      #scenario "delete resource" do
-        #expect{ page.driver.delete(@uri) }.to change{ Status.count }.by(-1)
-        #page.status_code.should == 200
-        #should_have_status @resource
-      #end
+      scenario "delete resource" do
+        expect{ page.driver.delete(@uri) }.to change{ Status.count }.by(-1)
+        page.status_code.should == 200
+        should_have_status @resource
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "statuses"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "statuses"
+    end
+  end
 end
