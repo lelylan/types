@@ -18,7 +18,7 @@ feature "PropertiesController" do
     context "when logged in" do
       before { basic_auth }
 
-      it "should view all owned resources" do
+      it "shows all owned resources" do
         visit @uri
         page.status_code.should == 200
         should_have_owned_property @resource
@@ -33,7 +33,7 @@ feature "PropertiesController" do
           before { @name = "My name is property" }
           before { @result = FactoryGirl.create(:property, name: @name) }
 
-          it "should find a property" do
+          it "finds the desired property" do
             visit "#{@uri}?name=name+is"
             should_contain_property @result
             page.should_not have_content @resource.name
@@ -42,42 +42,49 @@ feature "PropertiesController" do
       end
 
 
-      ## ------------
-      ## Pagination
-      ## ------------
-      #context "when paginating" do
-        #before { Property.destroy_all }
-        #before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
-        #before { @resources = FactoryGirl.create_list(:property, Settings.pagination.per + 5, name: 'Extra dimmer') }
+      # ------------
+      # Pagination
+      # ------------
+      context "when paginating" do
+        before { Property.destroy_all }
+        before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
+        before { @resources = FactoryGirl.create_list(:property, Settings.pagination.per + 5, name: 'Extra property') }
 
-        #context "with :start" do
-          #it "should show next page" do
-            #visit "#{@uri}?start=#{@resource.uri}"
-            #page.status_code.should == 200
-            #should_contain_property @resources.first
-            #page.should_not have_content @resource.name
-          #end
-        #end
+        context "with :start" do
+          it "shows the next page" do
+            visit "#{@uri}?start=#{@resource.uri}"
+            save_and_open_page
+            page.status_code.should == 200
+            should_contain_property @resources.first
+            page.should_not have_content @resource.name
+          end
+        end
 
-        #context "with :per" do
-          #it "should show the default number of resources" do
-            #visit "#{@uri}"
-            #JSON.parse(page.source).should have(Settings.pagination.per).items
-          #end
+        context "with :per" do
+          context "when not set" do
+            it "shows the default number of resources" do
+              visit "#{@uri}"
+              JSON.parse(page.source).should have(Settings.pagination.per).items
+            end
+          end
 
-          #it "should show 5 resources" do
-            #visit "#{@uri}?per=5"
-            #JSON.parse(page.source).should have(5).items
-          #end
+          context "when set to 5" do
+            it "shows 5 resources" do
+              visit "#{@uri}?per=5"
+              JSON.parse(page.source).should have(5).items
+            end
+          end
 
-          #it "should show all resources" do
-            #visit "#{@uri}?per=all"
-            #JSON.parse(page.source).should have(Property.count).items
-          #end
-        #end
-      #end
-    #end
-  #end
+          context "when set to all" do
+            it "shows all resources" do
+              visit "#{@uri}?per=all"
+              JSON.parse(page.source).should have(Property.count).items
+            end
+          end
+        end
+      end
+    end
+  end
 
 
 
@@ -252,7 +259,7 @@ feature "PropertiesController" do
       #end
 
       #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
-    end
-  end
+    #end
+  #end
 
 end
