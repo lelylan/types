@@ -145,6 +145,12 @@ feature "FunctionsController" do
         should_have_function @resource
       end
 
+      it "creates the resource connections" do
+        page.driver.post @uri, @params.to_json
+        @resource = Function.last
+        @resource.function_properties.should have(2).items
+      end
+
       it "stores the resource" do
         expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
       end
