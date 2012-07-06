@@ -16,7 +16,7 @@ gem 'httparty'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.6'
-  gem 'shoulda'
+  gem 'shoulda', :require => false
   gem 'capybara'
   gem 'capybara-json'
   gem 'factory_girl_rails'
