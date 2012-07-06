@@ -1,4 +1,8 @@
 require 'spec_helper'
+#require Rails.root + 'app/models/type'
+#load Rails.root + 'app/models/type.rb'
+#require_dependency "app/models/type"
+
 
 describe Type do
 

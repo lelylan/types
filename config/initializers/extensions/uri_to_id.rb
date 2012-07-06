@@ -15,7 +15,7 @@ module Lelylan
       # inserted into each hash
       #
 
-      def inject_id_to_hashes(resources, key)
+      def inject_ids(resources, key)
         resources.each do |resource|
           resource[key] = find_id_from_uri(HashWithIndifferentAccess.new(resource)[:uri])
         end

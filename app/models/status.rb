@@ -18,7 +18,7 @@ class Status
 
   def create_status_properties
     if properties
-      inject_id_to_hashes(properties, 'property_id')
+      inject_ids(properties, 'property_id')
       status_properties.destroy_all
       properties.each { |property| status_properties.create!(property) }
     end

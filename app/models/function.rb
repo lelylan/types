@@ -18,7 +18,7 @@ class Function
 
   def create_function_properties
     if properties
-      inject_id_to_hashes(properties, 'property_id')
+      inject_ids(properties, 'property_id')
       function_properties.destroy_all
       properties.each { |property| function_properties.create!(property) }
     end
