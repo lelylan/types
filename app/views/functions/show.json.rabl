@@ -1,8 +1,6 @@
 object FunctionDecorator.decorate(@function)
 
-node(:uri)        { |c| c.uri }
-node(:id)         { |c| c.id }
-node(:name)       { |c| c.name }
+attributes :uri, :id, :name
 
 node(:properties) do |function|
   function.function_properties.map do |property|

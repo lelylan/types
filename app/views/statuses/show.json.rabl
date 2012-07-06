@@ -1,8 +1,6 @@
 object StatusDecorator.decorate(@status)
 
-node(:uri)        { |c| c.uri }
-node(:id)         { |c| c.id }
-node(:name)       { |c| c.name }
+attributes :uri, :id, :name
 
 node(:properties) do |status|
   status.status_properties.map do |property|
