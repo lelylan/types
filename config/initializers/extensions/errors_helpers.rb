@@ -9,88 +9,41 @@ module Lelylan
       def self.included(base)
         base.rescue_from Mongoid::Errors::DocumentNotFound, with: :document_not_found
         base.rescue_from Mongoid::Errors::Validations, with: :document_not_valid
-        base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
         base.rescue_from JSON::ParserError, with: :json_parse_error
-        base.rescue_from Mongoid::Errors::InvalidType, with: :mongoid_errors_invalid_type
         base.rescue_from Lelylan::Errors::Time, with: :lelylan_errors_time
-        base.rescue_from Lelylan::Type::Unauthorized, with: :lelylan_type_unauthorized
-        base.rescue_from Lelylan::Type::NotFound, with: :lelylan_type_not_found
-        base.rescue_from Lelylan::Type::InternalServerError, with: :lelylan_type_error
-        base.rescue_from Lelylan::Type::ServiceUnavailable, with: :lelylan_type_service_unavailable
+        #base.rescue_from BSON::InvalidObjectId, with: :bson_invalid_object_id
       end
 
-      # --------------------
       # Document not found
-      # --------------------
       def document_not_found
         render_404 "notifications.resource.not_found"
       end
 
-      # --------------------
       # Document not valid
-      # --------------------
       def document_not_valid(e)
         render_422 "notifications.resource.not_valid", e.message, clean_body
       end
 
-      # -------------------
       # Wrong id for mongo
-      # -------------------
-      def bson_invalid_object_id(e)
-        render_404 "notifications.resource.not_found"
-      end
+      # def bson_invalid_object_id(e)
+        # render_404 "notifications.resource.not_found"
+      # end
 
-      # ----------------------------
       # Parsing error on JSON body
-      # ----------------------------
       def json_parse_error(e)
         code = "notifications.json.not_valid" 
         render_422 code, I18n.t(code), dirty_body
       end
   
-      # ------------------
       # Wrong time format
-      # ------------------
       def lelylan_errors_time(e)
         code = "notifications.query.time"
         render_422 code, I18n(code), e.message
       end
 
-
-
-      # --------------------
-      # Lelylan Type access
-      # --------------------
-
-      # 401 response
-      def lelylan_type_unauthorized(e)
-        code = "notifications.type.unauthorized"
-        render_422 code, I18n.t(code)
-      end
-
-      # 404 response
-      def lelylan_type_not_found(e)
-        code = "notifications.type.not_found"
-        render_422 code, I18n.t(code)
-      end
-
-      # 500 type service
-      def lelylan_type_error(e)
-        code = "notifications.type.error"
-        render_422 code, I18n.t(code)
-      end
-
-      # 503 type service
-      def lelylan_type_service_unavailable(e)
-        code = "notifications.type.unavailable"
-        render_422 code, I18n.t(code)
-      end
-
-
-
-      # --------------
-      # Render views
-      # --------------
+      # ----------------
+      # View rendering
+      # ----------------
 
       # Not authorized
       def render_401
@@ -112,8 +65,6 @@ module Lelylan
         @error = error.is_a?(String) ? error : error.full_messages.join('. ')
         render "shared/422", status: 422 and return
       end
-
-
 
       private 
 
