@@ -4,10 +4,20 @@ class FunctionProperty
 
   field :value
   field :property_id
+  field :property_uri # used only to easily check validations
 
-  attr_accessible :property_id, :value
+  attr_accessible :value, :property_uri
+
+  validates :property_uri, presence: true, url: true, uniqueness: true
 
   embedded_in :function
 
-  validates :property_id, presence: true, uniqueness: true
+  before_save :set_property_id
+
+
+  private
+
+    def set_property_id
+      self.property_id = Addressable::URI.parse(property_uri).basename
+    end
 end
