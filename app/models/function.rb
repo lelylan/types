@@ -24,7 +24,9 @@ class Function
         function_properties.destroy_all
         properties.each do |property|
           property[:property_uri] = property[:uri]
-          res = function_properties.create(property)
+          res = function_properties.build(property)
+          #res.valid?
+          #res.set_property_id
         end
       end
     end

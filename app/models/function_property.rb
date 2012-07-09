@@ -14,10 +14,7 @@ class FunctionProperty
 
   before_save :set_property_id
 
-
-  private
-
-    def set_property_id
-      self.property_id = Addressable::URI.parse(property_uri).basename
-    end
+  def set_property_id
+    self.property_id = Addressable::URI.parse(property_uri).basename
+  end
 end
