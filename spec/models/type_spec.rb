@@ -3,7 +3,6 @@ require 'spec_helper'
 #load Rails.root + 'app/models/type.rb'
 #require_dependency "app/models/type"
 
-
 describe Type do
 
   it { should_not allow_mass_assignment_of(:created_from) }
@@ -21,8 +20,8 @@ describe Type do
 
     context "with valid URIs" do
 
-      let(:property_uris) { [Settings.properties.status.uri, Settings.properties.intensity.uri] }
-      let(:property_ids)  { [Settings.properties.status.property_id, Settings.properties.intensity.property_id] }
+      let(:property_uris) { [ Settings.properties.status.uri, Settings.properties.intensity.uri ] }
+      let(:property_ids)  { [ Settings.properties.status.property_id, Settings.properties.intensity.property_id ] }
 
       subject { FactoryGirl.create(:type_no_connections, properties: property_uris) }
 
@@ -34,18 +33,18 @@ describe Type do
 
     context "with not valid URIs" do
 
-      let(:property_ids) { [nil] }
+      let(:property_uris) { [ nil ] }
 
       it "raises a not valid error" do
         expect {
-          FactoryGirl.create(:type_no_connections, properties: property_ids)
+          FactoryGirl.create(:type_no_connections, properties: property_uris)
         }.to raise_error(Lelylan::Errors::ValidURI) 
       end
 
       context "when raise an error" do
 
         let(:count) { Type.count }
-        before { expect { FactoryGirl.create(:type_no_connections, properties: property_ids) }.to raise_error }
+        before { expect { FactoryGirl.create(:type_no_connections, properties: property_uris) }.to raise_error }
 
         it "does not add a new record" do
           count.should == Type.count
@@ -69,8 +68,8 @@ describe Type do
 
     context "with valid URIs" do
 
-      let(:function_uris) { [Settings.functions.set_intensity.uri, Settings.functions.turn_on.uri, Settings.functions.turn_off.uri] }
-      let(:function_ids)  { [Settings.functions.set_intensity.function_id, Settings.functions.turn_on.function_id, Settings.functions.turn_off.function_id] }
+      let(:function_uris) { [ Settings.functions.set_intensity.uri, Settings.functions.turn_on.uri, Settings.functions.turn_off.uri ] }
+      let(:function_ids)  { [ Settings.functions.set_intensity.function_id, Settings.functions.turn_on.function_id, Settings.functions.turn_off.function_id ] }
 
       subject { FactoryGirl.create(:type_no_connections, functions: function_uris) }
 
@@ -82,18 +81,18 @@ describe Type do
 
     context "with not valid URIs" do
 
-      let(:function_ids) { [nil] }
+      let(:function_uris) { [ nil ] }
 
       it "raises a not valid error" do
         expect {
-          FactoryGirl.create(:type_no_connections, functions: function_ids)
+          FactoryGirl.create(:type_no_connections, functions: function_uris)
         }.to raise_error(Lelylan::Errors::ValidURI) 
       end
 
       context "when raises an error" do
 
         let(:count) { Type.count }
-        before { expect { FactoryGirl.create(:type_no_connections, functions: function_ids) }.to raise_error }
+        before { expect { FactoryGirl.create(:type_no_connections, functions: function_uris) }.to raise_error }
 
         it "does not add a new record" do
           count.should == Type.count
@@ -103,9 +102,9 @@ describe Type do
 
     context "with empty list" do
 
-      let(:functions_id) { [] }
+      let(:function_uris) { [] }
 
-      subject { FactoryGirl.create(:type, functions: functions_id ) }
+      subject { FactoryGirl.create(:type, functions: function_uris ) }
 
       it "removes all properties" do
         subject.functions.should have(0).items
@@ -113,4 +112,51 @@ describe Type do
     end
   end
 
+  context "#find_statuses" do
+
+    context "with valid URIs" do
+
+      let(:status_uris) { [ Settings.statuses.setting_intensity.uri ] }
+      let(:status_ids)  { [ Settings.statuses.setting_intensity.status_id ] }
+
+      subject { FactoryGirl.create(:type_no_connections, statuses: status_uris) }
+
+      it "sets the statuses relation with status ids" do
+        subject.status_ids.should == status_ids
+      end
+
+    end
+
+    context "with not valid URIs" do
+
+      let(:status_uris) { [ nil ] }
+
+      it "raises a not valid error" do
+        expect {
+          FactoryGirl.create(:type_no_connections, statuses: status_uris)
+        }.to raise_error(Lelylan::Errors::ValidURI) 
+      end
+
+      context "when raises an error" do
+
+        let(:count) { Type.count }
+        before { expect { FactoryGirl.create(:type_no_connections, statuses: status_uris) }.to raise_error }
+
+        it "does not add a new record" do
+          count.should == Type.count
+        end
+      end
+    end
+
+    context "with empty list" do
+
+      let(:status_uris) { [] }
+
+      subject { FactoryGirl.create(:type, statuses: status_uris ) }
+
+      it "removes all properties" do
+        subject.statuses.should have(0).items
+      end
+    end
+  end
 end

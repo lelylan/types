@@ -1,17 +1,30 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "FunctionsController" do
-  before { Function.destroy_all }
+feature "TypesController" do
+  before { Type.destroy_all }
   before { host! "http://" + host }
 
+  before { @status     = FactoryGirl.create(:status) }
+  before { @intensity  = FactoryGirl.create(:intensity) }
+  before { @properties = ["#{host}/properties/#{@status._id}", "#{host}/properties/#{@intensity._id}"] }
+
+  before { @turn_on       = FactoryGirl.create(:turn_on) }
+  before { @turn_off      = FactoryGirl.create(:turn_off) }
+  before { @set_intensity = FactoryGirl.create(:set_intensity) }
+  before { @functions     = ["#{host}/functions/#{@turn_on._id}", "#{host}/functions/#{@turn_off._id}", "#{host}/functions/#{@set_intensity._id}"] }
+
+  before { @setting_intensity = FactoryGirl.create(:setting_intensity) }
+  before { @statuses          = ["#{host}/statuses/#{@setting_intensity._id}"] }
+
 
   # -----------------
-  # GET /functions
+  # GET /types
   # -----------------
   context ".index" do
-    before { @uri = "/functions" }
-    before { @resource = FactoryGirl.create(:function) }
-    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+    before { @uri = "/types" }
+
+    before { @resource = FactoryGirl.create(:type, properties: @properties, functions: @functions, statuses: @statuses) }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -21,7 +34,7 @@ feature "FunctionsController" do
       it "shows all owned resources" do
         visit @uri
         page.status_code.should == 200
-        should_have_owned_function @resource
+        should_have_owned_type @resource
       end
 
 
@@ -30,12 +43,12 @@ feature "FunctionsController" do
       # ---------
       context "when searching" do
         context "name" do
-          before { @name = "My name is function" }
-          before { @result = FactoryGirl.create(:function, name: @name) }
+          before { @name = "My name is type" }
+          before { @result = FactoryGirl.create(:type_no_connections, name: @name) }
 
-          it "finds the desired function" do
+          it "finds the desired type" do
             visit "#{@uri}?name=name+is"
-            should_contain_function @result
+            should_contain_type @result
             page.should_not have_content @resource.name
           end
         end
@@ -46,15 +59,15 @@ feature "FunctionsController" do
       # Pagination
       # ------------
       context "when paginating" do
-        before { Function.destroy_all }
-        before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
-        before { @resources = FactoryGirl.create_list(:function, Settings.pagination.per + 5, name: 'Extra function') }
+        before { Type.destroy_all }
+        before { @resource = TypeDecorator.decorate(FactoryGirl.create(:type_no_connections)) }
+        before { @resources = FactoryGirl.create_list(:type, Settings.pagination.per + 5, name: 'Extra type') }
 
         context "with :start" do
           it "shows the next page" do
             visit "#{@uri}?start=#{@resource.uri}"
             page.status_code.should == 200
-            should_contain_function @resources.first
+            should_contain_type @resources.first
             page.should_not have_content @resource.name
           end
         end
@@ -77,7 +90,7 @@ feature "FunctionsController" do
           context "when set to all" do
             it "shows all resources" do
               visit "#{@uri}?per=all"
-              JSON.parse(page.source).should have(Function.count).items
+              JSON.parse(page.source).should have(Type.count).items
             end
           end
         end
@@ -88,12 +101,12 @@ feature "FunctionsController" do
 
 
   # ---------------------
-  # GET /functions/:id
+  # GET /types/:id
   # ---------------------
   context ".show" do
-    before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
-    before { @uri = "/functions/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+    before { @resource = TypeDecorator.decorate(FactoryGirl.create(:type)) }
+    before { @uri = "/types/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -103,12 +116,12 @@ feature "FunctionsController" do
       it "views the owned resource" do
         visit @uri
         page.status_code.should == 200
-        should_have_function @resource
+        should_have_type @resource
       end
 
-      it "exposes the function URI" do
+      it "exposes the type URI" do
         visit @uri
-        uri = "http://www.example.com/functions/#{@resource.id.as_json}"
+        uri = "http://www.example.com/types/#{@resource.id.as_json}"
         @resource.uri.should == uri
       end
 
@@ -119,53 +132,42 @@ feature "FunctionsController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "types"
     end
   end
 
 
 
   # ---------------
-  # POST /functions
+  # POST /types
   # ---------------
   context ".create" do
-    before { @uri =  "/functions" }
+    before { @uri =  "/types" }
 
     it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
 
     context "when logged in" do
       before { basic_auth }
-      before { @properties = json_fixture('properties.json')[:properties] }
-      before { @params = { name: 'New set intensity', properties: @properties } }
+      before { @params = { name: 'Type created', properties: @properties, functions: @functions, statuses: @statuses } }
 
       it "creates the resource" do
         page.driver.post @uri, @params.to_json
-        @resource = Function.last
+        @resource = Type.last
         page.status_code.should == 201
-        should_have_function @resource
+        should_have_type @resource
       end
 
       it "creates the resource connections" do
         page.driver.post @uri, @params.to_json
-        @resource = Function.last
-        @resource.function_properties.should have(2).items
+        @resource = Type.last
+        @resource.property_ids.should have(2).items
+        @resource.function_ids.should have(3).items
+        @resource.status_ids.should have(1).items
       end
 
       it "stores the resource" do
-        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
+        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Type.count }.by(1)
       end
-
-      #context "with not valid uri property" do
-        #before { @properties[0][:uri] = nil }
-
-        #it "render a not valid page" do
-          #page.driver.post @uri, @params.to_json
-          #page.status_code.should == 422
-        #end
-
-        #it "does not create the resource" do
-        #end
-      #end
 
       it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
       it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
@@ -175,19 +177,18 @@ feature "FunctionsController" do
 
 
   # ---------------------
-  # PUT /functions/:id
+  # PUT /types/:id
   # ---------------------
   context ".update" do
-    before { @resource = FactoryGirl.create(:function) }
-    before { @uri = "/functions/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+    before { @resource = FactoryGirl.create(:type, properties: @properties, functions: @functions) }
+    before { @uri = "/types/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
     it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth }
-      before { @properties = json_fixture('properties.json')[:properties] }
-      before { @params = { name: 'Updated', properties: @properties } }
+      before { @params = { name: 'Updated', statuses: @statuses } }
 
       it "updates the resource" do
         page.driver.put @uri, @params.to_json
@@ -198,11 +199,10 @@ feature "FunctionsController" do
 
       it "updates the resource properties" do
         page.driver.put @uri, @params.to_json
-        page.should have_content "on"
-        page.should have_content "100"
+        page.should_not have_content '"statuses":[]'
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "types"
       it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
     end
   end
@@ -210,12 +210,12 @@ feature "FunctionsController" do
 
 
   # ------------------------
-  # DELETE /functions/:id
+  # DELETE /types/:id
   # ------------------------
   context ".destroy" do
-    before { @resource = FactoryGirl.create(:function) }
-    before { @uri =  "/functions/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+    before { @resource = FactoryGirl.create(:type_no_connections) }
+    before { @uri =  "/types/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
     it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
@@ -223,12 +223,12 @@ feature "FunctionsController" do
       before { basic_auth } 
 
       scenario "delete resource" do
-        expect{ page.driver.delete(@uri) }.to change{ Function.count }.by(-1)
+        expect{ page.driver.delete(@uri) }.to change{ Type.count }.by(-1)
         page.status_code.should == 200
-        should_have_function @resource
+        should_have_type @resource
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "types"
     end
   end
 end

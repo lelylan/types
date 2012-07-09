@@ -179,7 +179,6 @@ feature "StatusController" do
 
       it "updates the resource" do
         page.driver.put @uri, @params.to_json
-        save_and_open_page
         @resource.reload
         page.status_code.should == 200
         page.should have_content "Updated"

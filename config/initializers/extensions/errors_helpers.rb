@@ -11,6 +11,7 @@ module Lelylan
         base.rescue_from Mongoid::Errors::Validations, with: :document_not_valid
         base.rescue_from JSON::ParserError, with: :json_parse_error
         base.rescue_from Lelylan::Errors::Time, with: :lelylan_errors_time
+        base.rescue_from Lelylan::Errors::ValidURI, with: :lelylan_errors_uri
       end
 
       # Document not found
@@ -28,11 +29,19 @@ module Lelylan
         code = "notifications.json.not_valid" 
         render_422 code, I18n.t(code), dirty_body
       end
-  
+
       # Wrong time format
       def lelylan_errors_time(e)
         code = "notifications.query.time"
-        render_422 code, I18n(code), e.message
+        render_422 code, I18n.t(code), e.message
+      end
+
+      # Wrong uri format
+      # TODO: find a way to write only the wrong URI if possible
+      # On tie error seems there is a way to send some params.
+      def lelylan_errors_uri(e)
+        code = "notifications.errors.uri_message"
+        render_422 code, I18n.t(code)
       end
 
       # ----------------
@@ -72,7 +81,7 @@ module Lelylan
           # Hack to have a clean JSON. Not sure why, but it creates an hash where the 
           # key is the params and the value is null. With this cicle we clean it up.
           body.each_key {|key| body = JSON.parse key }
-          return body
+          body
         end
 
         # Body JSON as string
