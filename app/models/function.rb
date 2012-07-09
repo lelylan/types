@@ -12,22 +12,5 @@ class Function
   validates :name, presence: true
   validates :created_from, presence: true, url: true
 
-  embeds_many :function_properties, cascade_callbacks: true
-
-  before_save :reset_properties
-
-
-  private 
-
-    def reset_properties
-      if properties
-        function_properties.destroy_all
-        properties.each do |property|
-          property[:property_uri] = property[:uri]
-          res = function_properties.build(property)
-          #res.valid?
-          #res.set_property_id
-        end
-      end
-    end
+  embeds_many :properties, class_name: "FunctionProperty", cascade_callbacks: true
 end

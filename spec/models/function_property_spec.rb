@@ -4,32 +4,38 @@ describe FunctionProperty do
 
   it { should allow_value(nil).for('value') }
 
-  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:property_uri)} }
-  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:property_uri)} }
+  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:uri)} }
+  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
 
-  context "with valid property_uri" do
+  context "with valid uri" do
 
-    let(:function_property) { { property_uri: Settings.properties.status.uri, value: 'on' } }
-    let(:function)          { FactoryGirl.create(:function_no_connections) }
+    let(:properties) { json_fixture('function_properties.json')[:properties] }
+    let(:function)   { FactoryGirl.create(:function, properties: properties); }
 
-    before  { function.function_properties.create!(function_property) }
-    subject { function.function_properties.first }
+    context "#status" do
 
-    it "sets the property_id" do
-      subject.property_id.should == Settings.properties.status.property_id
+      subject { function.properties.first }
+
+      it "sets the property_id" do
+        subject.property_id.should == 'status'
+      end
+
+      it "sets the value" do
+        subject.value.should == 'on'
+      end
     end
-  end
 
-  context "with duplicated property_uri" do
+    context "#intensity" do
 
-    let(:function_property) { { property_uri: Settings.properties.status.uri, value: 'on' } }
-    let(:function)          { FactoryGirl.create(:function_no_connections) }
+      subject { function.properties.last }
 
-    before  { function.function_properties.create!(function_property) }
-    subject { function.function_properties }
+      it "sets the property_id" do
+        subject.property_id.should == 'intensity'
+      end
 
-    it "raises a validation error" do
-      expect { subject.create!(function_property) }.to raise_error(Mongoid::Errors::Validations)
+      it "sets the value" do
+        subject.value.should == '0.0'
+      end
     end
   end
 end
