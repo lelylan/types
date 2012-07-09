@@ -148,24 +148,20 @@ feature "FunctionsController" do
       it "creates the resource connections" do
         page.driver.post @uri, @params.to_json
         @resource = Function.last
-        @resource.function_properties.should have(2).items
+        @resource.properties.should have(2).items
       end
 
       it "stores the resource" do
         expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
       end
 
-      #context "with not valid uri property" do
-        #before { @properties[0][:uri] = nil }
+      context "with not valid params" do
+        before { @params[:name] = "" }
 
-        #it "render a not valid page" do
-          #page.driver.post @uri, @params.to_json
-          #page.status_code.should == 422
-        #end
-
-        #it "does not create the resource" do
-        #end
-      #end
+        it "does not create the resource" do
+          expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(0)
+        end
+      end
 
       it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
       it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }

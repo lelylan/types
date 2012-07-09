@@ -22,7 +22,7 @@ module FunctionsViewMethods
     json.id.should == function.id.as_json
     json.name.should == function.name
     json.properties.each_with_index do |json_property, index|
-      property = FunctionPropertyDecorator.decorate(function.function_properties[index])
+      property = FunctionPropertyDecorator.decorate(function.properties[index])
       json_property.uri.should == property.uri
       json_property.value.should == property.value
     end
