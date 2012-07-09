@@ -12,15 +12,5 @@ class Function
   validates :name, presence: true
   validates :created_from, presence: true, url: true
 
-  embeds_many :function_properties
-
-  after_save :create_function_properties
-
-  def create_function_properties
-    if properties
-      inject_ids(properties, 'property_id')
-      function_properties.destroy_all
-      properties.each { |property| function_properties.create!(property) }
-    end
-  end
+  embeds_many :properties, class_name: "FunctionProperty", cascade_callbacks: true
 end

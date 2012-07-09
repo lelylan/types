@@ -2,20 +2,40 @@ require 'spec_helper'
 
 describe FunctionProperty do
 
-  it { should validate_presence_of(:property_id) }
-
   it { should allow_value(nil).for('value') }
 
-  context "with duplicated property_id" do
+  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:uri)} }
+  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
 
-    let(:function_property) { { property_id: 'intensity', value: '0.0' } }
-    let(:function)          { FactoryGirl.create(:function_no_connections) }
-    before  { function.function_properties.create!(function_property) }
-    subject { function.function_properties }
+  context "with valid uri" do
 
-    it "validates the uniqueness of property_id" do
-      expect { subject.create!(function_property) }.to raise_error(Mongoid::Errors::Validations)
+    let(:properties) { json_fixture('function_properties.json')[:properties] }
+    let(:function)   { FactoryGirl.create(:function, properties: properties); }
+
+    context "#status" do
+
+      subject { function.properties.first }
+
+      it "sets the property_id" do
+        subject.property_id.should == 'status'
+      end
+
+      it "sets the value" do
+        subject.value.should == 'on'
+      end
+    end
+
+    context "#intensity" do
+
+      subject { function.properties.last }
+
+      it "sets the property_id" do
+        subject.property_id.should == 'intensity'
+      end
+
+      it "sets the value" do
+        subject.value.should == '0.0'
+      end
     end
   end
-
 end

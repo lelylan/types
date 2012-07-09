@@ -11,8 +11,8 @@ describe Function do
     context "with valid properties" do
 
       let(:properties) { json_fixture('properties.json')[:properties] }
-      let(:function)   { FactoryGirl.create(:function_no_connections, properties: properties) }
-      subject          { function.function_properties }
+      let(:function)   { FactoryGirl.create(:function, properties: properties) }
+      subject          { function.properties }
 
       it "creates properties" do
         subject.should have(2).items
@@ -31,7 +31,8 @@ describe Function do
 
       let(:properties) { json_fixture('properties.json')[:properties] }
       let(:function)   { FactoryGirl.create(:function, properties: properties) }
-      subject          { function.function_properties }
+      before           { function.update_attributes(properties: properties) }
+      subject          { function.properties }
 
       it "deletes previous ones" do
         subject.should have(2).items
@@ -46,47 +47,35 @@ describe Function do
       end
     end
 
-    context "with not valid properties" do
+    context "with not valid params" do
 
-      it "raises an error" do
-        expect {
-          FactoryGirl.create(:function_no_connections, properties: [{ }])
-        }.to raise_error(Lelylan::Errors::ValidURI)
+      context "when name miss" do
+        it "raises an error" do
+          expect { FactoryGirl.create(:function, name: "") }.to raise_error(Mongoid::Errors::Validations)
+        end
       end
 
-      #it "does not create a new resource" do
-        #count = Function.count
-        #expect { FactoryGirl.create(:function_no_connections, properties: [{ }]) }.to raise_error(Lelylan::Errors::ValidURI)
-        #Function.count.should == count
-      #end
-    end
-
-    context "with duplicated properties" do
-
-      let(:properties) { json_fixture('properties.json')[:properties] }
-      before           { properties[1] = properties[0] }
-
-      it "does not create the property twice" do
-        expect { 
-          FactoryGirl.create(:function, properties: properties) 
-        }.to raise_error(Mongoid::Errors::Validations)
+      context "when property uri is not valid" do
+        it "raises an error" do
+          expect { 
+            FactoryGirl.create(:function, name: "Function", properties: [ {uri: "not_valid", value: "value"} ])
+          }.to raise_error(Mongoid::Errors::Validations)
+        end
       end
-    end
 
-    context "with no properties" do
-
-      let(:function) { FactoryGirl.create(:function) }
-      subject        { function.function_properties }
-
-      it "should not change anything" do
-        subject.should have(2).items
+      it "does not create a new resource" do
+        count = Function.count
+        expect { FactoryGirl.create(:function, name: "") }.to raise_error(Mongoid::Errors::Validations)
+        Function.count.should == count
       end
     end
 
     context "with empty properties" do
 
-      let(:function) { FactoryGirl.create(:function, properties: []) }
-      subject        { function.function_properties }
+      let(:properties) { json_fixture('properties.json')[:properties] }
+      let(:function)   { FactoryGirl.create(:function, properties: properties) }
+      before           { function.update_attributes(properties: []) }
+      subject          { function.properties }
 
       it "removes all properties" do
         subject.should have(0).items
@@ -94,7 +83,6 @@ describe Function do
     end
 
     context "with not valid JSON" do
-
       it "should raise an error" do
         expect { 
           FactoryGirl.create(:function, properties: "string") 
