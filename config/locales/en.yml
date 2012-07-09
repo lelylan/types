@@ -30,4 +30,4 @@ en:
     function:
       not_found: "Function not found"
     errors:
-      parse_uri: "The provided URI is not valid"
+      uri: "The URI you are connecting to the resource is not valid"

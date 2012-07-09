@@ -46,13 +46,19 @@ describe Function do
       end
     end
 
-    context "with not valid URI" do
+    context "with not valid properties" do
 
-      it "does not create the property" do
-        expect { 
-          FactoryGirl.create(:function_no_connections, properties: [{ }]) 
+      it "raises an error" do
+        expect {
+          FactoryGirl.create(:function_no_connections, properties: [{ }])
         }.to raise_error(Lelylan::Errors::ValidURI)
       end
+
+      #it "does not create a new resource" do
+        #count = Function.count
+        #expect { FactoryGirl.create(:function_no_connections, properties: [{ }]) }.to raise_error(Lelylan::Errors::ValidURI)
+        #Function.count.should == count
+      #end
     end
 
     context "with duplicated properties" do

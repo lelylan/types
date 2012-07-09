@@ -10,7 +10,7 @@ module Lelylan #:nodoc
 
     class ValidURI < StandardError
       def initialize(options={})
-        message = ::I18n.translate("notifications.errors.parse_uri", options)
+        message = ::I18n.translate("notifications.errors.uri", options)
         super(message)
       end
     end
