@@ -1,7 +1,4 @@
 require 'spec_helper'
-#require Rails.root + 'app/models/type'
-#load Rails.root + 'app/models/type.rb'
-#require_dependency "app/models/type"
 
 describe Type do
 
@@ -159,4 +156,53 @@ describe Type do
       end
     end
   end
+
+  context "#find_categories" do
+
+    context "with valid URIs" do
+
+      let(:category_uris) { [ Settings.categories.lighting.uri ] }
+      let(:category_ids)  { [ Settings.categories.lighting.category_id ] }
+
+      subject { FactoryGirl.create(:type_no_connections, categories: category_uris) }
+
+      it "sets the categories relation with category ids" do
+        subject.category_ids.should == category_ids
+      end
+
+    end
+
+    context "with not valid URIs" do
+
+      let(:category_uris) { [ nil ] }
+
+      it "raises a not valid error" do
+        expect {
+          FactoryGirl.create(:type_no_connections, categories: category_uris)
+        }.to raise_error(Lelylan::Errors::ValidURI) 
+      end
+
+      context "when raises an error" do
+
+        let(:count) { Type.count }
+        before { expect { FactoryGirl.create(:type_no_connections, categories: category_uris) }.to raise_error }
+
+        it "does not add a new record" do
+          count.should == Type.count
+        end
+      end
+    end
+
+    context "with empty list" do
+
+      let(:category_uris) { [] }
+
+      subject { FactoryGirl.create(:type, categories: category_uris ) }
+
+      it "removes all properties" do
+        subject.categories.should have(0).items
+      end
+    end
+  end
+
 end

@@ -63,6 +63,12 @@ statuses:
     uri: <%= "#{type_host}/statuses/setting-intensity" %>
     name: 'Setting intensity'
 
+categories:
+  lighting:
+    category_id: 'lighting'
+    uri: <%= "#{type_host}/categories/lighting" %>
+    name: 'Lighting'
+
 validation:
   uris:
     valid: ['http://example.com', 'http://www.examle.com']
