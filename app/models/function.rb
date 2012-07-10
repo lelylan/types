@@ -12,5 +12,5 @@ class Function
   validates :name, presence: true
   validates :created_from, presence: true, url: true
 
-  embeds_many :properties, class_name: "FunctionProperty", cascade_callbacks: true
+  embeds_many :properties, class_name: 'FunctionProperty', cascade_callbacks: true
 end

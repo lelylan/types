@@ -3,30 +3,25 @@ Settings.reload!
 
 FactoryGirl.define do
 
-  # -----------------
-  # Base factories
-  # -----------------
+  # base
 
   factory :setting_intensity, class: Status do
-    name 'Setting intensity'
+    name Settings.statuses.setting_intensity.name 
     created_from Settings.user.uri
-    status_properties {[
-      FactoryGirl.build(:status_for_setting_intensity),
-      FactoryGirl.build(:intensity_for_setting_intensity)
-    ]}
-  end
-
-  factory :status_no_connections, parent: :setting_intensity do
-    status_properties []
   end
 
   factory :status_not_owned, parent: :setting_intensity do
     created_from Settings.user.another.uri
   end
 
-  # --------------
-  # Connections
-  # --------------
+  # connections 
+
+  trait :with_status_properties do
+    after :create do |status|
+      FactoryGirl.create :status_for_setting_intensity, status: status
+      FactoryGirl.craete :function_property_intensity, status: status
+    end
+  end
 
   factory :status_for_setting_intensity, class: StatusProperty do
     property_id Settings.properties.status.property_id

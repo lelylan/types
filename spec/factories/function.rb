@@ -3,9 +3,11 @@ Settings.reload!
 
 FactoryGirl.define do
 
+  # base
+
   factory :function do
-    created_from Settings.user.uri
     name Settings.functions.set_intensity.name
+    created_from Settings.user.uri
   end
 
   factory :function_not_owned, parent: :function do
@@ -28,10 +30,12 @@ FactoryGirl.define do
     ]}
   end
 
+  # connections
+
   trait :with_properties do
     after :create do |function|
-      FactoryGirl.build :function_property_status, function: function
-      FactoryGirl.build :function_property_intensity, function: function
+      FactoryGirl.create :function_property_status, function: function
+      FactoryGirl.create :function_property_intensity, function: function
     end
   end
 
@@ -44,5 +48,4 @@ FactoryGirl.define do
     uri Settings.properties.intensity.uri
     value '0'
   end
-  
 end
