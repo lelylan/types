@@ -62,6 +62,7 @@ def json_fixture(file)
 end
 
 # Basic Authenticatin definition
+# ActionController::HttpAuthentication::Basic.encode_credentials user, password
 def authenticated(path)
   protocol = "https://"
   path = path.gsub(protocol, '')
