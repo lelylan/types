@@ -95,7 +95,13 @@ feature "CategoriesController" do
     before { @resource = FactoryGirl.create(:category) }
     before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -121,7 +127,13 @@ feature "CategoriesController" do
     before { @uri = "/categories/#{@resource.id.as_json}" }
     before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "views the owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_category @resource
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }

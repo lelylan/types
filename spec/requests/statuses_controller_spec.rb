@@ -95,7 +95,13 @@ feature "StatusController" do
     before { @resource = FactoryGirl.create(:setting_intensity) }
     before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "shows all owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -121,7 +127,13 @@ feature "StatusController" do
     before { @uri = "/statuses/#{@resource.id.as_json}" }
     before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "views the owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_status @resource
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -156,7 +168,7 @@ feature "StatusController" do
       context "with public resources" do
         before { @uri = "/statuses/#{@resource_not_owned._id}" }
 
-        it "view the not owned resource" do
+        it "views the not owned resource" do
           visit @uri
           page.status_code.should == 200
           should_have_status @resource_not_owned

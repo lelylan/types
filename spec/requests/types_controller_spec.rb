@@ -111,7 +111,13 @@ feature "TypesController" do
     before { @resource = FactoryGirl.create(:type) }
     before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -137,7 +143,13 @@ feature "TypesController" do
     before { @uri = "/types/#{@resource.id.as_json}" }
     before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "view the owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_type @resource
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -184,7 +196,7 @@ feature "TypesController" do
       context "with public resources" do
         before { @uri = "/types/#{@resource_not_owned._id}" }
 
-        it "view the not owned resource" do
+        it "views the not owned resource" do
           visit @uri
           page.status_code.should == 200
           should_have_type @resource_not_owned

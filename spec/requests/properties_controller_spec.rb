@@ -95,7 +95,13 @@ feature "PropertiesController" do
     before { @resource = FactoryGirl.create(:property) }
     before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -121,7 +127,13 @@ feature "PropertiesController" do
     before { @uri = "/properties/#{@resource.id.as_json}" }
     before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+    context "when not logged in" do
+      it "views the owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_property @resource
+      end
+    end
 
     context "when logged in" do
       before { basic_auth }
@@ -148,7 +160,7 @@ feature "PropertiesController" do
       context "with public resources" do
         before { @uri = "/properties/#{@resource_not_owned._id}" }
 
-        it "view the not owned resource" do
+        it "views the not owned resource" do
           visit @uri
           page.status_code.should == 200
           should_have_property @resource_not_owned

@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
-  include Lelylan::Errors::Helpers        # JSON error views
+  include Lelylan::Errors::Helpers
 
   protect_from_forgery
 
-  before_filter :authenticate
+  before_filter :authenticate, except: %w(public show)
 
   helper_method :current_user
 
