@@ -10,7 +10,7 @@ feature "TypesController" do
 
   before { @turn_on       = FactoryGirl.create(:turn_on) }
   before { @turn_off      = FactoryGirl.create(:turn_off) }
-  before { @set_intensity = FactoryGirl.create(:set_intensity) }
+  before { @set_intensity = FactoryGirl.create(:set_intensity, :with_properties) }
   before { @functions     = ["#{host}/functions/#{@turn_on._id}", "#{host}/functions/#{@turn_off._id}", "#{host}/functions/#{@set_intensity._id}"] }
 
   before { @setting_intensity = FactoryGirl.create(:setting_intensity) }
@@ -115,6 +115,7 @@ feature "TypesController" do
 
       it "views the owned resource" do
         visit @uri
+        save_and_open_page
         page.status_code.should == 200
         should_have_type @resource
       end

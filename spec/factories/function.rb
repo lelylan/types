@@ -12,21 +12,21 @@ FactoryGirl.define do
     created_from Settings.user.another.uri
   end
 
-  #factory :set_intensity, parent: :function
+  factory :set_intensity, parent: :function
 
-  #factory :turn_on, parent: :function do |f|
-    #name Settings.functions.turn_on.name
-    #properties {[
-      #FunctionProperty.build(uri: Settings.properties.status.uri, value: 'on')
-    #]}
-  #end
+  factory :turn_on, parent: :function do |f|
+    name Settings.functions.turn_on.name
+    properties {[
+      FactoryGirl.build(:function_property_status, value: 'on')
+    ]}
+  end
 
-  #factory :turn_off, parent: :function do |f|
-    #name Settings.functions.turn_off.name
-    #properties {[
-      #FunctionProperty.build(uri: Settings.properties.status.uri, value: 'off')
-    #]}
-  #end
+  factory :turn_off, parent: :function do |f|
+    name Settings.functions.turn_off.name
+    properties {[
+      FactoryGirl.build(:function_property_status, value: 'off')
+    ]}
+  end
 
   trait :with_properties do
     after :create do |function|

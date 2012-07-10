@@ -151,7 +151,7 @@ feature "FunctionsController" do
         @resource.properties.should have(2).items
       end
 
-      it "stores the resource" do
+      it "saves the resource" do
         expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
       end
 
