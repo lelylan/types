@@ -40,7 +40,7 @@ module TypesViewMethods
 
     categories = Category.in(_id: type.category_ids)
     json.categories.each_with_index do |json_category, index|
-      should_have_status(categories[index], json_category)
+      should_have_category(categories[index], json_category)
     end
   end
 

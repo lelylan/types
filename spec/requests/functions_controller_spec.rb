@@ -106,6 +106,14 @@ feature "FunctionsController" do
         should_have_function @resource
       end
 
+      context "when checking connections" do
+        before { visit @uri }
+
+        it "has properties" do
+          page.should have_content('"value":"on"')
+        end
+      end
+
       it "exposes the function URI" do
         visit @uri
         uri = "http://www.example.com/functions/#{@resource.id.as_json}"

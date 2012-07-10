@@ -106,6 +106,14 @@ feature "StatusController" do
         should_have_status @resource
       end
 
+      context "when checking connections" do
+        before { visit @uri }
+
+        it "has properties" do
+          page.should have_content('"range":{"start":"0","end":"100"}')
+        end
+      end
+
       it "exposes the status URI" do
         visit @uri
         uri = "http://www.example.com/statuses/#{@resource.id.as_json}"
