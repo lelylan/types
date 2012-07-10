@@ -91,9 +91,11 @@ feature "TypesController" do
           end
 
           context "when set too high value" do
-            it "shows the default number of resources" do
+            before { Settings.pagination.max_per = 30 }
+
+            it "shows the max number of resources allowed" do
               visit "#{@uri}?per=100000"
-              JSON.parse(page.source).should have(Settings.pagination.per).items
+              JSON.parse(page.source).should have(30).items
             end
           end
 

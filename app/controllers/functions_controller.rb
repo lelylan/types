@@ -63,7 +63,8 @@ class FunctionsController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      params[:per] = Settings.pagination.per if params[:per] == 0 or params[:per] > Settings.pagination.max_per
+      params[:per] = Settings.pagination.per if params[:per] == 0 
+      params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
       @functions = @functions.gt(_id: find_id_from_uri(params[:start])) if params[:start]
     end
 
