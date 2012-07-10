@@ -74,10 +74,17 @@ feature "PropertiesController" do
             end
           end
 
-          context "when set to all" do
-            it "shows all resources" do
-              visit "#{@uri}?per=all"
-              JSON.parse(page.source).should have(Property.count).items
+          context "when set too high value" do
+            it "shows the default number of resources" do
+              visit "#{@uri}?per=100000"
+              JSON.parse(page.source).should have(Settings.pagination.per).items
+            end
+          end
+
+          context "when set to not valid value" do
+            it "shows the default number of resources" do
+              visit "#{@uri}?per=not_valid"
+              JSON.parse(page.source).should have(Settings.pagination.per).items
             end
           end
         end

@@ -63,6 +63,7 @@ class TypesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
+      params[:per] = Settings.pagination.per if params[:per] == 0 or params[:per] > Settings.pagination.max_per
       @types = @types.gt(_id: find_id_from_uri(params[:start])) if params[:start]
     end
 

@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Status do
+
+  it { ['true', 'false', nil].each { |value| should allow_value(value).for(:pending) } }
+  it { ['not_valid', ''].each { |value| should_not allow_value(value).for(:pending) } }
+
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:created_from) }
 

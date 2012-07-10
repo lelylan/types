@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe StatusProperty do
 
-  it { ['true', 'false', nil].each { |value| should allow_value(value).for(:pending) } }
-  it { ['not_valid', ''].each { |value| should_not allow_value(value).for(:pending) } }
-
   it { should validate_presence_of(:uri) }
   it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:uri)} }
   it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }

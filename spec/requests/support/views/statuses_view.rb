@@ -21,10 +21,10 @@ module StatusesViewMethods
     json.uri.should == status.uri
     json.id.should == status.id.as_json
     json.name.should == status.name
+    json[:pending].should == status.pending
     json.properties.each_with_index do |json_property, index|
       property = StatusPropertyDecorator.decorate(status.properties[index])
       json_property.uri.should == property.uri
-      json_property[:pending].should == property.pending
       json_property[:values].should == property.values
     end
     json.created_at.should == status.created_at.iso8601
