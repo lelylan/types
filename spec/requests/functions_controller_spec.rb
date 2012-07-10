@@ -28,8 +28,8 @@ feature "FunctionsController" do
       # ---------
       # Search
       # ---------
-      context "when searching" do
-        context "name" do
+      shared_examples "searching function" do
+        context "#name" do
           before { @name = "My name is function" }
           before { @result = FactoryGirl.create(:function, name: @name) }
 
@@ -45,7 +45,7 @@ feature "FunctionsController" do
       # ------------
       # Pagination
       # ------------
-      context "when paginating" do
+      shared_examples "paginating function" do
         before { Function.destroy_all }
         before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
         before { @resources = FactoryGirl.create_list(:function, Settings.pagination.per + 5, name: 'Extra function') }
@@ -82,6 +82,32 @@ feature "FunctionsController" do
           end
         end
       end
+    end
+  end
+
+
+
+  # -----------------------
+  # GET /functions/public
+  # -----------------------
+  context ".index" do
+    before { @uri = "/functions/public" }
+    before { @resource = FactoryGirl.create(:function) }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+
+      it_should_behave_like "searching function"
+      it_should_behave_like "paginating function"
     end
   end
 
@@ -127,7 +153,15 @@ feature "FunctionsController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
+      context "with public resources" do
+        before { @uri = "/functions/#{@resource_not_owned._id}" }
+
+        it "view the not owned resource" do
+          visit @uri
+          page.status_code.should == 200
+          should_have_function @resource_not_owned
+        end
+      end
     end
   end
 

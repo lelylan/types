@@ -1,14 +1,20 @@
 class CategoriesController < ApplicationController
   include Lelylan::Search::URI
 
-  before_filter :find_owned_resources
+  before_filter :find_owned_resources, except: %w(public show)
+  before_filter :find_all_resources, only: %w(public show)
   before_filter :find_resource, only: %w(show update destroy)
-  before_filter :search_params, only: 'index'
-  before_filter :pagination, only: 'index'
+  before_filter :search_params, only: %w(index public)
+  before_filter :pagination, only: %w(index public)
 
 
   def index
     @categories = @categories.limit(params[:per])
+  end
+
+  def public
+    @categories = @categories.limit(params[:per])
+    render 'index'
   end
 
   def show
@@ -45,6 +51,10 @@ class CategoriesController < ApplicationController
 
     def find_owned_resources
       @categories = Category.where(created_from: current_user.uri)
+    end
+
+    def find_all_resources
+      @categories = Category.all
     end
 
     def find_resource

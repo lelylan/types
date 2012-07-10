@@ -9,3 +9,4 @@ node(:properties) do |function|
   end
 end
 
+attributes :created_at, :updated_at

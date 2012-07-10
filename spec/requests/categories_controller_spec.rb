@@ -20,7 +20,6 @@ feature "CategoriesController" do
 
       it "shows all owned resources" do
         visit @uri
-        #save_and_open_page
         page.status_code.should == 200
         should_have_owned_category @resource
       end
@@ -29,7 +28,7 @@ feature "CategoriesController" do
       # ---------
       # Search
       # ---------
-      context "when searching" do
+      shared_examples "searching category" do
         context "name" do
           before { @name = "My name is category" }
           before { @result = FactoryGirl.create(:category, name: @name) }
@@ -46,7 +45,7 @@ feature "CategoriesController" do
       # ------------
       # Pagination
       # ------------
-      context "when paginating" do
+      shared_examples "paginating category" do
         before { Category.destroy_all }
         before { @resource = CategoryDecorator.decorate(FactoryGirl.create(:category)) }
         before { @resources = FactoryGirl.create_list(:category, Settings.pagination.per + 5, name: 'Extra category') }
@@ -88,6 +87,32 @@ feature "CategoriesController" do
 
 
 
+  # -----------------------
+  # GET /categories/public
+  # -----------------------
+  context ".index" do
+    before { @uri = "/categories/public" }
+    before { @resource = FactoryGirl.create(:category) }
+    before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+
+      it_should_behave_like "searching category"
+      it_should_behave_like "paginating category"
+    end
+  end
+
+
+
   # ---------------------
   # GET /categories/:id
   # ---------------------
@@ -120,7 +145,15 @@ feature "CategoriesController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "categories"
+      context "with public resources" do
+        before { @uri = "/categories/#{@resource_not_owned._id}" }
+
+        it "view the not owned resource" do
+          visit @uri
+          page.status_code.should == 200
+          should_have_category @resource_not_owned
+        end
+      end
     end
   end
 

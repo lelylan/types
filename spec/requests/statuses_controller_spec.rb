@@ -28,8 +28,8 @@ feature "StatusController" do
       # ---------
       # Search
       # ---------
-      context "when searching" do
-        context "name" do
+      shared_examples "searching status" do
+        context "#name" do
           before { @name = "My name is status" }
           before { @result = FactoryGirl.create(:setting_intensity, name: @name) }
 
@@ -45,7 +45,7 @@ feature "StatusController" do
       # ------------
       # Pagination
       # ------------
-      context "when paginating" do
+      shared_examples "paginating status" do
         before { Status.destroy_all }
         before { @resource = StatusDecorator.decorate(FactoryGirl.create(:setting_intensity)) }
         before { @resources = FactoryGirl.create_list(:setting_intensity, Settings.pagination.per + 5, name: 'Extra status') }
@@ -82,6 +82,32 @@ feature "StatusController" do
           end
         end
       end
+    end
+  end
+
+
+
+  # ----------------------
+  # GET /statuses/public
+  # ----------------------
+  context ".index" do
+    before { @uri = "/statuses/public" }
+    before { @resource = FactoryGirl.create(:setting_intensity) }
+    before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "shows all owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+
+      it_should_behave_like "searching status"
+      it_should_behave_like "paginating status"
     end
   end
 
@@ -127,7 +153,15 @@ feature "StatusController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses"
+      context "with public resources" do
+        before { @uri = "/statuses/#{@resource_not_owned._id}" }
+
+        it "view the not owned resource" do
+          visit @uri
+          page.status_code.should == 200
+          should_have_status @resource_not_owned
+        end
+      end
     end
   end
 
