@@ -82,19 +82,6 @@ feature "FunctionsController" do
           end
         end
       end
-
-
-      ##---------
-      ## Public
-      ##---------
-      #context "with public resources" do
-        #before { @uri = "#{@uri}/public" }
-
-        #it "shows owned and not owned resources" do
-          #visit @uri
-          #JSON.parse(page.source).should have(2).items
-        #end
-      #end
     end
   end
 
