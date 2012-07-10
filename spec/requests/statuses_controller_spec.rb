@@ -151,10 +151,17 @@ feature "StatusController" do
         @resource.properties.should have(2).items
       end
 
-      it "stores the resource" do
+      it "save the resource" do
         expect{ page.driver.post(@uri, @params.to_json) }.to change{ Status.count }.by(1)
       end
 
+      context "with not valid params" do
+        before { @params[:name] = "" }
+
+        it "does not create the resource" do
+          expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(0)
+        end
+      end
       it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
       it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
     end

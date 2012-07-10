@@ -125,9 +125,9 @@ feature "FunctionsController" do
 
 
 
-  # ---------------
+  # ----------------
   # POST /functions
-  # ---------------
+  # ----------------
   context ".create" do
     before { @uri =  "/functions" }
 
