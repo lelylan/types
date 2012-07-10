@@ -1,14 +1,20 @@
 class PropertiesController < ApplicationController
   include Lelylan::Search::URI
 
-  before_filter :find_owned_resources
+  before_filter :find_owned_resources, except: %w(public show)
+  before_filter :find_all_resources, only: %w(public show)
   before_filter :find_resource, only: %w(show update destroy)
-  before_filter :search_params, only: 'index'
-  before_filter :pagination, only: 'index'
+  before_filter :search_params, only: %w(index public)
+  before_filter :pagination, only: %w(index public)
 
 
   def index
     @properties = @properties.limit(params[:per])
+  end
+
+  def public
+    @properties = @properties.limit(params[:per])
+    render 'index'
   end
 
   def show
@@ -45,6 +51,10 @@ class PropertiesController < ApplicationController
 
     def find_owned_resources
       @properties = Property.where(created_from: current_user.uri)
+    end
+
+    def find_all_resources
+      @properties = Property.all
     end
 
     def find_resource

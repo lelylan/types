@@ -29,7 +29,7 @@ feature "FunctionsController" do
       # Search
       # ---------
       shared_examples "searching function" do
-        context "name" do
+        context "#name" do
           before { @name = "My name is function" }
           before { @result = FactoryGirl.create(:function, name: @name) }
 

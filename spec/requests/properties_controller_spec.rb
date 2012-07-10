@@ -28,8 +28,8 @@ feature "PropertiesController" do
       # ---------
       # Search
       # ---------
-      context "when searching" do
-        context "name" do
+      shared_examples "searching property" do
+        context "#name" do
           before { @name = "My name is property" }
           before { @result = FactoryGirl.create(:property, name: @name) }
 
@@ -45,7 +45,7 @@ feature "PropertiesController" do
       # ------------
       # Pagination
       # ------------
-      context "when paginating" do
+      shared_examples "paginating property" do
         before { Property.destroy_all }
         before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
         before { @resources = FactoryGirl.create_list(:property, Settings.pagination.per + 5, name: 'Extra property') }
@@ -87,6 +87,32 @@ feature "PropertiesController" do
 
 
 
+  # -----------------------
+  # GET /properties/public
+  # -----------------------
+  context ".index" do
+    before { @uri = "/properties/public" }
+    before { @resource = FactoryGirl.create(:property) }
+    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+
+      it_should_behave_like "searching property"
+      it_should_behave_like "paginating property"
+    end
+  end
+
+
+
   # ---------------------
   # GET /properties/:id
   # ---------------------
@@ -119,7 +145,15 @@ feature "PropertiesController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "properties"
+      context "with public resources" do
+        before { @uri = "/properties/#{@resource_not_owned._id}" }
+
+        it "view the not owned resource" do
+          visit @uri
+          page.status_code.should == 200
+          should_have_property @resource_not_owned
+        end
+      end
     end
   end
 
