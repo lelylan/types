@@ -44,8 +44,8 @@ feature "TypesController" do
       # ---------
       # Search
       # ---------
-      context "when searching" do
-        context "name" do
+      shared_examples "searching type" do
+        context "#name" do
           before { @name = "My name is type" }
           before { @result = FactoryGirl.create(:type_no_connections, name: @name) }
 
@@ -61,7 +61,7 @@ feature "TypesController" do
       # ------------
       # Pagination
       # ------------
-      context "when paginating" do
+      shared_examples "paginating type" do
         before { Type.destroy_all }
         before { @resource = TypeDecorator.decorate(FactoryGirl.create(:type_no_connections)) }
         before { @resources = FactoryGirl.create_list(:type, Settings.pagination.per + 5, name: 'Extra type') }
@@ -98,6 +98,32 @@ feature "TypesController" do
           end
         end
       end
+    end
+  end
+
+
+
+  # -----------------------
+  # GET /types/public
+  # -----------------------
+  context ".index" do
+    before { @uri = "/types/public" }
+    before { @resource = FactoryGirl.create(:type) }
+    before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "shows all owned and not owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        JSON.parse(page.source).should have(2).items
+      end
+
+      it_should_behave_like "searching type"
+      it_should_behave_like "paginating type"
     end
   end
 
@@ -155,7 +181,15 @@ feature "TypesController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "types"
+      context "with public resources" do
+        before { @uri = "/types/#{@resource_not_owned._id}" }
+
+        it "view the not owned resource" do
+          visit @uri
+          page.status_code.should == 200
+          should_have_type @resource_not_owned
+        end
+      end
     end
   end
 
