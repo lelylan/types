@@ -21,6 +21,8 @@ module CategoriesViewMethods
     json.uri.should == category.uri
     json.id.should == category.id.as_json
     json.name.should == category.name
+    json.created_at.should == category.created_at.iso8601
+    json.updated_at.should == category.updated_at.iso8601
   end
 
   def should_not_have_not_owned_categories

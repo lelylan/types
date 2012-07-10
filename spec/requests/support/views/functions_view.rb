@@ -26,6 +26,8 @@ module FunctionsViewMethods
       json_property.uri.should == property.uri
       json_property.value.should == property.value
     end
+    json.created_at.should == function.created_at.iso8601
+    json.updated_at.should == function.created_at.iso8601
   end
 
   def should_not_have_not_owned_functions

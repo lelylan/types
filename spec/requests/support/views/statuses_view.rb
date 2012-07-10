@@ -27,6 +27,8 @@ module StatusesViewMethods
       json_property[:pending].should == property.pending
       json_property[:values].should == property.values
     end
+    json.created_at.should == status.created_at.iso8601
+    json.updated_at.should == status.created_at.iso8601
   end
 
   def should_not_have_not_owned_statuses

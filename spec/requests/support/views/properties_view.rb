@@ -23,6 +23,8 @@ module PropertiesViewMethods
     json.name.should == property.name
     json[:default].should == property.default
     json[:values].should == property.values
+    json.created_at.should == property.created_at.iso8601
+    json.updated_at.should == property.created_at.iso8601
   end
 
   def should_not_have_not_owned_properties
