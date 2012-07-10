@@ -17,4 +17,9 @@ node :statuses do |type|
   partial("statuses/index", object: statuses)
 end
 
+node :categories do |type|
+  categories = CategoryDecorator.decorate(Category.in(_id: type.category_ids))
+  partial("categories/index", object: categories)
+end
+
 attributes :created_at, :updated_at

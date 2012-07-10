@@ -5,123 +5,133 @@ feature "FunctionsController" do
   before { host! "http://" + host }
 
 
-  ## -----------------
-  ## GET /functions
-  ## -----------------
-  #context ".index" do
-    #before { @uri = "/functions" }
-    #before { @resource = FactoryGirl.create(:function) }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "visit(@uri)"
+  # -----------------
+  # GET /functions
+  # -----------------
+  context ".index" do
+    before { @uri = "/functions" }
+    before { @resource = FactoryGirl.create(:function) }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #context "when logged in" do
-      #before { basic_auth }
+    it_should_behave_like "not authorized resource", "visit(@uri)"
 
-      #it "shows all owned resources" do
-        #visit @uri
-        #page.status_code.should == 200
-        #should_have_owned_function @resource
-      #end
+    context "when logged in" do
+      before { basic_auth }
 
-
-      ## ---------
-      ## Search
-      ## ---------
-      #context "when searching" do
-        #context "name" do
-          #before { @name = "My name is function" }
-          #before { @result = FactoryGirl.create(:function, name: @name) }
-
-          #it "finds the desired function" do
-            #visit "#{@uri}?name=name+is"
-            #should_contain_function @result
-            #page.should_not have_content @resource.name
-          #end
-        #end
-      #end
+      it "shows all owned resources" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_owned_function @resource
+      end
 
 
-      ## ------------
-      ## Pagination
-      ## ------------
-      #context "when paginating" do
-        #before { Function.destroy_all }
-        #before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
-        #before { @resources = FactoryGirl.create_list(:function, Settings.pagination.per + 5, name: 'Extra function') }
+      # ---------
+      # Search
+      # ---------
+      context "when searching" do
+        context "name" do
+          before { @name = "My name is function" }
+          before { @result = FactoryGirl.create(:function, name: @name) }
 
-        #context "with :start" do
-          #it "shows the next page" do
-            #visit "#{@uri}?start=#{@resource.uri}"
-            #page.status_code.should == 200
-            #should_contain_function @resources.first
-            #page.should_not have_content @resource.name
-          #end
-        #end
-
-        #context "with :per" do
-          #context "when not set" do
-            #it "shows the default number of resources" do
-              #visit "#{@uri}"
-              #JSON.parse(page.source).should have(Settings.pagination.per).items
-            #end
-          #end
-
-          #context "when set to 5" do
-            #it "shows 5 resources" do
-              #visit "#{@uri}?per=5"
-              #JSON.parse(page.source).should have(5).items
-            #end
-          #end
-
-          #context "when set to all" do
-            #it "shows all resources" do
-              #visit "#{@uri}?per=all"
-              #JSON.parse(page.source).should have(Function.count).items
-            #end
-          #end
-        #end
-      #end
-    #end
-  #end
+          it "finds the desired function" do
+            visit "#{@uri}?name=name+is"
+            should_contain_function @result
+            page.should_not have_content @resource.name
+          end
+        end
+      end
 
 
+      # ------------
+      # Pagination
+      # ------------
+      context "when paginating" do
+        before { Function.destroy_all }
+        before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
+        before { @resources = FactoryGirl.create_list(:function, Settings.pagination.per + 5, name: 'Extra function') }
 
-  ## ---------------------
-  ## GET /functions/:id
-  ## ---------------------
-  #context ".show" do
-    #before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
-    #before { @uri = "/functions/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+        context "with :start" do
+          it "shows the next page" do
+            visit "#{@uri}?start=#{@resource.uri}"
+            page.status_code.should == 200
+            should_contain_function @resources.first
+            page.should_not have_content @resource.name
+          end
+        end
 
-    #it_should_behave_like "not authorized resource", "visit(@uri)"
+        context "with :per" do
+          context "when not set" do
+            it "shows the default number of resources" do
+              visit "#{@uri}"
+              JSON.parse(page.source).should have(Settings.pagination.per).items
+            end
+          end
 
-    #context "when logged in" do
-      #before { basic_auth }
+          context "when set to 5" do
+            it "shows 5 resources" do
+              visit "#{@uri}?per=5"
+              JSON.parse(page.source).should have(5).items
+            end
+          end
 
-      #it "views the owned resource" do
-        #visit @uri
-        #page.status_code.should == 200
-        #should_have_function @resource
-      #end
+          context "when set to all" do
+            it "shows all resources" do
+              visit "#{@uri}?per=all"
+              JSON.parse(page.source).should have(Function.count).items
+            end
+          end
+        end
+      end
+    end
+  end
 
-      #it "exposes the function URI" do
-        #visit @uri
-        #uri = "http://www.example.com/functions/#{@resource.id.as_json}"
-        #@resource.uri.should == uri
-      #end
 
-      #context "with host" do
-        #it "changes the URI" do
-          #visit "#{@uri}?host=www.lelylan.com"
-          #@resource.uri.should match("http://www.lelylan.com/")
-        #end
-      #end
 
-      #it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
-    #end
-  #end
+  # ---------------------
+  # GET /functions/:id
+  # ---------------------
+  context ".show" do
+    before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
+    before { @uri = "/functions/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+
+    it_should_behave_like "not authorized resource", "visit(@uri)"
+
+    context "when logged in" do
+      before { basic_auth }
+
+      it "views the owned resource" do
+        visit @uri
+        page.status_code.should == 200
+        should_have_function @resource
+      end
+
+      context "when checking connections" do
+        before { visit @uri }
+
+        it "has properties" do
+          page.should have_content('"value":"on"')
+        end
+      end
+
+      it "exposes the function URI" do
+        visit @uri
+        uri = "http://www.example.com/functions/#{@resource.id.as_json}"
+        @resource.uri.should == uri
+      end
+
+      context "with host" do
+        it "changes the URI" do
+          visit "#{@uri}?host=www.lelylan.com"
+          @resource.uri.should match("http://www.lelylan.com/")
+        end
+      end
+
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
+    end
+  end
+>>>>>>> feature/categories
 
 
 

@@ -4,13 +4,9 @@ class Category
 
   field :created_from
   field :name
-  field :public, type: Boolean, default: true
 
-  has_and_belongs_to_many :types
-
-  attr_accessible :name, :public
+  attr_accessible :name
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
-  validates :public, inclusion: { in: [true, false] }
 end

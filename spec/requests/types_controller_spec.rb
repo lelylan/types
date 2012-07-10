@@ -16,6 +16,9 @@ feature "TypesController" do
   before { @setting_intensity = FactoryGirl.create(:setting_intensity) }
   before { @statuses          = ["#{host}/statuses/#{@setting_intensity._id}"] }
 
+  before { @lighting   = FactoryGirl.create(:lighting) }
+  before { @categories = ["#{host}/statuses/#{@lighting._id}"] }
+
 
   # -----------------
   # GET /types
@@ -104,7 +107,7 @@ feature "TypesController" do
   # GET /types/:id
   # ---------------------
   context ".show" do
-    before { @resource = TypeDecorator.decorate(FactoryGirl.create(:type)) }
+    before { @resource = TypeDecorator.decorate(FactoryGirl.create(:type, properties: @properties, functions: @functions, statuses: @statuses, categories: @categories)) }
     before { @uri = "/types/#{@resource.id.as_json}" }
     before { @resource_not_owned = FactoryGirl.create(:type_not_owned) }
 
@@ -113,10 +116,30 @@ feature "TypesController" do
     context "when logged in" do
       before { basic_auth }
 
-      it "views the owned resource" do
+      it "view the owned resource" do
         visit @uri
         page.status_code.should == 200
         should_have_type @resource
+      end
+
+      context "when checking connections" do
+        before { visit @uri }
+
+        it "has properties" do
+          page.should have_content('"name":"Status"')
+        end
+
+        it "has functions" do
+          page.should have_content('"name":"Set intensity"')
+        end
+
+        it "has properties" do
+          page.should have_content('"name":"Setting intensity"')
+        end
+
+        it "has properties" do
+          page.should have_content('"name":"Lighting"')
+        end
       end
 
       it "exposes the type URI" do

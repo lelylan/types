@@ -37,6 +37,11 @@ module TypesViewMethods
     json.statuses.each_with_index do |json_status, index|
       should_have_status(statuses[index], json_status)
     end
+
+    categories = Category.in(_id: type.category_ids)
+    json.categories.each_with_index do |json_category, index|
+      should_have_category(categories[index], json_category)
+    end
   end
 
   def should_not_have_not_owned_types

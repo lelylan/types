@@ -10,17 +10,16 @@ class Type
   field :property_ids, type: Array, default: []
   field :function_ids, type: Array, default: []
   field :status_ids, type: Array, default: []
+  field :category_ids, type: Array, default: []
 
-  attr_accessor :properties, :functions, :statuses
-  attr_accessible :name, :public, :properties, :functions, :statuses
+  attr_accessor :properties, :functions, :statuses, :categories
+  attr_accessible :name, :public, :properties, :functions, :statuses, :categories
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
   validates :public, inclusion: { in: ['true', 'false'] }
 
-  before_save :find_properties
-  before_save :find_functions
-  before_save :find_statuses
+  before_save :find_properties, :find_functions, :find_statuses, :find_categories
 
   def find_properties
     self.property_ids = find_resources(properties) if not properties.nil?
@@ -32,6 +31,10 @@ class Type
 
   def find_statuses
     self.status_ids = find_resources(statuses) if not statuses.nil?
+  end
+
+  def find_categories
+    self.category_ids = find_resources(categories) if not categories.nil?
   end
 end
 

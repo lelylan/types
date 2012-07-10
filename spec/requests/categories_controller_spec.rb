@@ -1,17 +1,17 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "StatusController" do
-  before { Status.destroy_all }
+feature "CategoriesController" do
+  before { Category.destroy_all }
   before { host! "http://" + host }
 
 
   # -----------------
-  # GET /statuses
+  # GET /categories
   # -----------------
   context ".index" do
-    before { @uri = "/statuses" }
-    before { @resource = FactoryGirl.create(:setting_intensity) }
-    before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
+    before { @uri = "/categories" }
+    before { @resource = FactoryGirl.create(:category) }
+    before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -20,8 +20,9 @@ feature "StatusController" do
 
       it "shows all owned resources" do
         visit @uri
+        #save_and_open_page
         page.status_code.should == 200
-        should_have_owned_status @resource
+        should_have_owned_category @resource
       end
 
 
@@ -30,12 +31,12 @@ feature "StatusController" do
       # ---------
       context "when searching" do
         context "name" do
-          before { @name = "My name is status" }
-          before { @result = FactoryGirl.create(:setting_intensity, name: @name) }
+          before { @name = "My name is category" }
+          before { @result = FactoryGirl.create(:category, name: @name) }
 
-          it "finds the desired status" do
+          it "finds the desired category" do
             visit "#{@uri}?name=name+is"
-            should_contain_status @result
+            should_contain_category @result
             page.should_not have_content @resource.name
           end
         end
@@ -46,15 +47,15 @@ feature "StatusController" do
       # Pagination
       # ------------
       context "when paginating" do
-        before { Status.destroy_all }
-        before { @resource = StatusDecorator.decorate(FactoryGirl.create(:setting_intensity)) }
-        before { @resources = FactoryGirl.create_list(:setting_intensity, Settings.pagination.per + 5, name: 'Extra status') }
+        before { Category.destroy_all }
+        before { @resource = CategoryDecorator.decorate(FactoryGirl.create(:category)) }
+        before { @resources = FactoryGirl.create_list(:category, Settings.pagination.per + 5, name: 'Extra category') }
 
         context "with :start" do
           it "shows the next page" do
             visit "#{@uri}?start=#{@resource.uri}"
             page.status_code.should == 200
-            should_contain_status @resources.first
+            should_contain_category @resources.first
             page.should_not have_content @resource.name
           end
         end
@@ -77,7 +78,7 @@ feature "StatusController" do
           context "when set to all" do
             it "shows all resources" do
               visit "#{@uri}?per=all"
-              JSON.parse(page.source).should have(Status.count).items
+              JSON.parse(page.source).should have(Category.count).items
             end
           end
         end
@@ -88,12 +89,12 @@ feature "StatusController" do
 
 
   # ---------------------
-  # GET /statuses/:id
+  # GET /categories/:id
   # ---------------------
   context ".show" do
-    before { @resource = StatusDecorator.decorate(FactoryGirl.create(:setting_intensity)) }
-    before { @uri = "/statuses/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
+    before { @resource = CategoryDecorator.decorate(FactoryGirl.create(:category)) }
+    before { @uri = "/categories/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
 
     it_should_behave_like "not authorized resource", "visit(@uri)"
 
@@ -103,20 +104,12 @@ feature "StatusController" do
       it "views the owned resource" do
         visit @uri
         page.status_code.should == 200
-        should_have_status @resource
+        should_have_category @resource
       end
 
-      context "when checking connections" do
-        before { visit @uri }
-
-        it "has properties" do
-          page.should have_content('"range":{"start":"0","end":"100"}')
-        end
-      end
-
-      it "exposes the status URI" do
+      it "exposes the category URI" do
         visit @uri
-        uri = "http://www.example.com/statuses/#{@resource.id.as_json}"
+        uri = "http://www.example.com/categories/#{@resource.id.as_json}"
         @resource.uri.should == uri
       end
 
@@ -127,40 +120,33 @@ feature "StatusController" do
         end
       end
 
-      it_should_behave_like "a rescued 404 resource", "visit @uri", "statuses"
+      it_should_behave_like "a rescued 404 resource", "visit @uri", "categories"
     end
   end
 
 
 
   # ---------------
-  # POST /statuses
+  # POST /categories
   # ---------------
   context ".create" do
-    before { @uri =  "/statuses" }
+    before { @uri =  "/categories" }
 
     it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
 
     context "when logged in" do
       before { basic_auth }
-      before { @properties = json_fixture('status_properties.json')[:properties] }
-      before { @params = { name: 'New set intensity', properties: @properties } }
+      before { @params = { name: 'Lighting' } }
 
       it "creates the resource" do
         page.driver.post @uri, @params.to_json
-        @resource = Status.last
+        @resource = Category.last
         page.status_code.should == 201
-        should_have_status @resource
+        should_have_category @resource
       end
 
-      it "creates the resource properties" do
-        page.driver.post @uri, @params.to_json
-        @resource = Status.last
-        @resource.properties.should have(2).items
-      end
-
-      it "save the resource" do
-        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Status.count }.by(1)
+      it "stores the resource" do
+        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Category.count }.by(1)
       end
 
       context "with not valid params" do
@@ -170,6 +156,7 @@ feature "StatusController" do
           expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(0)
         end
       end
+
       it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
       it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
     end
@@ -178,35 +165,27 @@ feature "StatusController" do
 
 
   # ---------------------
-  # PUT /statuses/:id
+  # PUT /categories/:id
   # ---------------------
   context ".update" do
-    before { @resource = FactoryGirl.create(:setting_intensity) }
-    before { @uri = "/statuses/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
+    before { @resource = FactoryGirl.create(:category) }
+    before { @uri = "/categories/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
 
     it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
     context "when logged in" do
       before { basic_auth }
-      before { @properties = json_fixture('status_properties.json')[:properties] }
-      before { @params = { name: 'Updated', properties: @properties } }
+      before { @params = { name: 'Updated' } }
 
-      it "updates the resource" do
+      it "updates a resource" do
         page.driver.put @uri, @params.to_json
         @resource.reload
         page.status_code.should == 200
         page.should have_content "Updated"
       end
 
-      it "updates the resource properties" do
-        page.driver.put @uri, @params.to_json
-        page.should have_content "true"
-        page.should have_content "on"
-        page.should have_content "75"
-      end
-
-      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "statuses"
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "categories"
       it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
     end
   end
@@ -214,12 +193,12 @@ feature "StatusController" do
 
 
   # ------------------------
-  # DELETE /statuses/:id
+  # DELETE /categories/:id
   # ------------------------
   context ".destroy" do
-    before { @resource = FactoryGirl.create(:setting_intensity) }
-    before { @uri =  "/statuses/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:status_not_owned) }
+    before { @resource = FactoryGirl.create(:category) }
+    before { @uri =  "/categories/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:category_not_owned) }
 
     it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
@@ -227,12 +206,12 @@ feature "StatusController" do
       before { basic_auth } 
 
       scenario "delete resource" do
-        expect{ page.driver.delete(@uri) }.to change{ Status.count }.by(-1)
+        expect{ page.driver.delete(@uri) }.to change{ Category.count }.by(-1)
         page.status_code.should == 200
-        should_have_status @resource
+        should_have_category @resource
       end
 
-      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "statuses"
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "categories"
     end
   end
 end
