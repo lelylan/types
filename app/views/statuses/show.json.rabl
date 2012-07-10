@@ -14,3 +14,4 @@ node(:properties) do |status|
   end
 end
 
+attributes :created_at, :updated_at
