@@ -8,6 +8,14 @@ FactoryGirl.define do
   factory :function do
     name Settings.functions.set_intensity.name
     created_from Settings.user.uri
+    properties {[
+      FactoryGirl.build(:function_property_status),
+      FactoryGirl.build(:function_property_intensity)
+    ]}
+  end
+
+  factory :function_no_connections, parent: :function do
+    properties []
   end
 
   factory :function_not_owned, parent: :function do
@@ -31,13 +39,6 @@ FactoryGirl.define do
   end
 
   # connections
-
-  trait :with_properties do
-    after :create do |function|
-      FactoryGirl.create :function_property_status, function: function
-      FactoryGirl.create :function_property_intensity, function: function
-    end
-  end
 
   factory :function_property_status, class: FunctionProperty do
     uri Settings.properties.status.uri

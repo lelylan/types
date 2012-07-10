@@ -10,8 +10,8 @@ describe Function do
 
     context "with valid properties" do
 
-      let(:properties) { json_fixture('properties.json')[:properties] }
-      let(:function)   { FactoryGirl.create(:function, properties: properties) }
+      let(:properties) { json_fixture('function_properties.json')[:properties] }
+      let(:function)   { FactoryGirl.create(:function_no_connections, properties: properties) }
       subject          { function.properties }
 
       it "creates properties" do
@@ -23,33 +23,25 @@ describe Function do
       end
 
       it "sets the intensity" do
-        subject.where(property_id: 'intensity').first.value.should == '100.0'
+        subject.where(property_id: 'intensity').first.value.should == '0.0'
       end
     end
 
     context "with pre-existing properties" do
 
       let(:properties) { json_fixture('properties.json')[:properties] }
-      let(:function)   { FactoryGirl.create(:function, properties: properties) }
+      let(:function)   { FactoryGirl.create(:function) }
       before           { function.update_attributes(properties: properties) }
       subject          { function.properties }
 
-      it "deletes previous ones" do
+      it "deletes previous properties" do
         subject.should have(2).items
-      end
-
-      it "sets the new status" do
-        subject.where(property_id: 'status').first.value.should == 'on'
-      end
-
-      it "sets the new intensity" do
-        subject.where(property_id: 'intensity').first.value.should == '100.0'
       end
     end
 
     context "with not valid params" do
 
-      context "when name miss" do
+      context "when name is missing" do
         it "raises an error" do
           expect { FactoryGirl.create(:function, name: "") }.to raise_error(Mongoid::Errors::Validations)
         end
@@ -70,12 +62,20 @@ describe Function do
       end
     end
 
+    context "with no properties" do
+
+      let(:function) { FactoryGirl.create(:function) }
+      subject        { function.properties }
+
+      it "should not change anything" do
+        subject.should have(2).items
+      end
+    end
+
     context "with empty properties" do
 
-      let(:properties) { json_fixture('properties.json')[:properties] }
-      let(:function)   { FactoryGirl.create(:function, properties: properties) }
-      before           { function.update_attributes(properties: []) }
-      subject          { function.properties }
+      let(:function) { FactoryGirl.create(:function, properties: []) }
+      subject        { function.properties }
 
       it "removes all properties" do
         subject.should have(0).items

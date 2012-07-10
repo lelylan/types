@@ -8,6 +8,14 @@ FactoryGirl.define do
   factory :setting_intensity, class: Status do
     name Settings.statuses.setting_intensity.name 
     created_from Settings.user.uri
+    properties {[
+      FactoryGirl.build(:status_for_setting_intensity),
+      FactoryGirl.build(:intensity_for_setting_intensity)
+    ]}
+  end
+
+  factory :setting_intensity_no_connections, parent: :setting_intensity do
+    properties []
   end
 
   factory :status_not_owned, parent: :setting_intensity do
@@ -16,21 +24,14 @@ FactoryGirl.define do
 
   # connections 
 
-  trait :with_status_properties do
-    after :create do |status|
-      FactoryGirl.create :status_for_setting_intensity, status: status
-      FactoryGirl.craete :function_property_intensity, status: status
-    end
-  end
-
   factory :status_for_setting_intensity, class: StatusProperty do
-    property_id Settings.properties.status.property_id
+    uri Settings.properties.status.uri
     values ['on']
     pending nil
   end
 
   factory :intensity_for_setting_intensity, class: StatusProperty do
-    property_id Settings.properties.intensity.property_id
+    uri Settings.properties.intensity.uri
     range_start '0'
     range_end '100'
     pending 'true'
