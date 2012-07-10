@@ -3,7 +3,7 @@ object StatusDecorator.decorate(@status)
 attributes :uri, :id, :name
 
 node(:properties) do |status|
-  status.status_properties.map do |property|
+  status.properties.map do |property|
     property = StatusPropertyDecorator.decorate(property)
     { 
       uri: property.uri, 

@@ -22,7 +22,7 @@ module StatusesViewMethods
     json.id.should == status.id.as_json
     json.name.should == status.name
     json.properties.each_with_index do |json_property, index|
-      property = StatusPropertyDecorator.decorate(status.status_properties[index])
+      property = StatusPropertyDecorator.decorate(status.properties[index])
       json_property.uri.should == property.uri
       json_property[:pending].should == property.pending
       json_property[:values].should == property.values

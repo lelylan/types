@@ -10,7 +10,7 @@ feature "TypesController" do
 
   before { @turn_on       = FactoryGirl.create(:turn_on) }
   before { @turn_off      = FactoryGirl.create(:turn_off) }
-  before { @set_intensity = FactoryGirl.create(:set_intensity, :with_properties) }
+  before { @set_intensity = FactoryGirl.create(:set_intensity) }
   before { @functions     = ["#{host}/functions/#{@turn_on._id}", "#{host}/functions/#{@turn_off._id}", "#{host}/functions/#{@set_intensity._id}"] }
 
   before { @setting_intensity = FactoryGirl.create(:setting_intensity) }

@@ -148,7 +148,7 @@ feature "StatusController" do
       it "creates the resource properties" do
         page.driver.post @uri, @params.to_json
         @resource = Status.last
-        @resource.status_properties.should have(2).items
+        @resource.properties.should have(2).items
       end
 
       it "stores the resource" do

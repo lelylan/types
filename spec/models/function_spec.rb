@@ -29,7 +29,7 @@ describe Function do
 
     context "with pre-existing properties" do
 
-      let(:properties) { json_fixture('properties.json')[:properties] }
+      let(:properties) { json_fixture('function_properties.json')[:properties] }
       let(:function)   { FactoryGirl.create(:function) }
       before           { function.update_attributes(properties: properties) }
       subject          { function.properties }
