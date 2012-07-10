@@ -5,7 +5,6 @@ feature "FunctionsController" do
   before { host! "http://" + host }
 
 
-
   # -----------------
   # GET /functions
   # -----------------
@@ -131,7 +130,6 @@ feature "FunctionsController" do
       it_should_behave_like "a rescued 404 resource", "visit @uri", "functions"
     end
   end
->>>>>>> feature/categories
 
 
 
@@ -148,102 +146,93 @@ feature "FunctionsController" do
       before { @properties = json_fixture('properties.json')[:properties] }
       before { @params = { name: 'New set intensity', properties: @properties } }
 
-      #it "creates the resource" do
-        #page.driver.post @uri, @params.to_json
-        #@resource = Function.last
-        #page.status_code.should == 201
-        #should_have_function @resource
-      #end
+      it "creates the resource" do
+        page.driver.post @uri, @params.to_json
+        @resource = Function.last
+        page.status_code.should == 201
+        should_have_function @resource
+      end
 
-      #it "creates the resource connections" do
-        #page.driver.post @uri, @params.to_json
-        #@resource = Function.last
-        #@resource.properties.should have(2).items
-      #end
+      it "creates the resource connections" do
+        page.driver.post @uri, @params.to_json
+        @resource = Function.last
+        @resource.properties.should have(2).items
+      end
 
-      #it "saves the resource" do
-        #expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
-      #end
+      it "saves the resource" do
+        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(1)
+      end
 
-      #context "with not valid params" do
-        #before { @params[:name] = "" }
-
-        #it "does not create the resource" do
-          #expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(0)
-        #end
-      #end
-
-      context "with not valid connection" do
-        before { @params[:properties] = [uri: "not_valid"] }
+      context "with not valid params" do
+        before { @params[:name] = "" }
 
         it "does not create the resource" do
-          page.driver.post(@uri, @params.to_json)
-          #save_and_open_page
+          expect{ page.driver.post(@uri, @params.to_json) }.to change{ Function.count }.by(0)
         end
       end
 
-      #it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
-      #it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
+      it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
+      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
     end
   end
 
 
 
-  ## ---------------------
-  ## PUT /functions/:id
-  ## ---------------------
-  #context ".update" do
-    #before { @resource = FactoryGirl.create(:function) }
-    #before { @uri = "/functions/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+  # ---------------------
+  # PUT /functions/:id
+  # ---------------------
+  context ".update" do
+    before { @resource = FactoryGirl.create(:function) }
+    before { @uri = "/functions/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth }
-      #before { @properties = json_fixture('properties.json')[:properties] }
-      #before { @params = { name: 'Updated', properties: @properties } }
+    context "when logged in" do
+      before { basic_auth }
+      before { @properties = json_fixture('properties.json')[:properties] }
+      before { @params = { name: 'Updated', properties: @properties } }
 
-      #it "updates the resource" do
-        #page.driver.put @uri, @params.to_json
-        #@resource.reload
-        #page.status_code.should == 200
-        #page.should have_content "Updated"
-      #end
+      it "updates the resource" do
+        page.driver.put @uri, @params.to_json
+        @resource.reload
+        page.status_code.should == 200
+        page.should have_content "Updated"
+      end
 
-      #it "updates the resource properties" do
-        #page.driver.put @uri, @params.to_json
-        #page.should have_content "on"
-        #page.should have_content "100"
-      #end
+      it "updates the resource properties" do
+        page.driver.put @uri, @params.to_json
+        page.should have_content "on"
+        page.should have_content "100"
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
-      #it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "functions"
+      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
+    end
+  end
 
 
 
-  ## ------------------------
-  ## DELETE /functions/:id
-  ## ------------------------
-  #context ".destroy" do
-    #before { @resource = FactoryGirl.create(:function) }
-    #before { @uri =  "/functions/#{@resource.id.as_json}" }
-    #before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
+  # ------------------------
+  # DELETE /functions/:id
+  # ------------------------
+  context ".destroy" do
+    before { @resource = FactoryGirl.create(:function) }
+    before { @uri =  "/functions/#{@resource.id.as_json}" }
+    before { @resource_not_owned = FactoryGirl.create(:function_not_owned) }
 
-    #it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
+    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
 
-    #context "when logged in" do
-      #before { basic_auth } 
+    context "when logged in" do
+      before { basic_auth } 
 
-      #scenario "delete resource" do
-        #expect{ page.driver.delete(@uri) }.to change{ Function.count }.by(-1)
-        #page.status_code.should == 200
-        #should_have_function @resource
-      #end
+      scenario "delete resource" do
+        expect{ page.driver.delete(@uri) }.to change{ Function.count }.by(-1)
+        page.status_code.should == 200
+        should_have_function @resource
+      end
 
-      #it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions"
-    #end
-  #end
+      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "functions"
+    end
+  end
 end
