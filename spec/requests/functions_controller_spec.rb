@@ -28,7 +28,7 @@ feature "FunctionsController" do
       # ---------
       # Search
       # ---------
-      context "when searching" do
+      shared_examples "searching function" do
         context "name" do
           before { @name = "My name is function" }
           before { @result = FactoryGirl.create(:function, name: @name) }
@@ -45,7 +45,7 @@ feature "FunctionsController" do
       # ------------
       # Pagination
       # ------------
-      context "when paginating" do
+      shared_examples "paginating function" do
         before { Function.destroy_all }
         before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
         before { @resources = FactoryGirl.create_list(:function, Settings.pagination.per + 5, name: 'Extra function') }
@@ -106,64 +106,8 @@ feature "FunctionsController" do
         JSON.parse(page.source).should have(2).items
       end
 
-
-      # ---------
-      # Search
-      # ---------
-      context "when searching" do
-        context "name" do
-          before { @name = "My name is function" }
-          before { @result = FactoryGirl.create(:function, name: @name) }
-
-          it "finds the desired function" do
-            visit "#{@uri}?name=name+is"
-            should_contain_function @result
-            page.should_not have_content @resource.name
-          end
-        end
-      end
-
-
-      # ------------
-      # Pagination
-      # ------------
-      context "when paginating" do
-        before { Function.destroy_all }
-        before { @resource = FunctionDecorator.decorate(FactoryGirl.create(:function)) }
-        before { @resources = FactoryGirl.create_list(:function, Settings.pagination.per + 5, name: 'Extra function') }
-
-        context "with :start" do
-          it "shows the next page" do
-            visit "#{@uri}?start=#{@resource.uri}"
-            page.status_code.should == 200
-            should_contain_function @resources.first
-            page.should_not have_content @resource.name
-          end
-        end
-
-        context "with :per" do
-          context "when not set" do
-            it "shows the default number of resources" do
-              visit "#{@uri}"
-              JSON.parse(page.source).should have(Settings.pagination.per).items
-            end
-          end
-
-          context "when set to 5" do
-            it "shows 5 resources" do
-              visit "#{@uri}?per=5"
-              JSON.parse(page.source).should have(5).items
-            end
-          end
-
-          context "when set to all" do
-            it "shows all resources" do
-              visit "#{@uri}?per=all"
-              JSON.parse(page.source).should have(Function.count).items
-            end
-          end
-        end
-      end
+      it_should_behave_like "searching function"
+      it_should_behave_like "paginating function"
     end
   end
 
