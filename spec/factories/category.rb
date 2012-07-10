@@ -10,5 +10,7 @@ FactoryGirl.define do
 
   factory :category_not_owned, parent: :category do
     created_from Settings.user.another.uri
-  end 
+  end
+
+  factory :lighting, parent: :category
 end

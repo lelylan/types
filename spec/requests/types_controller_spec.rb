@@ -16,6 +16,9 @@ feature "TypesController" do
   before { @setting_intensity = FactoryGirl.create(:setting_intensity) }
   before { @statuses          = ["#{host}/statuses/#{@setting_intensity._id}"] }
 
+  before { @lighting   = FactoryGirl.create(:lighting) }
+  before { @categories = ["#{host}/statuses/#{@lighting._id}"] }
+
 
   # -----------------
   # GET /types
