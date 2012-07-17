@@ -12,11 +12,10 @@ class Type
   field :category_ids, type: Array, default: []
 
   attr_accessor :properties, :functions, :statuses, :categories
-  attr_accessible :name, :public, :properties, :functions, :statuses, :categories
+  attr_accessible :name, :properties, :functions, :statuses, :categories
 
   validates :name, presence: true
   validates :created_from, presence: true, url: true
-  validates :public, inclusion: { in: ['true', 'false'] }
 
   before_save :find_properties, :find_functions, :find_statuses, :find_categories
 

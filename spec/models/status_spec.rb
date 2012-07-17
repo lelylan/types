@@ -2,14 +2,15 @@ require 'spec_helper'
 
 describe Status do
 
-  it { ['true', 'false', nil].each { |value| should allow_value(value).for(:pending) } }
-  it { ['not_valid', ''].each { |value| should_not allow_value(value).for(:pending) } }
-
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:created_from) }
 
   it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
   it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:created_from)} }
+
+  context "#pending" do
+    it_validates "boolean", 'pending', FactoryGirl.create(:setting_intensity)
+  end
 
 
   describe "#create_status_properties" do

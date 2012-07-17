@@ -7,12 +7,6 @@ describe Type do
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:created_from) }
 
-  it { ['true', 'false'].each { |value| should allow_value(value).for(:public) } }
-  it { should_not allow_value('not_valid').for(:public) }
-
-  its(:public) { should == 'true' }
-
-
   context "#find_properties" do
 
     context "with valid URIs" do
@@ -25,7 +19,6 @@ describe Type do
       it "sets the properties relation with property ids" do
         subject.property_ids.should == property_ids
       end
-
     end
 
     context "with not valid URIs" do

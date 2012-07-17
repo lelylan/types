@@ -6,7 +6,6 @@ FactoryGirl.define do
   factory :type, class: Type do
     name 'Dimmer'
     created_from Settings.user.uri
-    public 'true'
     properties {[
       Settings.properties.status.uri, 
       Settings.properties.intensity.uri
