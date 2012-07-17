@@ -139,7 +139,6 @@ feature "StatusController" do
     context "when not logged in" do
       it "views the owned resource" do
         visit @uri
-        save_and_open_page
         page.status_code.should == 200
         should_have_status @resource
       end

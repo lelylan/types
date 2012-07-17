@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Status do
 
@@ -9,7 +9,8 @@ describe Status do
   it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:created_from)} }
 
   context "#pending" do
-    it_validates "boolean", 'pending', FactoryGirl.create(:setting_intensity)
+    it { [true, false, nil].each { |value| should allow_value(value).for(:pending) } }
+    it_validates "boolean", "pending", FactoryGirl.create(:setting_intensity)
   end
 
 
@@ -17,7 +18,7 @@ describe Status do
 
     context "with valid properties" do
 
-      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      let(:properties) { json_fixture("status_properties.json")[:properties] }
       let(:status)     { FactoryGirl.create(:setting_intensity_no_connections, properties: properties) }
       subject          { status.properties }
 
@@ -26,21 +27,21 @@ describe Status do
       end
 
       it "sets the status" do
-        subject.where(property_id: 'status').first.values.should == ['on']
+        subject.where(property_id: "status").first.values.should == ["on"]
       end
 
       it "sets the intensity start range" do
-        subject.where(property_id: 'intensity').first.range_start.should == '75'
+        subject.where(property_id: "intensity").first.range_start.should == "75"
       end
 
       it "sets the intensity end range" do
-        subject.where(property_id: 'intensity').first.range_end.should == '100'
+        subject.where(property_id: "intensity").first.range_end.should == "100"
       end
     end
 
     context "with pre-existing properties" do
 
-      let(:properties) { json_fixture('status_properties.json')[:properties] }
+      let(:properties) { json_fixture("status_properties.json")[:properties] }
       let(:status)     { FactoryGirl.create(:setting_intensity) }
       before           { status.update_attributes(properties: properties) }
       subject          { status.properties }
