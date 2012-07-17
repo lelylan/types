@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~>3.2.6'
-gem "mongoid", "~> 3.0.0.rc"
+gem 'mongoid', "~> 3.0.0.rc"
 gem 'rabl'
 gem 'yajl-ruby'
 gem 'validate_url'
