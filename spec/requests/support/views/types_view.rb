@@ -21,7 +21,6 @@ module TypesViewMethods
     json.uri.should == type.uri
     json.id.should == type.id.as_json
     json.name.should == type.name
-    json.public.should == type.public
 
     properties = Property.in(_id: type.property_ids)
     json.properties.each_with_index do |json_property, index|

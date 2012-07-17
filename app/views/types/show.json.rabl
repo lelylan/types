@@ -1,6 +1,6 @@
 object TypeDecorator.decorate(@type)
 
-attributes :uri, :id, :name, :public
+attributes :uri, :id, :name
 
 node :properties do |type|
   properties = PropertyDecorator.decorate(Property.in(_id: type.property_ids))

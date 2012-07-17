@@ -5,7 +5,6 @@ class Type
 
   field :name
   field :created_from
-  field :public, default: 'true'
 
   field :property_ids, type: Array, default: []
   field :function_ids, type: Array, default: []
