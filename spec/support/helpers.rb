@@ -47,7 +47,6 @@ def stub_delete(path, auth=true)
 end
 
 
-
 # Fixtures
 def fixture_path
   File.expand_path("../../fixtures", __FILE__)
@@ -59,4 +58,10 @@ end
 
 def json_fixture(file)
   HashWithIndifferentAccess.new JSON.parse fixture(file).read
+end
+
+
+# URI generators
+def a_uri(resource)
+  "http://www.example.com/#{resource.class.to_s.pluralize.downcase}/#{resource.id}"
 end

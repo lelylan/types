@@ -2,200 +2,39 @@ require 'spec_helper'
 
 describe Type do
 
-  it { should_not allow_mass_assignment_of(:created_from) }
+  it { should_not allow_mass_assignment_of :resource_owner_id }
 
-  it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:created_from) }
+  it { should validate_presence_of :name }
+  it { should validate_presence_of :resource_owner_id }
 
-  context "#find_properties" do
+  it { Settings.uris.valid.each     {|uri| should allow_value(uri).for(:properties)} }
+  it { Settings.uris.not_valid.each {|uri| should_not allow_value(uri).for(:properties)} }
 
-    context "with valid URIs" do
-
-      let(:property_uris) { [ Settings.properties.status.uri, Settings.properties.intensity.uri ] }
-      let(:property_ids)  { [ Settings.properties.status.property_id, Settings.properties.intensity.property_id ] }
-
-      subject { FactoryGirl.create(:type_no_connections, properties: property_uris) }
-
-      it "sets the properties relation with property ids" do
-        subject.property_ids.should == property_ids
-      end
-    end
-
-    context "with not valid URIs" do
-
-      let(:property_uris) { [ nil ] }
-
-      it "raises a not valid error" do
-        expect {
-          FactoryGirl.create(:type_no_connections, properties: property_uris)
-        }.to raise_error(Lelylan::Errors::ValidURI) 
-      end
-
-      context "when raise an error" do
-
-        let(:count) { Type.count }
-        before { expect { FactoryGirl.create(:type_no_connections, properties: property_uris) }.to raise_error }
-
-        it "does not add a new record" do
-          count.should == Type.count
-        end
-      end
-    end
-
-    context "with empty list" do
-
-      let(:property_ids) { [] }
-
-      subject { FactoryGirl.create(:type, properties: property_ids ) }
-
-      it "removes all properties" do
-        subject.properties.should have(0).items
-      end
-    end
+  it_behaves_like 'a type connection' do
+    let(:property)   { FactoryGirl.create :property }
+    let(:connection) { 'properties' }
+    let(:uris)       {[ a_uri(property) ]}
+    let(:ids)        {[ property.id.to_s ]}
   end
 
-  context "#find_functions" do
-
-    context "with valid URIs" do
-
-      let(:function_uris) { [ Settings.functions.set_intensity.uri, Settings.functions.turn_on.uri, Settings.functions.turn_off.uri ] }
-      let(:function_ids)  { [ Settings.functions.set_intensity.function_id, Settings.functions.turn_on.function_id, Settings.functions.turn_off.function_id ] }
-
-      subject { FactoryGirl.create(:type_no_connections, functions: function_uris) }
-
-      it "sets the functions relation with function ids" do
-        subject.function_ids.should == function_ids
-      end
-
-    end
-
-    context "with not valid URIs" do
-
-      let(:function_uris) { [ nil ] }
-
-      it "raises a not valid error" do
-        expect {
-          FactoryGirl.create(:type_no_connections, functions: function_uris)
-        }.to raise_error(Lelylan::Errors::ValidURI) 
-      end
-
-      context "when raises an error" do
-
-        let(:count) { Type.count }
-        before { expect { FactoryGirl.create(:type_no_connections, functions: function_uris) }.to raise_error }
-
-        it "does not add a new record" do
-          count.should == Type.count
-        end
-      end
-    end
-
-    context "with empty list" do
-
-      let(:function_uris) { [] }
-
-      subject { FactoryGirl.create(:type, functions: function_uris ) }
-
-      it "removes all properties" do
-        subject.functions.should have(0).items
-      end
-    end
+  it_behaves_like 'a type connection' do
+    let(:function)   { FactoryGirl.create :function }
+    let(:connection) { 'functions' }
+    let(:uris)       {[ a_uri(function) ]}
+    let(:ids)        {[ function.id.to_s ]}
   end
 
-  context "#find_statuses" do
-
-    context "with valid URIs" do
-
-      let(:status_uris) { [ Settings.statuses.setting_intensity.uri ] }
-      let(:status_ids)  { [ Settings.statuses.setting_intensity.status_id ] }
-
-      subject { FactoryGirl.create(:type_no_connections, statuses: status_uris) }
-
-      it "sets the statuses relation with status ids" do
-        subject.status_ids.should == status_ids
-      end
-
-    end
-
-    context "with not valid URIs" do
-
-      let(:status_uris) { [ nil ] }
-
-      it "raises a not valid error" do
-        expect {
-          FactoryGirl.create(:type_no_connections, statuses: status_uris)
-        }.to raise_error(Lelylan::Errors::ValidURI) 
-      end
-
-      context "when raises an error" do
-
-        let(:count) { Type.count }
-        before { expect { FactoryGirl.create(:type_no_connections, statuses: status_uris) }.to raise_error }
-
-        it "does not add a new record" do
-          count.should == Type.count
-        end
-      end
-    end
-
-    context "with empty list" do
-
-      let(:status_uris) { [] }
-
-      subject { FactoryGirl.create(:type, statuses: status_uris ) }
-
-      it "removes all properties" do
-        subject.statuses.should have(0).items
-      end
-    end
+  it_behaves_like 'a type connection' do
+    let(:status)     { FactoryGirl.create :setting_intensity }
+    let(:connection) { 'properties' }
+    let(:uris)       {[ a_uri(status) ]}
+    let(:ids)        {[ status.id.to_s ]}
   end
-
-  context "#find_categories" do
-
-    context "with valid URIs" do
-
-      let(:category_uris) { [ Settings.categories.lighting.uri ] }
-      let(:category_ids)  { [ Settings.categories.lighting.category_id ] }
-
-      subject { FactoryGirl.create(:type_no_connections, categories: category_uris) }
-
-      it "sets the categories relation with category ids" do
-        subject.category_ids.should == category_ids
-      end
-
-    end
-
-    context "with not valid URIs" do
-
-      let(:category_uris) { [ nil ] }
-
-      it "raises a not valid error" do
-        expect {
-          FactoryGirl.create(:type_no_connections, categories: category_uris)
-        }.to raise_error(Lelylan::Errors::ValidURI) 
-      end
-
-      context "when raises an error" do
-
-        let(:count) { Type.count }
-        before { expect { FactoryGirl.create(:type_no_connections, categories: category_uris) }.to raise_error }
-
-        it "does not add a new record" do
-          count.should == Type.count
-        end
-      end
-    end
-
-    context "with empty list" do
-
-      let(:category_uris) { [] }
-
-      subject { FactoryGirl.create(:type, categories: category_uris ) }
-
-      it "removes all properties" do
-        subject.categories.should have(0).items
-      end
-    end
+  
+  it_behaves_like 'a type connection' do
+    let(:category)   { FactoryGirl.create :category }
+    let(:connection) { 'properties' }
+    let(:uris)       {[ a_uri(category) ]}
+    let(:ids)        {[ category.id.to_s ]}
   end
-
 end
