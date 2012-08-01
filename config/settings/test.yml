@@ -1,3 +1,5 @@
+resource_owner_id: '0000aaa0a000a00000000000'
+
 device:
   host: <%= device_host = "https://device.lelylan.com" %>
   uri: <%= "#{device_host}/devices/closet-dimmer" %>

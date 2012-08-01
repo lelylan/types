@@ -1,28 +1,15 @@
-Settings.add_source!("#{Rails.root}/config/settings/test.yml")
-Settings.reload!
-
 FactoryGirl.define do
-
-  # Property
-  factory :property do
+  factory :property, aliases: %w(status) do
+    resource_owner_id Settings.resource_owner_id
     name 'Status'
-    created_from Settings.user.uri
-    default Settings.properties.status.default
-    values Settings.properties.status.values
+    default 'off'
+    values ['on', 'off']
   end
 
-  # Property not owned
-  factory :property_not_owned, parent: :property do
-    created_from Settings.user.another.uri
-  end 
-
-  # Status property
-  factory :status, parent: :property
-
-  # Intensity property
   factory :intensity, parent: :property do
+    resource_owner_id Settings.resource_owner_id
     name 'Intensity'
-    default Settings.properties.intensity.default
-    values Settings.properties.intensity.values
+    default 0
+    values ['0', '50', '100']
   end
 end
