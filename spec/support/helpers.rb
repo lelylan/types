@@ -60,14 +60,3 @@ end
 def json_fixture(file)
   HashWithIndifferentAccess.new JSON.parse fixture(file).read
 end
-
-# Basic Authenticatin definition
-# ActionController::HttpAuthentication::Basic.encode_credentials user, password
-def authenticated(path)
-  protocol = "https://"
-  path = path.gsub(protocol, '')
-  path = "#{Lelylan::Type.username}:#{Lelylan::Type.password}@#{path}"
-  path = "#{protocol}#{path}"
-  return path
-end
-
