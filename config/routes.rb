@@ -1,4 +1,4 @@
-LelylanType::Application.routes.draw do
+Types::Application.routes.draw do
   resources :properties, defaults: { format: 'json' } do
     match :public, via: :get, on: :collection
   end

@@ -1,51 +1,11 @@
 class ApplicationController < ActionController::Base
   include Lelylan::Errors::Helpers
 
-  protect_from_forgery
-
-  before_filter :authenticate, except: %w(public show)
-
-  helper_method :current_user
-
   private
 
-    # ---------------------
-    # Authentication flow
-    # ---------------------
-
-    # TODO: Lelylan::People.auth(username: username, password: password, flow: 'basic')
-    def authenticate
-      authenticate_or_request_with_http_basic do |username, password|
-        response = authenticate_user(username, password)
-        if response.code == 200
-          @current_user = Hashie::Mash.new JSON.parse(response.body)
-        else
-          @current_user = nil
-        end
-      end
+  def current_user
+    if doorkeeper_token
+      @current_user ||= User.find(doorkeeper_token.resource_owner_id)
     end
-
-    # Remote authentication
-    def authenticate_user(username, password)
-      options = { body: { username: username, password: password }.to_json, 
-                  headers: { 'Content-Type' => 'application/json', 'Accept'=>'application/json' } }
-      HTTParty.post 'https://people.lelylan.com/authentication', options
-    end
-
-    # Helper method to get user information
-    def current_user
-      @current_user
-    end
-
-
-    # ---------------------
-    # Not authorized JSON
-    # ---------------------
-
-    # Override the 401 notification method
-    ActionController::HttpAuthentication::Basic.module_eval do
-      def authentication_request(controller, realm)
-        controller.render_401
-      end
-    end
+  end
 end
