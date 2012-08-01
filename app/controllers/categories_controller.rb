@@ -23,8 +23,6 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    pp request.env["HTTP_ACCEPTS"]
-    pp params
     body = JSON.parse request.body.read
     @category = Category.new(body)
     @category.resource_owner_id = current_user.id
@@ -36,7 +34,7 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    body = request.body.read
+    body = JSON.parse request.body.read
     if @category.update_attributes(body)
       render 'show'
     else

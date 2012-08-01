@@ -46,8 +46,8 @@ feature 'CategoriesController' do
 
   context 'POST /categories' do
 
-    let(:params)   { { name: 'lighting' } }
     let(:uri)      { '/categories' }
+    let(:params)   { { name: 'lighting' } }
     before         { page.driver.post uri, params.to_json }
     let(:resource) { Category.last }
 
@@ -62,59 +62,43 @@ feature 'CategoriesController' do
       expect { page.driver.post(uri, params.to_json) }.to change { Category.count }.by(1)
     end
 
-    it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: "Name can't be blank" }
+    it_behaves_like 'a validated resource',  'page.driver.post(uri, {}.to_json)', { method: 'POST', error: "Name can't be blank" }
     it_behaves_like 'a parsable json input', 'page.driver.post(uri, params.to_json)', { method: 'POST' }
   end
 
-  #context 'PUT /locations/:id' do
+  context 'PUT /categories/:id' do
 
-    #before { page.driver.get '/locations' } # let us use the decorators before calling the POST method
+    let!(:resource) { FactoryGirl.create :category, resource_owner_id: user.id }
+    let(:uri)       { "/categories/#{resource.id}" }
+    let(:params)    { {name: 'Updated' } }
 
-    #let!(:resource)  { FactoryGirl.create :floor, :with_parent, :with_children, resource_owner_id: user.id }
-    #let!(:new_house) { FactoryGirl.create :house, name: 'New house', resource_owner_id: user.id }
-    #let!(:new_room)  { FactoryGirl.create :room, name: 'New Room', resource_owner_id: user.id }
-    #let!(:not_owned) { FactoryGirl.create(:floor) }
+    before { page.driver.put uri, params.to_json }
+    before { resource.reload }
 
-    #let(:uri) { "/locations/#{resource.id}" }
+    it 'updates the resource' do
+      page.status_code.should == 200
+      page.should have_content 'Updated'
+      has_category resource
+    end
 
-    #let(:params) {{
-      #name:      'New floor', 
-      #parent:    LocationDecorator.decorate(new_house).uri, 
-      #locations: [LocationDecorator.decorate(new_room).uri] 
-    #}}
+    it_behaves_like 'a not found resource',  'category', 'page.driver.put(uri)'
+    it_behaves_like 'a validated resource',  'page.driver.put(uri, {name: ""}.to_json)', { method: 'PUT', error: "Name can't be blank" }
+    it_behaves_like 'a parsable json input', 'page.driver.put(uri, params.to_json)',     { method: 'PUT' }
+  end
 
-    #before { page.driver.put uri, params.to_json }
-    #before { resource.reload }
+  context 'DELETE /categories/:id' do
+    let!(:resource)  { FactoryGirl.create :category, resource_owner_id: user.id }
+    let!(:not_owned) { FactoryGirl.create :category }
+    let(:uri)        { "/categories/#{resource.id}" }
 
-    #it 'updates the resource' do
-      #page.status_code.should == 200
-      #page.should have_content 'New'
-      #has_location resource
-    #end
+    it 'deletes resource' do
+      expect { page.driver.delete(uri) }.to change{ Category.count }.by(-1)
+      page.status_code.should == 200
+      has_category resource
+    end
 
-    #it 'updates the resource connections' do
-      #resource.the_parent.should     == new_house.reload
-      #resource.children.first.should == new_room.reload
-    #end
-
-    #it_behaves_like 'not found resource', 'page.driver.put(uri)'
-    #it_behaves_like 'check valid params', 'page.driver.put(uri, {name: ""}.to_json)', { method: 'PUT', error: "Name can't be blank" }
-    #it_behaves_like 'not valid json input', 'page.driver.put(uri, params.to_json)', { method: 'PUT' }
-  #end
-
-  #context 'DELETE /locations/:id' do
-    #let!(:resource)  { FactoryGirl.create :floor, :with_ancestors, :with_descendants, resource_owner_id: user.id }
-    #let!(:not_owned) { FactoryGirl.create(:floor) }
-    #let(:uri)        { "/locations/#{resource.id}" }
-
-    #it 'deletes resource' do
-      #expect { page.driver.delete(uri) }.to change{ Location.count }.by(-1)
-      #page.status_code.should == 200
-      #has_location resource
-    #end
-
-    #it_behaves_like 'not found resource',   'page.driver.delete(uri)'
-  #end
+    it_behaves_like 'a not found resource', 'category', 'page.driver.delete(uri)'
+  end
 end
 
   #context ".index" do
