@@ -10,7 +10,7 @@ class Function
   attr_accessible :name, :properties
 
   validates :name, presence: true
-  validates :resource_owner_id, presence: true, url: true
+  validates :resource_owner_id, presence: true
 
   embeds_many :properties, class_name: 'FunctionProperty', cascade_callbacks: true
 end
