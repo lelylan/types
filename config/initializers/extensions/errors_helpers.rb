@@ -25,6 +25,10 @@ module Lelylan
       # View rendering
       # ----------------
 
+      def doorkeeper_unauthorized_render_options
+        { template: 'shared/401', :status => :unauthorized }
+      end
+
       def render_404(code = 'notifications.resource.not_found', uri = nil)
         @code  = code
         @error = I18n.t(code)
