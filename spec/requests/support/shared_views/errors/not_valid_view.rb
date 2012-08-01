@@ -10,7 +10,7 @@ module ViewNotValidMethods
     json.status.should     == '422'
     json[:method].should   == options[:method]
     json.error.code.should == options[:code]
-    json.error.description.should include options[:error]
+    page.should have_content  options[:error]
   end
 
   def not_valid_default

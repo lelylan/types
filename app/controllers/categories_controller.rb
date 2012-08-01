@@ -23,8 +23,7 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    body = JSON.parse request.body.read
-    @category = Category.new(body)
+    @category = Category.new(params[:category])
     @category.resource_owner_id = current_user.id
     if @category.save
       render 'show', status: 201, location: CategoryDecorator.decorate(@category).uri
@@ -34,8 +33,7 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    body = JSON.parse request.body.read
-    if @category.update_attributes(body)
+    if @category.update_attributes(params[:category])
       render 'show'
     else
       render_422 'notifications.resource.not_valid', @category.errors

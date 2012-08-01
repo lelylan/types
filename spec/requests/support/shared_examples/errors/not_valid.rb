@@ -10,11 +10,11 @@ end
 shared_examples_for 'a parsable json input' do |action, options|
 
   it 'shows a not valid response' do
-    params = 'I am not a Hash'
+    params = 'not-valid'
     eval(action)
+    print page.source
     page.status_code.should == 422
     has_a_not_valid_resource code: 'notifications.json.not_valid', error: 'Not valid', method: options[:method]
     page.should have_content params
   end
 end
-
