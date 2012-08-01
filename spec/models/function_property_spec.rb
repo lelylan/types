@@ -16,13 +16,14 @@ describe FunctionProperty do
       { uri: 'https://api.lelylan.com/properties/intensity', value: '0.0' }
     ]}
 
-    let!(:function) { FactoryGirl.create(:function, properties: properties); }
+    let(:function) { FactoryGirl.create(:function, properties: properties) }
 
     context 'status property' do
 
       subject { function.properties.where(property_id: 'status').first }
 
       it 'sets the property_id' do
+        pp function.properties
         subject.property_id.should == 'status'
       end
 

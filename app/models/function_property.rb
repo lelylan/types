@@ -1,6 +1,7 @@
 class FunctionProperty
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Lelylan::Search::URI
 
   field :value
   field :property_id
@@ -12,9 +13,11 @@ class FunctionProperty
 
   embedded_in :function
 
+  before_save :set_property_id
+
   private
 
-  def property_id=(property_id)
-    write_attribute :property_id, find_id(uri)
+  def set_property_id
+    self.property_id = find_id(uri)
   end
 end

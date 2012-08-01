@@ -9,13 +9,13 @@ module Lelylan
   module Search
     module URI
 
-      # Gets all the ids starting from a list of URIs
-      def find_resources(uris)
-        uris.map { |uri| find_id_from_uri(uri) }
+      # Gets all the IDs starting from a list of URIs
+      def find_ids(uris)
+        uris.map { |uri| find_id(uri) }
       end
 
-      # Gets the id form the URI and raise error is the URI is nil
-      def find_id_from_uri(uri)
+      # Gets the ID form the URI and raise error is the URI is nil
+      def find_id(uri)
         begin
           Addressable::URI.parse(uri).basename
         rescue

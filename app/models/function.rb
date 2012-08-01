@@ -6,7 +6,7 @@ class Function
   field :name
   field :resource_owner_id
 
-  attr_accessor :properties
+  #attr_accessor :properties
   attr_accessible :name, :properties
 
   validates :name, presence: true
