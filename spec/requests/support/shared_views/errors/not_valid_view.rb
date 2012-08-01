@@ -1,24 +1,22 @@
 module ViewNotValidMethods
 
   # Resource not valid
-  def should_have_a_not_valid_resource(options = {})
+  def has_a_not_valid_resource(options = {})
     options = not_valid_default.merge(options)
-    json = JSON.parse(page.source)
-    json = Hashie::Mash.new json
+    json    = JSON.parse(page.source)
+    json    = Hashie::Mash.new json
 
-    json.request.should match Regexp.escape(@uri)
-    json.status.should == '422'
-    json[:method].should == options[:method]
+    json.request.should match Regexp.escape(uri)
+    json.status.should     == '422'
+    json[:method].should   == options[:method]
     json.error.code.should == options[:code]
     json.error.description.should include options[:error]
   end
 
   def not_valid_default
-    {
-      method: 'POST',
+    { method: 'POST',
       code: 'notifications.resource.not_valid',
-      error: 'uri is not a valid',
-    }
+      error: 'uri is not a valid' }
   end
 end
 

@@ -23,7 +23,9 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    body = request.body.read
+    pp request.env["HTTP_ACCEPTS"]
+    pp params
+    body = JSON.parse request.body.read
     @category = Category.new(body)
     @category.resource_owner_id = current_user.id
     if @category.save

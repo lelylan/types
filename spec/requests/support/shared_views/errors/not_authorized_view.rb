@@ -1,14 +1,14 @@
 module ViewNotAuthorizedMethods
 
-  # Accepted values as type are 'resource' and 'connection'
-  def should_have_not_authorized_resource(uri)
+  def has_unauthorized_resource
     json = JSON.parse(page.source)
     json = Hashie::Mash.new json
 
-    json.status.should == '401'
-    json.request.should match Regexp.escape(uri)
-    json.error.code.should == 'notifications.access.denied'
-    json.error.description.should include 'Access denied'
+    json.status.should     == '401'
+    json.request.should    == page.current_url
+
+    json.error.code.should        == 'notifications.unauthorized'
+    json.error.description.should == 'Access not authorized'
   end
 
 end

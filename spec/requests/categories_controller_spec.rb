@@ -1,14 +1,15 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "CategoriesController" do
+feature 'CategoriesController' do
 
   let!(:application)  { FactoryGirl.create :application }
   let!(:user)         { FactoryGirl.create :user }
   let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'write', resource_owner_id: user.id }
 
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
+  before { page.driver.header 'Accepts', 'application/json' }
 
-  describe 'GET /locations' do
+  describe 'GET /categories' do
 
     let!(:resource)  { FactoryGirl.create :category, resource_owner_id: user.id }
     let!(:not_owned) { FactoryGirl.create :category }
@@ -18,79 +19,52 @@ feature "CategoriesController" do
       page.driver.get uri
       page.status_code.should == 200
       contains_owned_category resource
+      does_not_contain_category not_owned
     end
 
-    it_behaves_like 'searchable', 'category', { name: 'My name is resource' }
-
-    it_behaves_like 'paginable', 'category'
+    it_behaves_like 'a searchable resource', 'category', { name: 'My name is resource' }
+    it_behaves_like 'a paginable resource',  'category'
   end
 
-  #context 'GET /locations/:id' do
+  context 'GET /categories/:id' do
 
-    #let!(:resource)  { FactoryGirl.create(:floor, :with_ancestors, :with_descendants, :with_devices, resource_owner_id: user.id) }
-    #let!(:not_owned) { FactoryGirl.create(:floor) }
-    #let(:uri)        { "/locations/#{resource.id}" }
+    let!(:resource)  { FactoryGirl.create :category, resource_owner_id: user.id }
+    let!(:not_owned) { FactoryGirl.create :category }
+    let(:uri)        { "/categories/#{resource.id}" }
 
-    #before { page.driver.get uri }
+    before { page.driver.get uri }
 
-    #it 'view the owned resource' do
-      #page.status_code.should == 200
-      #has_location resource
-    #end
+    it 'view the owned resource' do
+      page.status_code.should == 200
+      has_category resource
+    end
 
-    #it 'creates the resource connections' do
-      #json = Hashie::Mash.new JSON.parse(page.source)
-      #json.parent.should_not == nil
-      #json.ancestors.should have(2).itmes
-      #json.locations.should have(1).item
-      #json.devices.should   have(1).items
-    #end
+    it_behaves_like 'a not found resource', 'category', 'page.driver.get(uri)'
+    it_behaves_like 'a changeable host',    'category'
+    it_behaves_like 'a public resource',    'category'
+  end
 
-    #it_behaves_like 'changeable host'
-    #it_behaves_like 'not found resource', 'page.driver.get(uri)'
-  #end
+  context 'POST /categories' do
 
-  #context 'POST /locations' do
+    let(:params)   { { name: 'lighting' } }
+    let(:uri)      { '/categories' }
+    before         { page.driver.post uri, params.to_json }
+    let(:resource) { Category.last }
 
-    #let!(:uri) { '/locations' }
-    #before     { page.driver.get uri } # let us use the decorators before calling the POST method
+    it 'creates the resource' do
+      page.driver.post uri, params.to_json
+      resource = Category.last
+      page.status_code.should == 201
+      has_category resource
+    end
 
-    #let(:parent) { FactoryGirl.create(:house, resource_owner_id: user.id) }
-    #let(:child)  { FactoryGirl.create(:room, resource_owner_id: user.id) }
-    #let(:device) { FactoryGirl.create(:device, resource_owner_id: user.id) }
+    it 'stores the resource' do
+      expect { page.driver.post(uri, params.to_json) }.to change { Category.count }.by(1)
+    end
 
-    #let(:params) {{
-      #name:      'New floor',
-      #type:      'floor',
-      #parent:    LocationDecorator.decorate(parent).uri, 
-      #locations: [ LocationDecorator.decorate(child).uri ],
-      #devices:   [ DeviceDecorator.decorate(device).uri ]
-    #}}
-
-    #before         { page.driver.post uri, params.to_json }
-    #let(:resource) { Location.last }
-
-    #it 'creates the resource' do
-      #page.driver.post uri, params.to_json
-      #resource = Location.last
-      #page.status_code.should == 201
-      #has_location resource
-    #end
-
-    #it 'creates the resource connections' do
-      #resource.the_parent.should_not == nil
-      #resource.ancestors.should      have(1).itmes
-      #resource.children.should       have(1).item
-      #resource.descendants.should    have(1).items
-    #end
-
-    #it 'stores the resource' do
-      #expect { page.driver.post(uri, params.to_json) }.to change { Location.count }.by(1)
-    #end
-
-    #it_behaves_like 'check valid params', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: "Name can't be blank" }
-    #it_behaves_like 'not valid json input', 'page.driver.post(uri, params.to_json)', { method: 'POST' }
-  #end
+    it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: "Name can't be blank" }
+    it_behaves_like 'a parsable json input', 'page.driver.post(uri, params.to_json)', { method: 'POST' }
+  end
 
   #context 'PUT /locations/:id' do
 

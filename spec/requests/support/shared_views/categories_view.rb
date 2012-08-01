@@ -4,7 +4,6 @@ module CategoriesViewMethods
     category = CategoryDecorator.decorate category
     json     = JSON.parse page.source
     contains_category category
-    has_not_not_owned_categories
   end
 
   def contains_category(category)
@@ -27,11 +26,8 @@ module CategoriesViewMethods
     json.updated_at.should == category.updated_at.iso8601
   end
 
-  def has_not_not_owned_categories
-    has_valid_json
-    json = JSON.parse(page.source)
-    json.should have(1).item
-    Category.all.should have(2).items
+  def does_not_contain_category(category)
+    page.should_not have_content category.id
   end
 end
 

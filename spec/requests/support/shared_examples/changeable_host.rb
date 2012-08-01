@@ -1,10 +1,10 @@
-shared_examples_for 'changeable host' do
+shared_examples_for 'a changeable host' do |model|
 
-  let(:changeable) { "#{resource.class.to_s}Decorator".constantize.decorate(resource) }
+  let(:changeable) { "#{model.classify}Decorator".constantize.decorate(resource) }
 
-  it 'exposes the location URI' do
+  it 'exposes the resource URI' do
     page.driver.get uri
-    uri = "http://www.example.com/locations/#{changeable.id}"
+    uri = "http://www.example.com/#{model.pluralize}/#{changeable.id}"
     changeable.uri.should == uri
   end
 
