@@ -1,4 +1,4 @@
-shared_examples_for 'a searchable resource' do |model, searchable|
+shared_examples_for 'a searchable resource' do |searchable|
 
   searchable.each do |key, value|
 

@@ -1,4 +1,4 @@
-shared_examples_for 'a not found resource' do |model, action|
+shared_examples_for 'a not found resource' do |action|
 
   context 'with not existing resource' do
 
@@ -12,7 +12,7 @@ shared_examples_for 'a not found resource' do |model, action|
 
   context 'with illegal id' do
 
-    let(:uri) { "/#{model.pluralize}/0" }
+    let(:uri) { "/#{controller}/0" }
 
     scenario 'get a not found notification' do
       eval action

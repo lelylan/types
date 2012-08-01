@@ -1,4 +1,4 @@
-shared_examples_for 'a paginable resource' do |model|
+shared_examples_for 'a paginable resource' do
 
   let(:decorator)  { "#{model.classify}Decorator".constantize }
 

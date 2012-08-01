@@ -1,10 +1,10 @@
-shared_examples_for 'a changeable host' do |model|
+shared_examples_for 'a changeable host' do
 
   let(:changeable) { "#{model.classify}Decorator".constantize.decorate(resource) }
 
   it 'exposes the resource URI' do
     page.driver.get uri
-    uri = "http://www.example.com/#{model.pluralize}/#{changeable.id}"
+    uri = "http://www.example.com/#{controller}/#{changeable.id}"
     changeable.uri.should == uri
   end
 
