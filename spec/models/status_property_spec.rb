@@ -2,44 +2,48 @@ require 'spec_helper'
 
 describe StatusProperty do
 
+  it { should_not allow_mass_assignment_of :property_id }
   it { should validate_presence_of :uri }
 
-  it { Settings.validation.uris.valid.each     { |uri| should allow_value(uri).for(:uri) } }
-  it { Settings.validation.uris.not_valid.each { |uri| should_not allow_value(uri).for(:uri) } }
+  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:uri) } }
+  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:uri) } }
 
-  context 'with valid property uri' do
+  context 'with valid property uris' do
+
+    let(:status)    { FactoryGirl.create :status }
+    let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { uri: 'https://api.lelylan.com/properties/status', pending: false , values: ['on'] },
-      { uri: 'https://api.lelylan.com/properties/intensity', pending: true, min_range: '75', max_range: '100' }
+      { uri: a_uri(status), values: ['on'] },
+      { uri: a_uri(intensity), min_range: '75', max_range: '100' }
     ]}
 
-    let(:status) { FactoryGirl.create :setting_intensity, properties: properties }
+    let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
 
     context 'status property' do
 
-      subject { status.properties.where(property_id: 'status').first }
+      let(:property) { resource.properties.where(property_id: status.id).first }
 
       it 'sets the property_id' do
-        subject.property_id.should == 'status'
+        property.property_id.should == status.id
       end
 
       it 'sets the value' do
-        subject.values.should == ['on']
+        property.values.should == ['on']
       end
     end
 
     context 'intensity property' do
 
-      subject { status.properties.where(property_id: 'intensity').first }
+      let(:property) { resource.properties.where(property_id: intensity.id).first }
 
       it 'sets the property_id' do
-        subject.property_id.should == 'intensity'
+        property.property_id.should == intensity.id
       end
 
       it 'sets the range' do
-        subject.min_range.should == '75'
-        subject.max_range.should == '100'
+        property.min_range.should == '75'
+        property.max_range.should == '100'
       end
     end
   end

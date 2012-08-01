@@ -6,7 +6,7 @@ class StatusProperty
   field :values, type: Array, default: []
   field :min_range
   field :max_range
-  field :property_id
+  field :property_id, type: Moped::BSON::ObjectId
 
   attr_accessor :uri
   attr_protected :property_id

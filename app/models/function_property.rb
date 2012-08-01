@@ -4,7 +4,7 @@ class FunctionProperty
   include Lelylan::Search::URI
 
   field :value
-  field :property_id
+  field :property_id, type: Moped::BSON::ObjectId
 
   attr_accessor :uri
   attr_protected :property_id
