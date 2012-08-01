@@ -2,39 +2,44 @@ require 'spec_helper'
 
 describe StatusProperty do
 
-  it { should validate_presence_of(:uri) }
-  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:uri)} }
-  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
+  it { should validate_presence_of :uri }
 
-  context "with valid uri" do
+  it { Settings.validation.uris.valid.each     { |uri| should allow_value(uri).for(:uri) } }
+  it { Settings.validation.uris.not_valid.each { |uri| should_not allow_value(uri).for(:uri) } }
 
-    let(:properties) { json_fixture('status_properties.json')[:properties] }
-    let(:status)     { FactoryGirl.create(:setting_intensity, properties: properties); }
+  context 'with valid property uri' do
 
-    context "#status property" do
+    let(:properties) {[
+      { uri: 'https://api.lelylan.com/properties/status', pending: false , values: ['on'] },
+      { uri: 'https://api.lelylan.com/properties/intensity', pending: true, min_range: '75', max_range: '100' }
+    ]}
 
-      subject { status.properties.first }
+    let(:status) { FactoryGirl.create :setting_intensity, properties: properties }
 
-      it "sets the property_id" do
+    context 'status property' do
+
+      subject { status.properties.where(property_id: 'status').first }
+
+      it 'sets the property_id' do
         subject.property_id.should == 'status'
       end
 
-      it "sets the value" do
+      it 'sets the value' do
         subject.values.should == ['on']
       end
     end
 
-    context "#intensity" do
+    context 'intensity property' do
 
-      subject { status.properties.last }
+      subject { status.properties.where(property_id: 'intensity').first }
 
-      it "sets the property_id" do
+      it 'sets the property_id' do
         subject.property_id.should == 'intensity'
       end
 
-      it "sets the range" do
-        subject.range_start.should == '75'
-        subject.range_end.should == '100'
+      it 'sets the range' do
+        subject.min_range.should == '75'
+        subject.max_range.should == '100'
       end
     end
   end

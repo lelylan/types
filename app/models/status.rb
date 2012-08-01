@@ -13,7 +13,7 @@ class Status
   validates :name, presence: true
   validates :pending, inclusion: { in: [true, false], allow_nil: true }
 
-  validates :resource_owner_id, presence: true, url: true
+  validates :resource_owner_id, presence: true
 
   embeds_many :properties, class_name: 'StatusProperty', cascade_callbacks: true
 end
