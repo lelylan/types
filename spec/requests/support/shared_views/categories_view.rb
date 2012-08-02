@@ -27,7 +27,7 @@ module CategoriesViewMethods
   end
 
   def does_not_contain_category(category)
-    page.should_not have_content category.id
+    page.should_not have_content category.id.to_s
   end
 end
 

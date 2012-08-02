@@ -54,8 +54,7 @@ feature 'CategoriesController' do
     let(:resource) { Category.last }
 
     it_behaves_like 'a creatable resource'
-    it_behaves_like 'a validated resource',  'page.driver.post(uri, {}.to_json)',     { method: 'POST', error: 'can\'t be blank' }
-    #it_behaves_like 'a parsable json input', 'page.driver.post(uri, params.to_json)', { method: 'POST' }
+    it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
   end
 
   context 'PUT /categories/:id' do
@@ -67,7 +66,6 @@ feature 'CategoriesController' do
     it_behaves_like 'an updatable resource'
     it_behaves_like 'a not found resource',  'page.driver.put(uri)'
     it_behaves_like 'a validated resource',  'page.driver.put(uri, {name: ""}.to_json)', { method: 'PUT', error: 'can\'t be blank' }
-    #it_behaves_like 'a parsable json input', 'page.driver.put(uri, params.to_json)',     { method: 'PUT' }
   end
 
   context 'DELETE /categories/:id' do

@@ -1,263 +1,79 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
 feature "PropertiesController" do
-  before { Property.destroy_all }
-  before { host! "http://" + host }
 
+  let!(:application)  { FactoryGirl.create :application }
+  let!(:user)         { FactoryGirl.create :user }
+  let!(:access_token) { FactoryGirl.create :access_token, application: application, scopes: 'write', resource_owner_id: user.id }
 
-  # -----------------
-  # GET /properties
-  # -----------------
-  context ".index" do
-    before { @uri = "/properties" }
-    before { @resource = FactoryGirl.create(:property) }
-    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
+  before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
+  before { page.driver.header 'Content-Type', 'application/json' }
 
-    it_should_behave_like "not authorized resource", "visit(@uri)"
+  let(:model) { 'property' }
+  let(:controller) { 'properties' }
 
-    context "when logged in" do
-      before { basic_auth }
+  describe 'GET /properties' do
 
-      it "shows all owned resources" do
-        visit @uri
-        page.status_code.should == 200
-        should_have_owned_property @resource
-      end
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let!(:not_owned) { FactoryGirl.create :property }
+    let(:uri)        { '/properties' }
 
-
-      # ---------
-      # Search
-      # ---------
-      shared_examples "searching property" do
-        context "#name" do
-          before { @name = "My name is property" }
-          before { @result = FactoryGirl.create(:property, name: @name) }
-
-          it "finds the desired property" do
-            visit "#{@uri}?name=name+is"
-            should_contain_property @result
-            page.should_not have_content @resource.name
-          end
-        end
-      end
-
-
-      # ------------
-      # Pagination
-      # ------------
-      shared_examples "paginating property" do
-        before { Property.destroy_all }
-        before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
-        before { @resources = FactoryGirl.create_list(:property, Settings.pagination.per + 5, name: 'Extra property') }
-
-        context "with :start" do
-          it "shows the next page" do
-            visit "#{@uri}?start=#{@resource.uri}"
-            page.status_code.should == 200
-            should_contain_property @resources.first
-            page.should_not have_content @resource.name
-          end
-        end
-
-        context "with :per" do
-          context "when not set" do
-            it "shows the default number of resources" do
-              visit "#{@uri}"
-              JSON.parse(page.source).should have(Settings.pagination.per).items
-            end
-          end
-
-          context "when set to 5" do
-            it "shows 5 resources" do
-              visit "#{@uri}?per=5"
-              JSON.parse(page.source).should have(5).items
-            end
-          end
-
-          context "when set too high value" do
-            before { Settings.pagination.max_per = 30 }
-
-            it "shows the max number of resources allowed" do
-              visit "#{@uri}?per=100000"
-              JSON.parse(page.source).should have(30).items
-            end
-          end
-
-          context "when set to not valid value" do
-            it "shows the default number of resources" do
-              visit "#{@uri}?per=not_valid"
-              JSON.parse(page.source).should have(Settings.pagination.per).items
-            end
-          end
-        end
-      end
-    end
+    it_behaves_like 'a listable resource'
+    it_behaves_like 'a paginable resource'
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
   end
 
+  context 'GET /properties/public' do
 
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let!(:not_owned) { FactoryGirl.create :property, name: 'Not owned' }
+    let(:uri)        { '/properties/public' }
 
-  # -----------------------
-  # GET /properties/public
-  # -----------------------
-  context ".index" do
-    before { @uri = "/properties/public" }
-    before { @resource = FactoryGirl.create(:property) }
-    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
-
-    context "when not logged in" do
-      it "shows all owned and not owned resources" do
-        visit @uri
-        page.status_code.should == 200
-        JSON.parse(page.source).should have(2).items
-      end
-    end
-
-    context "when logged in" do
-      before { basic_auth }
-
-      it "shows all owned and not owned resources" do
-        visit @uri
-        page.status_code.should == 200
-        JSON.parse(page.source).should have(2).items
-      end
-
-      it_should_behave_like "searching property"
-      it_should_behave_like "paginating property"
-    end
+    it_behaves_like 'a public listable resource'
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
+    it_behaves_like 'a paginable resource'
   end
 
+  context 'GET /properties/:id' do
 
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let!(:not_owned) { FactoryGirl.create :property }
+    let(:uri)        { "/properties/#{resource.id}" }
 
-  # ---------------------
-  # GET /properties/:id
-  # ---------------------
-  context ".show" do
-    before { @resource = PropertyDecorator.decorate(FactoryGirl.create(:property)) }
-    before { @uri = "/properties/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
-
-    context "when not logged in" do
-      it "views the owned resource" do
-        visit @uri
-        page.status_code.should == 200
-        should_have_property @resource
-      end
-    end
-
-    context "when logged in" do
-      before { basic_auth }
-
-      it "views the owned resource" do
-        visit @uri
-        page.status_code.should == 200
-        should_have_property @resource
-      end
-
-      it "exposes the property URI" do
-        visit @uri
-        uri = "http://www.example.com/properties/#{@resource.id.as_json}"
-        @resource.uri.should == uri
-      end
-
-      context "with host" do
-        it "changes the URI" do
-          visit "#{@uri}?host=www.lelylan.com"
-          @resource.uri.should match("http://www.lelylan.com/")
-        end
-      end
-
-      context "with public resources" do
-        before { @uri = "/properties/#{@resource_not_owned._id}" }
-
-        it "views the not owned resource" do
-          visit @uri
-          page.status_code.should == 200
-          should_have_property @resource_not_owned
-        end
-      end
-    end
+    it_behaves_like 'a showable resource'
+    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    it_behaves_like 'a changeable host'
+    it_behaves_like 'a public resource'
   end
 
+  context 'POST /properties' do
 
+    let(:uri)      { '/properties' }
+    let(:params)   { { name: 'Status' } }
+    before         { page.driver.post uri, params.to_json }
+    let(:resource) { Property.last }
 
-  # ---------------
-  # POST /properties
-  # ---------------
-  context ".create" do
-    before { @uri =  "/properties" }
-
-    it_should_behave_like "not authorized resource", "page.driver.post(@uri)"
-
-    context "when logged in" do
-      before { basic_auth }
-      before { @params = { name: 'New intensity', default: '0', values: Settings.properties.intensity.values } }
-
-      it "creates the resource" do
-        page.driver.post @uri, @params.to_json
-        @resource = Property.last
-        page.status_code.should == 201
-        should_have_property @resource
-      end
-
-      it "stores the resource" do
-        expect{ page.driver.post(@uri, @params.to_json) }.to change{ Property.count }.by(1)
-      end
-
-      it_validates "not valid params", "page.driver.post(@uri, @params.to_json)", { method: "POST", error: "Name can't be blank" }
-      it_validates "not valid JSON", "page.driver.post(@uri, @params.to_json)", { method: "POST" }
-    end
+    it_behaves_like 'a creatable resource'
+    it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
   end
 
+  context 'PUT /properties/:id' do
 
+    let!(:resource) { FactoryGirl.create :property, resource_owner_id: user.id }
+    let(:uri)       { "/properties/#{resource.id}" }
+    let(:params)    { {name: 'Updated' } }
 
-  # ---------------------
-  # PUT /properties/:id
-  # ---------------------
-  context ".update" do
-    before { @resource = FactoryGirl.create(:property) }
-    before { @uri = "/properties/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
-
-    it_should_behave_like "not authorized resource", "page.driver.put(@uri)"
-
-    context "when logged in" do
-      before { basic_auth }
-      before { @params = { name: 'Updated', default: '20', values: ['0', '100'] } }
-
-      it "updates a resource" do
-        page.driver.put @uri, @params.to_json
-        @resource.reload
-        page.status_code.should == 200
-        page.should have_content "Updated"
-      end
-
-      it_should_behave_like "a rescued 404 resource", "page.driver.put(@uri)", "properties"
-      it_validates "not valid JSON", "page.driver.put(@uri, @params.to_json)", { method: "PUT" }
-    end
+    it_behaves_like 'an updatable resource'
+    it_behaves_like 'a not found resource',  'page.driver.put(uri)'
+    it_behaves_like 'a validated resource',  'page.driver.put(uri, {name: ""}.to_json)', { method: 'PUT', error: 'can\'t be blank' }
   end
 
+  context 'DELETE /properties/:id' do
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let!(:not_owned) { FactoryGirl.create :property }
+    let(:uri)        { "/properties/#{resource.id}" }
 
-
-  # ------------------------
-  # DELETE /properties/:id
-  # ------------------------
-  context ".destroy" do
-    before { @resource = FactoryGirl.create(:property) }
-    before { @uri =  "/properties/#{@resource.id.as_json}" }
-    before { @resource_not_owned = FactoryGirl.create(:property_not_owned) }
-
-    it_should_behave_like "not authorized resource", "page.driver.delete(@uri)"
-
-    context "when logged in" do
-      before { basic_auth } 
-
-      scenario "delete resource" do
-        expect{ page.driver.delete(@uri) }.to change{ Property.count }.by(-1)
-        page.status_code.should == 200
-        should_have_property @resource
-      end
-
-      it_should_behave_like "a rescued 404 resource", "page.driver.delete(@uri)", "properties"
-    end
+    it_behaves_like 'a deletable resource'
+    it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
   end
 end
