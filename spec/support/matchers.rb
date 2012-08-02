@@ -1,7 +1,8 @@
-module SharedMacros
-  def has_valid_json
-    expect { JSON.parse(page.source) }.to_not raise_error
+RSpec::Matchers.define :authorize do |expected|
+  match do |actual|
+    method, uri = expected.squish.split ' '
+    page.driver.send method, uri
+    page.status_code != 401
   end
 end
 
-RSpec.configuration.include SharedMacros

@@ -1,6 +1,7 @@
 class StatusesController < ApplicationController
   include Lelylan::Search::URI
 
+  doorkeeper_for :index, scopes: [:read, :write]
   doorkeeper_for :create, :update, :destroy, scopes: [:write]
 
   before_filter :find_owned_resources,  except: %w(public show)
