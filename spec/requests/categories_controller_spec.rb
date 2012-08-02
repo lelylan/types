@@ -9,8 +9,9 @@ feature 'CategoriesController' do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:model) { 'category' }
+  let(:model)      { 'category' }
   let(:controller) { 'categories' }
+  let(:factory)    { 'category' }
 
   describe 'GET /categories' do
 

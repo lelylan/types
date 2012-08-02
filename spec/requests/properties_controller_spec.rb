@@ -9,8 +9,9 @@ feature "PropertiesController" do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:model) { 'property' }
+  let(:model)      { 'property' }
   let(:controller) { 'properties' }
+  let(:factory)    { 'property' }
 
   describe 'GET /properties' do
 

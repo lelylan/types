@@ -9,9 +9,9 @@ feature 'StatusesController' do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:factory)    { 'setting_intensity' }
   let(:model)      { 'status' }
   let(:controller) { 'statuses' }
+  let(:factory)    { 'setting_intensity' }
 
   describe 'GET /statuses' do
 

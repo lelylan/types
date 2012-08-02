@@ -9,8 +9,9 @@ feature "FunctionsController" do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:model) { 'function' }
+  let(:model)      { 'function' }
   let(:controller) { 'functions' }
+  let(:factory)    { 'function' }
 
   describe 'GET /functions' do
 
