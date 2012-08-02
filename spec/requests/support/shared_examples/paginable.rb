@@ -1,9 +1,9 @@
 shared_examples_for 'a paginable resource' do
 
-  let(:decorator)  { "#{model.classify}Decorator".constantize }
+  let(:decorator)  { "#{controller.classify}Decorator".constantize }
 
-  let!(:resource)  { decorator.decorate(FactoryGirl.create(model, resource_owner_id: user.id)) }
-  let!(:resources) { FactoryGirl.create_list(model, Settings.pagination.per + 5, name: 'Extra resource', resource_owner_id: user.id) }
+  let!(:resource)  { decorator.decorate(FactoryGirl.create(factory, resource_owner_id: user.id)) }
+  let!(:resources) { FactoryGirl.create_list(factory, Settings.pagination.per + 5, name: 'Extra resource', resource_owner_id: user.id) }
 
   describe '?start=:uri' do
 

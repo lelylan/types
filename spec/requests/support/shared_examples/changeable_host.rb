@@ -1,6 +1,7 @@
 shared_examples_for 'a changeable host' do
 
-  let(:changeable) { "#{model.classify}Decorator".constantize.decorate(resource) }
+  let(:decorator)  { "#{controller.classify}Decorator".constantize }
+  let(:changeable) { decorator.decorate(resource) }
 
   it 'exposes the resource URI' do
     page.driver.get uri

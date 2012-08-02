@@ -1,12 +1,13 @@
 class StatusesController < ApplicationController
   include Lelylan::Search::URI
 
-  before_filter :find_owned_resources, except: %w(public show)
-  before_filter :find_all_resources, only: %w(public show)
-  before_filter :find_resource, only: %w(show update destroy)
-  before_filter :search_params, only: %w(index public)
-  before_filter :pagination, only: %w(index public)
+  doorkeeper_for :create, :update, :destroy, scopes: [:write]
 
+  before_filter :find_owned_resources,  except: %w(public show)
+  before_filter :find_public_resources, only: %w(public show)
+  before_filter :find_resource,         only: %w(show update destroy)
+  before_filter :search_params,         only: %w(index public)
+  before_filter :pagination,            only: %w(index public)
 
   def index
     @statuses = @statuses.limit(params[:per])
@@ -21,19 +22,17 @@ class StatusesController < ApplicationController
   end
 
   def create
-    body = JSON.parse(request.body.read)
-    @status = Status.new(body)
-    @status.created_from = current_user.uri
+    @status = Status.new(params[:status])
+    @status.resource_owner_id = current_user.id
     if @status.save
       render 'show', status: 201, location: StatusDecorator.decorate(@status).uri
     else
-      render_422 "notifications.resource.not_valid", @status.errors
+      render_422 'notifications.resource.not_valid', @status.errors
     end
   end
 
   def update
-    body = JSON.parse(request.body.read)
-    if @status.update_attributes(body)
+    if @status.update_attributes(params[:status])
       render 'show'
     else
       render_422 'notifications.resource.not_valid', @status.errors
@@ -50,10 +49,10 @@ class StatusesController < ApplicationController
   private
 
     def find_owned_resources
-      @statuses = Status.where(created_from: current_user.uri)
+      @statuses = Status.where(resource_owner_id: current_user.id)
     end
 
-    def find_all_resources
+    def find_public_resources
       @statuses = Status.all
     end
 
@@ -61,14 +60,14 @@ class StatusesController < ApplicationController
       @status = @statuses.find(params[:id])
     end
 
+    def search_params
+      @statuses = @statuses.where('name' => /.*#{params[:name]}.*/i) if params[:name]
+    end
+
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
       params[:per] = Settings.pagination.per if params[:per] == 0 
       params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
-      @statuses = @statuses.gt(_id: find_id_from_uri(params[:start])) if params[:start]
+      @statuses = @statuses.gt(_id: find_id(params[:start])) if params[:start]
     end
-
-    def search_params
-      @statuses = @statuses.where('name' => /.*#{params[:name]}.*/i) if params[:name]
-    end 
 end

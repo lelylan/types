@@ -1,4 +1,4 @@
-shared_examples_for 'a not owned resource' do |model, action|
+shared_examples_for 'a not owned resource' do |action|
 
   context 'with resource not owned' do
 
@@ -7,7 +7,6 @@ shared_examples_for 'a not owned resource' do |model, action|
     scenario 'get a not found notification' do
       eval action
       has_valid_json
-      print page.source
       has_not_found_resource uri: uri
     end
   end

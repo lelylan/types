@@ -6,9 +6,10 @@ node(:properties) do |status|
   status.properties.map do |property|
     property = StatusPropertyDecorator.decorate(property)
     { 
-      uri: property.uri, 
-      values: property.values,
-      range: { start: property.range_start, end: property.range_end } 
+      uri:       property.uri, 
+      values:    property.values,
+      min_range: property.min_range, 
+      max_range: property.max_range
     }
   end
 end

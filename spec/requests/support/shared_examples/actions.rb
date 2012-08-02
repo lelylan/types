@@ -8,7 +8,7 @@ shared_examples_for 'a listable resource' do
   end
 end
 
-shared_examples_for 'a public listable resource' do |model|
+shared_examples_for 'a public listable resource' do
 
   it 'shows all resources (owned and not owned)' do
     page.driver.get uri
@@ -29,7 +29,7 @@ end
 
 shared_examples_for 'a creatable resource' do
 
-  let(:klass)    { model.classify.constantize }
+  let(:klass)    { controller.classify.constantize }
 
   it 'creates the resource' do
     page.driver.post uri, params.to_json
@@ -57,7 +57,7 @@ end
 
 shared_examples_for 'a deletable resource' do
 
-  let(:klass)    { model.classify.constantize }
+  let(:klass)    { controller.classify.constantize }
 
   it 'deletes the resource' do
     expect { page.driver.delete(uri) }.to change{ klass.count }.by(-1)

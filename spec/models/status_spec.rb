@@ -11,7 +11,7 @@ describe Status do
     let(:resource)    { FactoryGirl.create :setting_intensity }
   end
 
-  context 'when creates function properties' do
+  context 'when creates status properties' do
 
     let(:status)    { FactoryGirl.create :status }
     let(:intensity) { FactoryGirl.create :intensity }
@@ -57,7 +57,7 @@ describe Status do
 
     context 'with no properties' do
 
-      let(:resource) { FactoryGirl.create :function }
+      let(:resource) { FactoryGirl.create :status }
       before         { status.update_attributes {} }
 
       it 'does not change anything' do
