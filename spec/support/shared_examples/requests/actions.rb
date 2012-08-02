@@ -10,17 +10,6 @@ shared_examples_for 'a listable resource' do
   end
 end
 
-shared_examples_for 'a public listable resource' do
-  
-  let!(:not_owned) { FactoryGirl.create :function }
-
-  it 'shows all resources (owned and not owned)' do
-    page.driver.get uri
-    page.status_code.should == 200
-    JSON.parse(page.source).should have(2).items
-  end
-end
-
 shared_examples_for 'a showable resource' do
 
   before { page.driver.get uri }

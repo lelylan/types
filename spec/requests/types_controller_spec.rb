@@ -9,14 +9,12 @@ feature 'TypesController' do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:model)      { 'type' }
   let(:controller) { 'types' }
   let(:factory)    { 'type' }
 
   describe 'GET /types' do
 
     let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :type }
     let(:uri)        { '/types' }
 
     it_behaves_like 'a listable resource'
@@ -27,24 +25,22 @@ feature 'TypesController' do
   context 'GET /types/public' do
 
     let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :type, name: 'Not owned' }
     let(:uri)        { '/types/public' }
 
     it_behaves_like 'a public listable resource'
-    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
     it_behaves_like 'a paginable resource'
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
   end
 
   context 'GET /types/:id' do
 
     let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :type }
     let(:uri)        { "/types/#{resource.id}" }
 
     it_behaves_like 'a showable resource'
-    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
     it_behaves_like 'a changeable host'
-    it_behaves_like 'a public resource'
+    it_behaves_like 'a public resource', 'page.driver.get(uri)'
+    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
   end
 
   context 'POST /types' do
@@ -95,16 +91,17 @@ feature 'TypesController' do
     let(:params)    { { name: 'Updated' } }
 
     it_behaves_like 'an updatable resource'
+    it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource',  'page.driver.put(uri)'
     it_behaves_like 'a validated resource',  'page.driver.put(uri, { name: "" }.to_json)', { method: 'PUT', error: 'can\'t be blank' }
   end
 
   context 'DELETE /types/:id' do
     let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :type }
     let(:uri)        { "/types/#{resource.id}" }
 
     it_behaves_like 'a deletable resource'
+    it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
   end
 end

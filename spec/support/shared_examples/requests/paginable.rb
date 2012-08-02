@@ -8,9 +8,7 @@ shared_examples_for 'a paginable resource' do
   describe '?start=:uri' do
 
     it 'shows the next page' do
-      pp Function.all.entries.map(&:id)
       page.driver.get uri, start: resource.uri
-      pp resources.first.id
       page.status_code.should == 200
       contains_resource resources.first
       page.should_not have_content resource.name

@@ -1,17 +1,4 @@
-module StatusesViewMethods
-
-  def contains_owned_status(status)
-    status = StatusDecorator.decorate(status)
-    json   = JSON.parse(page.source)
-    contains_status(status)
-  end
-
-  def contains_status(status)
-    status = StatusDecorator.decorate(status)
-    json   = JSON.parse(page.source).first
-    has_status(status, json)
-  end
-
+module HelpersViewMethods
   def has_status(status, json = nil)
     has_valid_json
 
@@ -34,11 +21,6 @@ module StatusesViewMethods
       json_property.max_range.should == property.max_range
     end
   end
-
-  def does_not_contain_status(status)
-    page.should_not have_content status.id.to_s
-  end
-
 end
 
-RSpec.configuration.include StatusesViewMethods
+RSpec.configuration.include HelpersViewMethods
