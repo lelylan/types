@@ -1,93 +1,82 @@
 require 'spec_helper'
 
 describe Function do
-  it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:created_from) }
 
-  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
+  it { should validate_presence_of :name }
+  it { should validate_presence_of :resource_owner_id }
 
-  describe "#create_function_properties" do
+  context 'when creates function properties' do
 
-    context "with valid properties" do
+    let(:status)    { FactoryGirl.create :status }
+    let(:intensity) { FactoryGirl.create :intensity }
 
-      let(:properties) { json_fixture('function_properties.json')[:properties] }
-      let(:function)   { FactoryGirl.create(:function_no_connections, properties: properties) }
-      subject          { function.properties }
+    let(:properties) {[
+      { uri: a_uri(status), value: 'on' },
+      { uri: a_uri(intensity), value: '0.0' }
+    ]}
 
-      it "creates properties" do
-        subject.should have(2).items
-      end
+    context 'with valid properties' do
 
-      it "sets the status" do
-        subject.where(property_id: 'status').first.value.should == 'on'
-      end
+      let(:resource) { FactoryGirl.create :function, :with_no_properties, properties: properties }
 
-      it "sets the intensity" do
-        subject.where(property_id: 'intensity').first.value.should == '0.0'
+      it 'creates two properties' do
+        resource.properties.should have(2).items
       end
     end
 
-    context "with pre-existing properties" do
+    context 'with pre-existing properties' do
 
-      let(:properties) { json_fixture('function_properties.json')[:properties] }
-      let(:function)   { FactoryGirl.create(:function) }
-      before           { function.update_attributes(properties: properties) }
-      subject          { function.properties }
+      let(:resource)       { FactoryGirl.create :function }
+      let!(:old_stauts)    { resource.properties.where(property_id: 'status').first }
+      let!(:old_intensity) { resource.properties.where(property_id: 'intensity').first }
 
-      it "deletes previous properties" do
-        subject.should have(2).items
+      before               { resource.update_attributes properties: properties }
+      let!(:new_stauts)    { resource.properties.where(property_id: status.id).first }
+      let!(:new_intensity) { resource.properties.where(property_id: intensity.id).first }
+
+      it 'replaces previous properties' do
+        new_stauts.id.should_not    == old_stauts.id
+        new_intensity.id.should_not == old_intensity.id
       end
     end
 
-    context "with not valid params" do
+    context 'with empty properties' do
 
-      context "when name is missing" do
-        it "raises an error" do
-          expect { FactoryGirl.create(:function, name: "") }.to raise_error(Mongoid::Errors::Validations)
-        end
-      end
+      let(:resource) { FactoryGirl.create :function, properties: [] }
 
-      context "when property uri is not valid" do
-        it "raises an error" do
-          expect { 
-            FactoryGirl.create(:function, name: "Function", properties: [ {uri: "not_valid", value: "value"} ])
-          }.to raise_error(Mongoid::Errors::Validations)
-        end
-      end
-
-      it "does not create a new resource" do
-        count = Function.count
-        expect { FactoryGirl.create(:function, name: "") }.to raise_error(Mongoid::Errors::Validations)
-        Function.count.should == count
+      it 'removes previous properties' do
+        resource.properties.should have(0).items
       end
     end
 
-    context "with no properties" do
+    context 'with no properties' do
 
-      let(:function) { FactoryGirl.create(:function) }
-      subject        { function.properties }
+      let(:resource) { FactoryGirl.create :function }
+      before         { resource.update_attributes name: 'Updated' }
 
-      it "should not change anything" do
-        subject.should have(2).items
+      it 'does not change anything' do
+        resource.properties.should have(2).items
       end
     end
 
-    context "with empty properties" do
+    context 'with not valid property uri' do
 
-      let(:function) { FactoryGirl.create(:function, properties: []) }
-      subject        { function.properties }
+      let(:properties) { [{uri: 'not-valid', value: 'value'}] }
+      let(:resource)   { FactoryGirl.create :function, properties: properties, name: 'Function' }
 
-      it "removes all properties" do
-        subject.should have(0).items
+      it 'raises an error' do
+        expect { resource }.to raise_error Mongoid::Errors::Validations
       end
     end
 
-    context "with not valid JSON" do
-      it "should raise an error" do
-        expect { 
-          FactoryGirl.create(:function, properties: "string") 
-        }.to raise_error
+    context 'with not valid json' do
+
+      let(:resource) { FactoryGirl.create(:function, properties: 'not-valid') }
+
+      it 'raises an error' do
+        expect { resource }.to raise_error
       end
     end
   end
 end
+

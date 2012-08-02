@@ -1,38 +1,43 @@
 class Type
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI
+  include Resourceable
 
   field :name
-  field :created_from
+  field :resource_owner_id
 
   field :property_ids, type: Array, default: []
   field :function_ids, type: Array, default: []
-  field :status_ids, type: Array, default: []
+  field :status_ids,   type: Array, default: []
   field :category_ids, type: Array, default: []
 
   attr_accessor :properties, :functions, :statuses, :categories
-  attr_accessible :name, :properties, :functions, :statuses, :categories
+  attr_protected :resource_owner_id
 
-  validates :name, presence: true
-  validates :created_from, presence: true, url: true
+  validates :resource_owner_id, presence: true
+  validates :name,              presence: true
+
+  validates :properties, uri: true
+  validates :functions,  uri: true
+  validates :statuses,   uri: true
+  validates :properties, uri: true
 
   before_save :find_properties, :find_functions, :find_statuses, :find_categories
 
   def find_properties
-    self.property_ids = find_resources(properties) if not properties.nil?
+    self.property_ids = find_ids(properties) if not properties.nil?
   end
 
   def find_functions
-    self.function_ids = find_resources(functions) if not functions.nil?
+    self.function_ids = find_ids(functions) if not functions.nil?
   end
 
   def find_statuses
-    self.status_ids = find_resources(statuses) if not statuses.nil?
+    self.status_ids = find_ids(statuses) if not statuses.nil?
   end
 
   def find_categories
-    self.category_ids = find_resources(categories) if not categories.nil?
+    self.category_ids = find_ids(categories) if not categories.nil?
   end
 end
 

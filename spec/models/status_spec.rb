@@ -1,105 +1,86 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Status do
 
-  it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:created_from) }
+  it { should validate_presence_of :name }
+  it { should validate_presence_of :resource_owner_id }
 
-  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:created_from)} }
-  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:created_from)} }
-
-  context "#pending" do
-    it { [true, false, nil].each { |value| should allow_value(value).for(:pending) } }
-    it_validates "boolean", "pending", FactoryGirl.create(:setting_intensity)
+  it_behaves_like 'a boolean' do
+    let(:field)       { 'pending' }
+    let(:accepts_nil) { true }
+    let(:resource)    { FactoryGirl.create :setting_intensity }
   end
 
+  context 'when creates status properties' do
 
-  describe "#create_status_properties" do
+    let(:status)    { FactoryGirl.create :status }
+    let(:intensity) { FactoryGirl.create :intensity }
 
-    context "with valid properties" do
+    let(:properties) {[
+      { uri: a_uri(status), values: ['on'] },
+      { uri: a_uri(intensity),  min_range: '75', max_range: '100' }
+    ]}
 
-      let(:properties) { json_fixture("status_properties.json")[:properties] }
-      let(:status)     { FactoryGirl.create(:setting_intensity_no_connections, properties: properties) }
-      subject          { status.properties }
+    context 'with valid properties' do
 
-      it "creates properties" do
-        subject.should have(2).items
-      end
+      let(:resource) { FactoryGirl.create :setting_intensity, :with_no_properties, properties: properties }
 
-      it "sets the status" do
-        subject.where(property_id: "status").first.values.should == ["on"]
-      end
-
-      it "sets the intensity start range" do
-        subject.where(property_id: "intensity").first.range_start.should == "75"
-      end
-
-      it "sets the intensity end range" do
-        subject.where(property_id: "intensity").first.range_end.should == "100"
+      it 'creates properties' do
+        resource.properties.should have(2).items
       end
     end
 
-    context "with pre-existing properties" do
+    context 'with pre-existing properties' do
 
-      let(:properties) { json_fixture("status_properties.json")[:properties] }
-      let(:status)     { FactoryGirl.create(:setting_intensity) }
-      before           { status.update_attributes(properties: properties) }
-      subject          { status.properties }
+      let(:resource)       { FactoryGirl.create :setting_intensity }
+      let!(:old_stauts)    { resource.properties.where(property_id: 'status').first }
+      let!(:old_intensity) { resource.properties.where(property_id: 'intensity').first }
 
-      it "deletes previous properties" do
-        subject.should have(2).items
+      before               { resource.update_attributes properties: properties }
+      let!(:new_stauts)    { resource.properties.where(property_id: status.id).first }
+      let!(:new_intensity) { resource.properties.where(property_id: intensity.id).first }
+
+      it 'replaces previous properties' do
+        new_stauts.id.should_not    == old_stauts.id
+        new_intensity.id.should_not == old_intensity.id
       end
     end
 
-    context "with not valid params" do
+    context 'with empty properties' do
 
-      context "when name is missing" do
-        it "raises an error" do
-          expect { FactoryGirl.create(:setting_intensity, name: "") }.to raise_error(Mongoid::Errors::Validations)
-        end
-      end
+      let(:resource) { FactoryGirl.create :setting_intensity, properties: [] }
 
-      context "when property uri is not valid" do
-        it "raises an error" do
-          expect { 
-            FactoryGirl.create(:setting_intensity, name: "Status", properties: [ {uri: "not_valid"} ])
-          }.to raise_error(Mongoid::Errors::Validations)
-        end
-      end
-
-      it "does not create a new resource" do
-        count = Status.count
-        expect { FactoryGirl.create(:setting_intensity, name: "") }.to raise_error(Mongoid::Errors::Validations)
-        Status.count.should == count
+      it 'removes previous properties' do
+        resource.properties.should have(0).items
       end
     end
 
-    context "with no properties" do
+    context 'with no properties' do
 
-      let(:status) { FactoryGirl.create(:setting_intensity) }
-      subject      { status.properties }
+      let(:resource) { FactoryGirl.create :setting_intensity }
+      before         { resource.update_attributes {} }
 
-      it "should not change anything" do
-        subject.should have(2).items
+      it 'does not change anything' do
+        resource.properties.should have(2).items
       end
     end
 
-    context "with empty properties" do
+    context 'with not valid property uri' do
 
-      let(:status) { FactoryGirl.create(:setting_intensity, properties: []) }
-      subject      { status.properties }
+      let(:properties) { [{uri: 'not-valid', value: 'value'}] }
+      let(:resource)   { FactoryGirl.create :setting_intensity, properties: properties, name: 'Status' }
 
-      it "removes all properties" do
-        subject.should have(0).items
+      it 'raises an error' do
+        expect { resource }.to raise_error Mongoid::Errors::Validations
       end
     end
 
-    context "with not valid JSON" do
+    context 'with not valid json' do
 
-      it "should raise an error" do
-        expect { 
-          FactoryGirl.create(:setting_intensity, properties: "string") 
-        }.to raise_error
+      let(:resource) { FactoryGirl.create(:status, properties: 'not-valid') }
+
+      it 'raises an error' do
+        expect { resource }.to raise_error
       end
     end
   end

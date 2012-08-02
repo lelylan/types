@@ -2,39 +2,48 @@ require 'spec_helper'
 
 describe StatusProperty do
 
-  it { should validate_presence_of(:uri) }
-  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:uri)} }
-  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
+  it { should_not allow_mass_assignment_of :property_id }
+  it { should validate_presence_of :uri }
 
-  context "with valid uri" do
+  it { Settings.uris.valid.each     { |uri| should allow_value(uri).for(:uri) } }
+  it { Settings.uris.not_valid.each { |uri| should_not allow_value(uri).for(:uri) } }
 
-    let(:properties) { json_fixture('status_properties.json')[:properties] }
-    let(:status)     { FactoryGirl.create(:setting_intensity, properties: properties); }
+  context 'with valid property uris' do
 
-    context "#status property" do
+    let(:status)    { FactoryGirl.create :status }
+    let(:intensity) { FactoryGirl.create :intensity }
 
-      subject { status.properties.first }
+    let(:properties) {[
+      { uri: a_uri(status), values: ['on'] },
+      { uri: a_uri(intensity), min_range: '75', max_range: '100' }
+    ]}
 
-      it "sets the property_id" do
-        subject.property_id.should == 'status'
+    let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
+
+    context 'status property' do
+
+      let(:property) { resource.properties.where(property_id: status.id).first }
+
+      it 'sets the property_id' do
+        property.property_id.should == status.id
       end
 
-      it "sets the value" do
-        subject.values.should == ['on']
+      it 'sets the value' do
+        property.values.should == ['on']
       end
     end
 
-    context "#intensity" do
+    context 'intensity property' do
 
-      subject { status.properties.last }
+      let(:property) { resource.properties.where(property_id: intensity.id).first }
 
-      it "sets the property_id" do
-        subject.property_id.should == 'intensity'
+      it 'sets the property_id' do
+        property.property_id.should == intensity.id
       end
 
-      it "sets the range" do
-        subject.range_start.should == '75'
-        subject.range_end.should == '100'
+      it 'sets the range' do
+        property.min_range.should == '75'
+        property.max_range.should == '100'
       end
     end
   end

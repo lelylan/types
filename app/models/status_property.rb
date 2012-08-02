@@ -1,29 +1,29 @@
 class StatusProperty
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Resourceable
 
   field :values, type: Array, default: []
-  field :range_start
-  field :range_end
-  field :property_id
+  field :min_range
+  field :max_range
+  field :property_id, type: Moped::BSON::ObjectId
 
   attr_accessor :uri
-  attr_accessible :values, :range_start, :range_end, :uri
+  attr_protected :property_id
 
-  validates :uri, presence: true, url: true
+  validates :uri, presence: true, uri: true, on: :create
 
   embedded_in :status
 
-  before_save :parse_values, :set_property_id
-
+  before_create :parse_values, :set_property_id
 
   private 
 
-    def parse_values
-      values.map!(&:to_s)
-    end
+  def parse_values
+    values.map!(&:to_s)
+  end
 
-    def set_property_id
-      self.property_id = Addressable::URI.parse(uri).basename
-    end
+  def set_property_id
+    self.property_id = find_id(uri)
+  end
 end

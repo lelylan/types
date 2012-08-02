@@ -1,52 +1,26 @@
-Settings.add_source!("#{Rails.root}/config/settings/test.yml")
-Settings.reload!
-
 FactoryGirl.define do
-
-  # base
-
-  factory :function do
-    name Settings.functions.set_intensity.name
-    created_from Settings.user.uri
+  factory :function, aliases: %w(set_intensity) do
+    resource_owner_id Settings.resource_owner_id
+    name 'Set intensity'
     properties {[
-      FactoryGirl.build(:function_property_status),
-      FactoryGirl.build(:function_property_intensity)
+      FactoryGirl.build(:status_for_function),
+      FactoryGirl.build(:intensity_for_function)
     ]}
   end
 
-  factory :function_no_connections, parent: :function do
-    properties []
-  end
-
-  factory :function_not_owned, parent: :function do
-    created_from Settings.user.another.uri
-  end
-
-  factory :set_intensity, parent: :function
-
-  factory :turn_on, parent: :function do |f|
-    name Settings.functions.turn_on.name
+  factory :turn_on, parent: :function do
+    resource_owner_id Settings.resource_owner_id
+    name 'Turn on'
     properties {[
-      FactoryGirl.build(:function_property_status, value: 'on')
+      FactoryGirl.build(:status_for_function)
     ]}
   end
 
-  factory :turn_off, parent: :function do |f|
-    name Settings.functions.turn_off.name
+  factory :turn_off, parent: :function do
+    resource_owner_id Settings.resource_owner_id
+    name 'Turn off'
     properties {[
-      FactoryGirl.build(:function_property_status, value: 'off')
+      FactoryGirl.build(:status_for_function)
     ]}
-  end
-
-  # connections
-
-  factory :function_property_status, class: FunctionProperty do
-    uri Settings.properties.status.uri
-    value 'on'
-  end
-
-  factory :function_property_intensity, class: FunctionProperty do
-    uri Settings.properties.intensity.uri
-    value '0'
   end
 end

@@ -2,11 +2,11 @@ class Category
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :created_from
+  field :resource_owner_id, type: Moped::BSON::ObjectId
   field :name
 
-  attr_accessible :name
+  attr_protected :resource_owner_id
 
   validates :name, presence: true
-  validates :created_from, presence: true, url: true
+  validates :resource_owner_id, presence: true
 end

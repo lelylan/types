@@ -2,39 +2,49 @@ require 'spec_helper'
 
 describe FunctionProperty do
 
+  it { should_not allow_mass_assignment_of :property_id }
+  it { should validate_presence_of :uri }
+
   it { should allow_value(nil).for('value') }
 
-  it { Settings.validation.uris.valid.each {|uri| should allow_value(uri).for(:uri)} }
-  it { Settings.validation.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
+  it { Settings.uris.valid.each     {|uri| should allow_value(uri).for(:uri)} }
+  it { Settings.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
 
-  context "with valid uri" do
+  context 'with valid property uris' do
 
-    let(:properties) { json_fixture('function_properties.json')[:properties] }
-    let(:function)   { FactoryGirl.create(:function, properties: properties); }
+    let(:status)    { FactoryGirl.create :status }
+    let(:intensity) { FactoryGirl.create :intensity }
 
-    context "#status" do
+    let(:properties) {[
+      { uri: a_uri(status), value: 'on' },
+      { uri: a_uri(intensity), value: '0.0' }
+    ]}
 
-      subject { function.properties.first }
+    let(:resource) { FactoryGirl.create :function, properties: properties }
 
-      it "sets the property_id" do
-        subject.property_id.should == 'status'
+    context 'status property' do
+
+      let(:property) { resource.properties.where(property_id: status.id).first }
+
+      it 'sets the property_id' do
+        property.property_id.should == status.id
       end
 
-      it "sets the value" do
-        subject.value.should == 'on'
+      it 'sets the value' do
+        property.value.should == 'on'
       end
     end
 
-    context "#intensity" do
+    context 'intensity proeprty' do
 
-      subject { function.properties.last }
+      let(:property) { resource.properties.where(property_id: intensity.id).first }
 
-      it "sets the property_id" do
-        subject.property_id.should == 'intensity'
+      it 'sets the property_id' do
+        property.property_id.should == intensity.id
       end
 
-      it "sets the value" do
-        subject.value.should == '0.0'
+      it 'sets the value' do
+        property.value.should == '0.0'
       end
     end
   end
