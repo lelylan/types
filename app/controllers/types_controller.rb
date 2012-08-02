@@ -24,7 +24,7 @@ class TypesController < ApplicationController
   def create
     @type = Type.new(params)
     @type.resource_owner_id = current_user.id
-    if @type.save
+    if @type.save!
       render 'show', status: 201, location: TypeDecorator.decorate(@type).uri
     else
       render_422 "notifications.resource.not_valid", @type.errors
@@ -32,7 +32,7 @@ class TypesController < ApplicationController
   end
 
   def update
-    if @type.update_attributes(params)
+    if @type.update_attributes!(params)
       render 'show'
     else
       render_422 'notifications.resource.not_valid', @type.errors
@@ -44,30 +44,28 @@ class TypesController < ApplicationController
     @type.destroy
   end
 
-
-
   private
 
-    def find_owned_resources
-      @types = Type.where(resource_owner_id: current_user.id)
-    end
+  def find_owned_resources
+    @types = Type.where(resource_owner_id: current_user.id)
+  end
 
-    def find_public_resources
-      @types = Type.all
-    end
+  def find_public_resources
+    @types = Type.all
+  end
 
-    def find_resource
-      @type = @types.find(params[:id])
-    end
+  def find_resource
+    @type = @types.find(params[:id])
+  end
 
-    def search_params
-      @types = @types.where('name' => /.*#{params[:name]}.*/i) if params[:name]
-    end
+  def search_params
+    @types = @types.where('name' => /.*#{params[:name]}.*/i) if params[:name]
+  end
 
-    def pagination
-      params[:per] = (params[:per] || Settings.pagination.per).to_i
-      params[:per] = Settings.pagination.per if params[:per] == 0 
-      params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
-      @types = @types.gt(_id: find_id(params[:start])) if params[:start]
-    end
+  def pagination
+    params[:per] = (params[:per] || Settings.pagination.per).to_i
+    params[:per] = Settings.pagination.per if params[:per] == 0 
+    params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
+    @types = @types.gt(_id: find_id(params[:start])) if params[:start]
+  end
 end

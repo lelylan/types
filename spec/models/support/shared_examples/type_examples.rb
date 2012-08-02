@@ -4,52 +4,68 @@ shared_examples_for 'a type connection' do
 
   describe '#find_connection' do
 
-    context 'with valid URIs' do
+    context 'when creates' do
 
-      let(:type) { FactoryGirl.create :type, :with_no_connections, connection => uris }
+      context 'with valid URIs' do
 
-      it 'sets the connection ids' do
-        type[field].should == ids
+        let(:type) { FactoryGirl.create :type, :with_no_connections, connection => uris }
+
+        it 'sets the connections' do
+          type[field].should == ids
+        end
+      end
+
+      context 'with empty connections' do
+
+        let(:type) { FactoryGirl.create :type, connection => [] }
+
+        it 'removes previous connections' do
+          type[field].should have(0).items
+        end
+      end
+
+      context 'with not valid connection uri' do
+
+        let(:type) { FactoryGirl.create :type, connection => [ 'not-valid' ] }
+
+        it 'raises an error' do
+          expect { type }.to raise_error Mongoid::Errors::Validations
+        end
+      end
+
+      context 'with not valid json' do
+
+        let(:type) { FactoryGirl.create(:type, connection => 'not-valid') }
+
+        it 'raises an error' do
+          expect { type }.to raise_error
+        end
       end
     end
 
-    context 'with pre-existing connections' do
+    context 'when updates' do
 
-      let(:type)     { FactoryGirl.create :type }
-      let!(:old_ids) { type[field] }
+      context 'with new connections' do
 
-      before         { type.update_attributes connection => uris }
-      let!(:new_ids) { type[field] }
+        let(:type)     { FactoryGirl.create :type }
+        let!(:old_ids) { type[field] }
 
-      it 'sets the connection ids' do
-        new_ids.should_not == old_ids
+        before         { type.update_attributes connection => uris }
+        let!(:new_ids) { type[field] }
+
+        it 'sets the new connections' do
+          new_ids.should_not == old_ids
+        end
       end
-    end
 
-    context 'with empty connections' do
+      context 'with not valid uris' do
 
-      let(:type) { FactoryGirl.create :type, connection => [] }
+        let(:type)   { FactoryGirl.create :type }
+        let(:update) { type.update_attributes! connection => 'not-valid' }
 
-      it 'removes previous connections' do
-        type[field].should have(0).items
-      end
-    end
-
-    context 'with not valid connection uri' do
-
-      let(:type) { FactoryGirl.create :type, connection => [ 'not-valid' ] }
-
-      it 'raises an error' do
-        expect { type }.to raise_error Mongoid::Errors::Validations
-      end
-    end
-
-    context 'with not valid json' do
-
-      let(:type) { FactoryGirl.create(:type, connection => 'not-valid') }
-
-      it 'raises an error' do
-        expect { type }.to raise_error
+        it 'raises an error' do
+          expect { update }.to raise_error Mongoid::Errors::Validations
+        end
       end
     end
   end
