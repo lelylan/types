@@ -50,6 +50,7 @@ feature 'CategoriesController' do
 
     let(:uri)      { '/categories' }
     let(:params)   { { name: 'lighting' } }
+
     before         { page.driver.post uri, params.to_json }
     let(:resource) { Category.last }
 

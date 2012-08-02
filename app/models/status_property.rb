@@ -11,11 +11,11 @@ class StatusProperty
   attr_accessor :uri
   attr_protected :property_id
 
-  validates :uri, presence: true, url: true
+  validates :uri, presence: true, url: true, on: :create
 
   embedded_in :status
 
-  before_save :parse_values, :set_property_id
+  before_create :parse_values, :set_property_id
 
   private 
 

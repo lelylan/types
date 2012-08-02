@@ -52,7 +52,7 @@ describe Function do
     context 'with no properties' do
 
       let(:resource) { FactoryGirl.create :function }
-      before         { resource.update_attributes {} }
+      before         { resource.update_attributes name: 'Updated' }
 
       it 'does not change anything' do
         resource.properties.should have(2).items

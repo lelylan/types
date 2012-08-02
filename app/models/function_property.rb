@@ -9,11 +9,11 @@ class FunctionProperty
   attr_accessor :uri
   attr_protected :property_id
 
-  validates :uri, presence: true, url: true
+  validates :uri, presence: true, url: true, on: :create
 
   embedded_in :function
 
-  before_save :set_property_id
+  before_create :set_property_id
 
   private
 

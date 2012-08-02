@@ -20,7 +20,7 @@ module CategoriesViewMethods
     json = Hashie::Mash.new json
 
     json.uri.should  == category.uri
-    json.id.should   == category.id.as_json
+    json.id.should   == category.id.to_s
     json.name.should == category.name
     json.created_at.should == category.created_at.iso8601
     json.updated_at.should == category.updated_at.iso8601
