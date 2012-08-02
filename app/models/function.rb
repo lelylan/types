@@ -1,7 +1,6 @@
 class Function
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI
 
   field :name
   field :resource_owner_id

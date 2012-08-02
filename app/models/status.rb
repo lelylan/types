@@ -1,7 +1,6 @@
 class Status
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI
 
   field :name
   field :pending, type: Boolean

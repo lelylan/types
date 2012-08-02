@@ -1,6 +1,4 @@
 class FunctionsController < ApplicationController
-  include Lelylan::Search::URI
-
   doorkeeper_for :index, scopes: [:read, :write]
   doorkeeper_for :create, :update, :destroy, scopes: [:write]
 

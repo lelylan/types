@@ -1,7 +1,7 @@
 class Type
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI
+  include Resourceable
 
   field :name
   field :resource_owner_id

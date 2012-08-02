@@ -1,7 +1,7 @@
 class StatusProperty
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI
+  include Resourceable
 
   field :values, type: Array, default: []
   field :min_range

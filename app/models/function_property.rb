@@ -1,7 +1,7 @@
 class FunctionProperty
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Lelylan::Search::URI
+  include Resourceable
 
   field :value
   field :property_id, type: Moped::BSON::ObjectId

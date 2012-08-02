@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
-  include Lelylan::Errors::Helpers
+  include Resourceable
+  include Rescueable
+  include Viewable
 
   private
 
