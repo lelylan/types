@@ -22,7 +22,7 @@ class PropertiesController < ApplicationController
   end
 
   def create
-    @property = Property.new(params[:property])
+    @property = Property.new(params)
     @property.resource_owner_id = current_user.id
     if @property.save
       render 'show', status: 201, location: PropertyDecorator.decorate(@property).uri
@@ -32,7 +32,7 @@ class PropertiesController < ApplicationController
   end
 
   def update
-    if @property.update_attributes(params[:property])
+    if @property.update_attributes(params)
       render 'show'
     else
       render_422 'notifications.resource.not_valid', @property.errors

@@ -22,7 +22,7 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    @category = Category.new(params[:category])
+    @category = Category.new(params)
     @category.resource_owner_id = current_user.id
     if @category.save
       render 'show', status: 201, location: CategoryDecorator.decorate(@category).uri
@@ -32,7 +32,7 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    if @category.update_attributes(params[:category])
+    if @category.update_attributes(params)
       render 'show'
     else
       render_422 'notifications.resource.not_valid', @category.errors

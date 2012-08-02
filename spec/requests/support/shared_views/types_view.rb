@@ -1,55 +1,52 @@
 module TypesViewMethods
 
-  def should_have_owned_type(type)
+  def contains_owned_type(type)
     type = TypeDecorator.decorate(type)
     json = JSON.parse(page.source)
-    should_contain_type(type)
-    should_not_have_not_owned_types
+    contains_type(type)
   end
 
-  def should_contain_type(type)
+  def contains_type(type)
     type = TypeDecorator.decorate(type)
     json = JSON.parse(page.source).first
-    should_have_type(type, json)
+    has_type(type, json)
   end
 
-  def should_have_type(type, json = nil)
+  def has_type(type, json = nil)
+    has_valid_json
+
     type = TypeDecorator.decorate(type)
-    should_have_valid_json
     json = JSON.parse(page.source) unless json 
     json = Hashie::Mash.new json
-    json.uri.should == type.uri
-    json.id.should == type.id.as_json
+
+    json.uri.should  == type.uri
+    json.id.should   == type.id.as_json
     json.name.should == type.name
 
     properties = Property.in(_id: type.property_ids)
     json.properties.each_with_index do |json_property, index|
-      should_have_property(properties[index], json_property)
+      has_property(properties[index], json_property)
     end
 
     functions = Function.in(_id: type.function_ids)
     json.functions.each_with_index do |json_function, index|
-      should_have_function(functions[index], json_function)
+      has_function(functions[index], json_function)
     end
 
     statuses = Status.in(_id: type.status_ids)
     json.statuses.each_with_index do |json_status, index|
-      should_have_status(statuses[index], json_status)
+      has_status(statuses[index], json_status)
     end
 
     categories = Category.in(_id: type.category_ids)
     json.categories.each_with_index do |json_category, index|
-      should_have_category(categories[index], json_category)
+      has_category(categories[index], json_category)
     end
   end
 
-  def should_not_have_not_owned_types
-    should_have_valid_json
-    json = JSON.parse(page.source)
-    json.should have(1).item
-    Type.all.should have(2).items
+  def does_not_contain_type(type) 
+    page.should_not have_content type.id.to_s
   end
-
 end
 
 RSpec.configuration.include TypesViewMethods

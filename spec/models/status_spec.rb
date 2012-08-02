@@ -57,8 +57,8 @@ describe Status do
 
     context 'with no properties' do
 
-      let(:resource) { FactoryGirl.create :status }
-      before         { status.update_attributes {} }
+      let(:resource) { FactoryGirl.create :setting_intensity }
+      before         { resource.update_attributes {} }
 
       it 'does not change anything' do
         resource.properties.should have(2).items

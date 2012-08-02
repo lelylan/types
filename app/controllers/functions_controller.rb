@@ -22,7 +22,7 @@ class FunctionsController < ApplicationController
   end
 
   def create
-    @function = Function.new(params[:function])
+    @function = Function.new(params)
     @function.resource_owner_id = current_user.id
     if @function.save
       render 'show', status: 201, location: FunctionDecorator.decorate(@function).uri
@@ -32,7 +32,7 @@ class FunctionsController < ApplicationController
   end
 
   def update
-    if @function.update_attributes(params[:function])
+    if @function.update_attributes(params)
       render 'show'
     else
       render_422 'notifications.resource.not_valid', @function.errors
