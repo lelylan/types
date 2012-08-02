@@ -40,8 +40,7 @@ Spork.each_run do
   require 'factory_girl_rails'
   FactoryGirl.reload
   I18n.backend.reload!
-  Dir[Rails.root.join('spec/support/**/*.rb')].each         {|f| require f}
-  Dir[Rails.root.join('spec/shared_examples/**/*.rb')].each {|f| require f}
-  Dir[Rails.root.join('spec/views/**/*.rb')].each           {|f| require f}
+  Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
+  Dir[Rails.root.join('spec/views/**/*.rb')].each   {|f| require f}
 end
 

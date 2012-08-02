@@ -2,7 +2,8 @@ shared_examples_for 'a not owned resource' do |action|
 
   context 'with resource not owned' do
 
-    let(:uri) { "/#{controller}/#{not_owned.id}" }
+    let!(:not_owned) { FactoryGirl.create :function }
+    let!(:uri)       { "/#{controller}/#{not_owned.id}" }
 
     scenario 'get a not found notification' do
       eval action

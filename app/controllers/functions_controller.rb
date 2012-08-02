@@ -66,6 +66,6 @@ class FunctionsController < ApplicationController
     params[:per] = (params[:per] || Settings.pagination.per).to_i
     params[:per] = Settings.pagination.per if params[:per] == 0 
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
-    @functions = @functions.gt(_id: find_id(params[:start])) if params[:start]
+    @functions = @functions.gt(id: find_id(params[:start])) if params[:start]
   end
 end

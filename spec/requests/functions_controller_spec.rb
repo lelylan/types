@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
-feature "FunctionsController" do
+feature 'FunctionsController' do
 
   let!(:application)  { FactoryGirl.create :application }
   let!(:user)         { FactoryGirl.create :user }
@@ -9,14 +9,12 @@ feature "FunctionsController" do
   before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
   before { page.driver.header 'Content-Type', 'application/json' }
 
-  let(:model)      { 'function' }
   let(:controller) { 'functions' }
   let(:factory)    { 'function' }
 
   describe 'GET /functions' do
 
     let!(:resource)  { FactoryGirl.create :function, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :function }
     let(:uri)        { '/functions' }
 
     it_behaves_like 'a listable resource'
@@ -27,24 +25,22 @@ feature "FunctionsController" do
   context 'GET /functions/public' do
 
     let!(:resource)  { FactoryGirl.create :function, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :function, name: 'Not owned' }
     let(:uri)        { '/functions/public' }
 
     it_behaves_like 'a public listable resource'
-    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
     it_behaves_like 'a paginable resource'
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
   end
 
   context 'GET /functions/:id' do
 
     let!(:resource)  { FactoryGirl.create :function, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :function }
     let(:uri)        { "/functions/#{resource.id}" }
 
     it_behaves_like 'a showable resource'
-    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
     it_behaves_like 'a changeable host'
-    it_behaves_like 'a public resource'
+    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    it_behaves_like 'a public resource', 'page.driver.get(uri)'
   end
 
   context 'POST /functions' do
@@ -82,7 +78,6 @@ feature "FunctionsController" do
 
   context 'DELETE /functions/:id' do
     let!(:resource)  { FactoryGirl.create :function, resource_owner_id: user.id }
-    let!(:not_owned) { FactoryGirl.create :function }
     let(:uri)        { "/functions/#{resource.id}" }
 
     it_behaves_like 'a deletable resource'

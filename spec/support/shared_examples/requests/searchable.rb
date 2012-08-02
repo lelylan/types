@@ -8,7 +8,7 @@ shared_examples_for 'a searchable resource' do |searchable|
 
       it 'returns the searched resource' do
         page.driver.get uri, key => value
-        eval "contains_#{model}(result)"
+        contains_resource result
         page.should_not have_content resource.id.to_s
       end
     end
