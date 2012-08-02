@@ -11,7 +11,7 @@ class StatusProperty
   attr_accessor :uri
   attr_protected :property_id
 
-  validates :uri, presence: true, url: true, on: :create
+  validates :uri, presence: true, uri: true, on: :create
 
   embedded_in :status
 
