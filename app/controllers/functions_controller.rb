@@ -26,7 +26,7 @@ class FunctionsController < ApplicationController
     if @function.save!
       render 'show', status: 201, location: FunctionDecorator.decorate(@function).uri
     else
-      render_422 "notifications.resource.not_valid", @function.errors
+      render_422 'notifications.resource.not_valid', @function.errors
     end
   end
 

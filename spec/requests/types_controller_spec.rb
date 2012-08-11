@@ -20,6 +20,17 @@ feature 'TypesController' do
     it_behaves_like 'a listable resource'
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { name: 'My name is resource' }
+
+    context 'when does not show connections' do
+
+      before  { page.driver.get uri }
+      subject { page }
+
+      it { should_not have_content 'properties' }
+      it { should_not have_content 'functions' }
+      it { should_not have_content 'statuses' }
+      it { should_not have_content 'categories' }
+    end
   end
 
   context 'GET /types/public' do
@@ -30,6 +41,17 @@ feature 'TypesController' do
     it_behaves_like 'a public listable resource'
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { name: 'My name is resource' }
+
+    context 'when does not show connections' do
+
+      before  { page.driver.get uri }
+      subject { page }
+
+      it { save_and_open_page; should_not have_content 'properties' }
+      it { should_not have_content 'functions' }
+      it { should_not have_content 'statuses' }
+      it { should_not have_content 'categories' }
+    end
   end
 
   context 'GET /types/:id' do

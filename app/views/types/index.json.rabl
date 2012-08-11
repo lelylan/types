@@ -1,3 +1,3 @@
 collection TypeDecorator.decorate(@types)
 
-extends "types/show"
+attributes :uri, :id, :name, :created_at, :updated_at

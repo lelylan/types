@@ -1,7 +1,7 @@
 development:
   sessions:
     default:
-      database: type_development
+      database: types_development
       hosts:
         - localhost:27017
       options:
@@ -16,7 +16,7 @@ development:
 test:
   sessions:
     default:
-      database: type_test
+      database: types_test
       hosts:
         - localhost:27017
       options:
