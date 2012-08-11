@@ -2,9 +2,9 @@ class Status
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  field :resource_owner_id, type: Moped::BSON::ObjectId
   field :name
   field :pending, type: Boolean
-  field :resource_owner_id
 
   attr_accessor :properties
   attr_accessible :pending, :name, :properties

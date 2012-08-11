@@ -2,8 +2,8 @@ class Function
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  field :resource_owner_id, type: Moped::BSON::ObjectId
   field :name
-  field :resource_owner_id
 
   attr_accessible :name, :properties
 

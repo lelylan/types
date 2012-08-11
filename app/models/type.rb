@@ -4,7 +4,7 @@ class Type
   include Resourceable
 
   field :name
-  field :resource_owner_id
+  field :resource_owner_id, type: Moped::BSON::ObjectId
 
   field :property_ids, type: Array, default: []
   field :function_ids, type: Array, default: []

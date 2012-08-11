@@ -3,8 +3,8 @@ class FunctionProperty
   include Mongoid::Timestamps
   include Resourceable
 
-  field :value
   field :property_id, type: Moped::BSON::ObjectId
+  field :value
 
   attr_accessor :uri
   attr_protected :property_id

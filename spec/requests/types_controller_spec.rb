@@ -47,7 +47,7 @@ feature 'TypesController' do
       before  { page.driver.get uri }
       subject { page }
 
-      it { save_and_open_page; should_not have_content 'properties' }
+      it { should_not have_content 'properties' }
       it { should_not have_content 'functions' }
       it { should_not have_content 'statuses' }
       it { should_not have_content 'categories' }
