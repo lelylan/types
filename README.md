@@ -18,6 +18,7 @@ Clone the repository.
 ## Resources
 
 [Lelylan API](http://dev.lelylan.com)
+
 [Lelylan Types API](http://dev.lelylan.com/rest/types/)
 
 
@@ -48,7 +49,7 @@ Follow [github](https://github.com/styleguide/) guidelines.
 ## Feedback
 
 Use the [issue tracker](http://github.com/lelylan/types/issues) for bugs.
-[Mail](mailto:touch@lelylan.com) or [Tweet](twitter.com/lelylan) us for any idea that can improve the project.
+[Mail](mailto:touch@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
 
 
 ## Links 
