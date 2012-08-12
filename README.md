@@ -17,9 +17,8 @@ Clone the repository.
 
 ## Resources
 
-[Lelylan API](http://dev.lelylan.com)
-
-[Lelylan Types API](http://dev.lelylan.com/rest/types/)
+* [Lelylan API](http://dev.lelylan.com)
+* [Lelylan Types API](http://dev.lelylan.com/rest/types/)
 
 
 ## Contributing
