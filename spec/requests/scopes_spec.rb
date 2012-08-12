@@ -7,7 +7,7 @@ feature 'Scope' do
 
   context 'with no token' do
 
-    context 'types' do
+    context 'types controller' do
 
       let(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
 
@@ -20,7 +20,7 @@ feature 'Scope' do
       it { should_not authorize "delete /types/#{resource.id}" }
     end
 
-    context 'properties' do
+    context 'properties controller' do
 
       let(:resource) { FactoryGirl.create :property, resource_owner_id: user.id }
 
@@ -33,7 +33,7 @@ feature 'Scope' do
       it { should_not authorize "delete /properties/#{resource.id}" }
     end
 
-    context 'functions' do
+    context 'functions controller' do
 
       let(:resource) { FactoryGirl.create :function, resource_owner_id: user.id }
 
@@ -46,7 +46,7 @@ feature 'Scope' do
       it { should_not authorize "delete /functions/#{resource.id}" }
     end
 
-    context 'statuses' do
+    context 'statuses controller' do
 
       let(:resource) { FactoryGirl.create :setting_intensity, resource_owner_id: user.id }
 
@@ -59,7 +59,7 @@ feature 'Scope' do
       it { should_not authorize "delete /statuses/#{resource.id}" }
     end
 
-    context 'categories' do
+    context 'categories controller' do
 
       let(:resource) { FactoryGirl.create :category, resource_owner_id: user.id }
 
@@ -80,7 +80,7 @@ feature 'Scope' do
 
     before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
-    context 'types' do
+    context 'types controller' do
 
       let(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
 
@@ -93,7 +93,7 @@ feature 'Scope' do
       it { should_not authorize "delete /types/#{resource.id}" }
     end
 
-    context 'properties' do
+    context 'properties controller' do
 
       let(:resource) { FactoryGirl.create :property, resource_owner_id: user.id }
 
@@ -106,7 +106,7 @@ feature 'Scope' do
       it { should_not authorize "delete /properties/#{resource.id}" }
     end
 
-    context 'functions' do
+    context 'functions controller' do
 
       let(:resource) { FactoryGirl.create :function, resource_owner_id: user.id }
 
@@ -119,7 +119,7 @@ feature 'Scope' do
       it { should_not authorize "delete /functions/#{resource.id}" }
     end
 
-    context 'statuses' do
+    context 'statuses controller' do
 
       let(:resource) { FactoryGirl.create :setting_intensity, resource_owner_id: user.id }
 
@@ -132,7 +132,7 @@ feature 'Scope' do
       it { should_not authorize "delete /statuses/#{resource.id}" }
     end
 
-    context 'categories' do
+    context 'categories controller' do
 
       let(:resource) { FactoryGirl.create :category, resource_owner_id: user.id }
 
@@ -153,7 +153,7 @@ feature 'Scope' do
 
     before { page.driver.header 'Authorization', "Bearer #{access_token.token}" }
 
-    context 'types' do
+    context 'types controller' do
 
       let(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
 
@@ -165,7 +165,7 @@ feature 'Scope' do
       it { should authorize "delete /types/#{resource.id}" }
     end
 
-    context 'properties' do
+    context 'properties controller' do
 
       let(:resource) { FactoryGirl.create :property, resource_owner_id: user.id }
 
@@ -177,7 +177,7 @@ feature 'Scope' do
       it { should authorize "delete /properties/#{resource.id}" }
     end
 
-    context 'functions' do
+    context 'functions controller' do
 
       let(:resource) { FactoryGirl.create :function, resource_owner_id: user.id }
 
@@ -189,7 +189,7 @@ feature 'Scope' do
       it { should authorize "delete /functions/#{resource.id}" }
     end
 
-    context 'statuses' do
+    context 'statuses controller' do
 
       let(:resource) { FactoryGirl.create :setting_intensity, resource_owner_id: user.id }
 
@@ -201,7 +201,7 @@ feature 'Scope' do
       it { should authorize "delete /statuses/#{resource.id}" }
     end
 
-    context 'categories' do
+    context 'categories controller' do
 
       let(:resource) { FactoryGirl.create :category, resource_owner_id: user.id }
 
