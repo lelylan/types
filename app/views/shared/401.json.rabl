@@ -6,7 +6,7 @@ node(:request) { |request| request.url }
 
 node(:error) do |request| 
   {
-    code: 'notifications.access.denied',
-    description: I18n.t('notifications.access.denied')
+    code: 'notifications.access.unauthorized',
+    description: I18n.t('notifications.access.unauthorized')
   }
 end
