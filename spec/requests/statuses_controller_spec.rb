@@ -38,10 +38,10 @@ feature 'StatusesController' do
     let!(:not_owned) { FactoryGirl.create :setting_intensity }
     let(:uri)        { "/statuses/#{resource.id}" }
 
-    it_behaves_like 'a showable resource'
+    #it_behaves_like 'a showable resource'
     it_behaves_like 'a changeable host'
-    it_behaves_like 'a public resource', 'page.driver.get(uri)'
-    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    #it_behaves_like 'a public resource', 'page.driver.get(uri)'
+    #it_behaves_like 'a not found resource', 'page.driver.get(uri)'
   end
 
   context 'POST /statuses' do

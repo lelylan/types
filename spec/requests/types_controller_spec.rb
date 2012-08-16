@@ -77,10 +77,10 @@ feature 'TypesController' do
     let(:setting_intensity) { FactoryGirl.create :setting_intensity }
     let(:lighting)          { FactoryGirl.create :lighting }
 
-    let(:properties) { [ a_uri(status), a_uri(intensity) ] }
-    let(:functions)  { [ a_uri(turn_on), a_uri(turn_off), a_uri(set_intensity) ] }
-    let(:statuses)   { [ a_uri(setting_intensity) ] }
-    let(:categories) { [ a_uri(lighting), 'not-valid'] }
+    let!(:properties) { [ a_uri(status), a_uri(intensity) ] }
+    let!(:functions)  { [ a_uri(turn_on), a_uri(turn_off), a_uri(set_intensity) ] }
+    let!(:statuses)   { [ a_uri(setting_intensity) ] }
+    let!(:categories) { [ a_uri(lighting), 'not-valid'] }
 
     let(:params) {{ 
       name: 'Dimmer',
@@ -90,16 +90,17 @@ feature 'TypesController' do
       categories: categories
     }}
 
-    before { page.driver.post uri, params.to_json }
+    context 'when creates the connections' do
 
-    let(:resource) { Type.last }
-    let(:json)     { Hashie::Mash.new JSON.parse(page.source) }
+      before     { page.driver.post uri, params.to_json }
+      let(:json) { Hashie::Mash.new JSON.parse(page.source) }
 
-    it 'has two connected properties' do
-      json.properties.should have(2).items
-      json.functions.should  have(3).items
-      json.statuses.should   have(1).items
-      json.categories.should have(1).items
+      it 'has two connected properties' do
+        json.properties.should have(2).items
+        json.functions.should  have(3).items
+        json.statuses.should   have(1).items
+        json.categories.should have(1).items
+      end
     end
 
     it_behaves_like 'a creatable resource'

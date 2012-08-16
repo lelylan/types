@@ -1,6 +1,6 @@
 shared_examples_for 'a listable resource' do
 
-  let!(:not_owned) { FactoryGirl.create :function }
+  let!(:not_owned) { FactoryGirl.create factory }
 
   it 'shows all owned resources' do
     page.driver.get uri
@@ -22,7 +22,7 @@ end
 
 shared_examples_for 'a creatable resource' do
 
-  let(:klass)    { controller.classify.constantize }
+  let(:klass) { controller.classify.constantize }
 
   it 'creates the resource' do
     page.driver.post uri, params.to_json
