@@ -1,6 +1,6 @@
 class PropertiesController < ApplicationController
-  doorkeeper_for :index, scopes: [:read, :write]
-  doorkeeper_for :create, :update, :destroy, scopes: [:write]
+  doorkeeper_for :index, scopes: %w(types.read types resources.read resources).map(&:to_sym)
+  doorkeeper_for :create, :update, :destroy, scopes: %w(types resources).map(&:to_sym)
 
   before_filter :find_owned_resources,  except: %w(public show)
   before_filter :find_public_resources, only: %w(public show)
