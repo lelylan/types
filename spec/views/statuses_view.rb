@@ -10,8 +10,8 @@ module HelpersViewMethods
     json.id.should   == status.id.as_json
     json.name.should == status.name
     json[:pending].should  == status.pending
-    json.created_at.should == status.created_at.iso8601
-    json.updated_at.should == status.created_at.iso8601
+    json.created_at.should_not be_nil
+    json.updated_at.should_not be_nil
 
     json.properties.each_with_index do |json_property, i|
       property = StatusPropertyDecorator.decorate(status.properties[i])

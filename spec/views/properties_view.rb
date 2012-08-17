@@ -5,8 +5,8 @@ module HelpersViewMethods
     json.name.should == property.name
     json[:default].should  == property.default
     json[:values].should   == property.values
-    json.created_at.should == property.created_at.iso8601
-    json.updated_at.should == property.created_at.iso8601
+    json.created_at.should_not be_nil
+    json.updated_at.should_not be_nil
   end
 end
 

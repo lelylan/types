@@ -3,6 +3,8 @@ module HelpersViewMethods
     json.uri.should  == type.uri
     json.id.should   == type.id.as_json
     json.name.should == type.name
+    json.created_at.should_not be_nil
+    json.updated_at.should_not be_nil
 
     if json.properties
       properties = Property.in(_id: type.property_ids)
