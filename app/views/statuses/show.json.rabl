@@ -5,12 +5,10 @@ attributes :uri, :id, :name, :pending
 node(:properties) do |status|
   status.properties.map do |property|
     property = StatusPropertyDecorator.decorate(property)
-    { 
-      uri:       property.uri, 
-      values:    property.values,
-      min_range: property.min_range, 
-      max_range: property.max_range
-    }
+    result = { uri: property.uri }
+    result[:values] = property.values 
+    result[:range] = (property.max or property.min) ? {min: property.min, max: property.max} : nil
+    result
   end
 end
 

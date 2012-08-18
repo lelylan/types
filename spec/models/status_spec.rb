@@ -18,7 +18,7 @@ describe Status do
 
     let(:properties) {[
       { uri: a_uri(status), values: ['on'] },
-      { uri: a_uri(intensity),  min_range: '75', max_range: '100' }
+      { uri: a_uri(intensity),  range: { min: '75', max: '100' } }
     ]}
 
     context 'with valid properties' do

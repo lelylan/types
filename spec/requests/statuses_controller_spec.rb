@@ -38,10 +38,10 @@ feature 'StatusesController' do
     let!(:not_owned) { FactoryGirl.create :setting_intensity }
     let(:uri)        { "/statuses/#{resource.id}" }
 
-    #it_behaves_like 'a showable resource'
+    it_behaves_like 'a showable resource'
     it_behaves_like 'a changeable host'
-    #it_behaves_like 'a public resource', 'page.driver.get(uri)'
-    #it_behaves_like 'a not found resource', 'page.driver.get(uri)'
+    it_behaves_like 'a public resource', 'page.driver.get(uri)'
+    it_behaves_like 'a not found resource', 'page.driver.get(uri)'
   end
 
   context 'POST /statuses' do
@@ -50,7 +50,7 @@ feature 'StatusesController' do
 
     let(:status)     { FactoryGirl.create :status }
     let(:intensity)  { FactoryGirl.create :intensity }
-    let(:properties) { [ { uri: a_uri(status), values: ['on'] }, { uri: a_uri(intensity), min_range: '75', max_range: '100' } ] }
+    let(:properties) { [ { uri: a_uri(status), values: ['on'] }, { uri: a_uri(intensity), range: { min: '75', max: '100' } } ] }
     let(:params)     { { name: 'Setting intensity', properties: properties } }
 
     before         { page.driver.post uri, params.to_json }

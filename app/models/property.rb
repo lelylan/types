@@ -4,8 +4,8 @@ class Property
 
   field :name
   field :resource_owner_id
-  field :default, default: ''
-  field :values, type: Array, default: []
+  field :default
+  field :values, type: Array
 
   attr_protected :resource_owner_id
 
@@ -17,6 +17,6 @@ class Property
   private 
 
   def parse_values
-    values.map!(&:to_s)
+    values.map!(&:to_s) if values
   end
 end
