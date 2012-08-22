@@ -14,6 +14,7 @@ gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'httparty'
 
 group :development, :test do
+  gem 'foreman'
   gem 'rspec-rails', '~> 2.6'
   gem 'shoulda'
   gem 'capybara'
