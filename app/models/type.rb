@@ -11,6 +11,9 @@ class Type
   field :status_ids,   type: Array, default: []
   field :category_ids, type: Array, default: []
 
+  index({ resource_owner_id: 1 })
+  index({ name: 1 })
+
   attr_accessor :properties, :functions, :statuses, :categories
   attr_protected :resource_owner_id
 

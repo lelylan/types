@@ -7,6 +7,8 @@ class Property
   field :default
   field :values, type: Array
 
+  index({ resource_owner_id: 1 })
+
   attr_protected :resource_owner_id
 
   validates :name, presence: true

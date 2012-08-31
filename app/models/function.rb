@@ -5,6 +5,8 @@ class Function
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :name
 
+  index({ resource_owner_id: 1 })
+
   attr_accessible :name, :properties
 
   validates :name, presence: true

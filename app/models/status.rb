@@ -6,6 +6,8 @@ class Status
   field :name
   field :pending, type: Boolean
 
+  index({ resource_owner_id: 1 })
+
   attr_accessor :properties
   attr_accessible :pending, :name, :properties
 
