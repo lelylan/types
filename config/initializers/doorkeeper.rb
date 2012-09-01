@@ -5,7 +5,7 @@ end
 
 # Doorkeeper models extensions
 Types::Application.config.to_prepare do
-  Doorkeeper::AccessToken.class_eval { store_in session: 'people' }
-  Doorkeeper::AccessGrant.class_eval { store_in session: 'people' }
-  Doorkeeper::Application.class_eval { store_in session: 'people' }
+  Doorkeeper::AccessToken.class_eval { store_in collection: :oauth_access_tokens, session: 'people' }
+  Doorkeeper::AccessGrant.class_eval { store_in collection: :oauth_access_grants, session: 'people' }
+  Doorkeeper::Application.class_eval { store_in collection: :oauth_access_applications, session: 'people' }
 end
