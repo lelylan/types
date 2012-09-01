@@ -26,13 +26,6 @@ module HelpersViewMethods
         has_status StatusDecorator.decorate(statuses[i]), json_status
       end
     end
-
-    if json.categories
-      categories = Category.in(_id: type.category_ids)
-      json.categories.each_with_index do |json_category, i|
-        has_category CategoryDecorator.decorate(categories[i]), json_category
-      end
-    end
   end
 end
 

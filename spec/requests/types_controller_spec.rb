@@ -29,7 +29,6 @@ feature 'TypesController' do
       it { should_not have_content 'properties' }
       it { should_not have_content 'functions' }
       it { should_not have_content 'statuses' }
-      it { should_not have_content 'categories' }
     end
   end
 
@@ -50,7 +49,6 @@ feature 'TypesController' do
       it { should_not have_content 'properties' }
       it { should_not have_content 'functions' }
       it { should_not have_content 'statuses' }
-      it { should_not have_content 'categories' }
     end
   end
 
@@ -80,14 +78,12 @@ feature 'TypesController' do
     let!(:properties) { [ a_uri(status), a_uri(intensity) ] }
     let!(:functions)  { [ a_uri(turn_on), a_uri(turn_off), a_uri(set_intensity) ] }
     let!(:statuses)   { [ a_uri(setting_intensity) ] }
-    let!(:categories) { [ a_uri(lighting), 'not-valid'] }
 
     let(:params) {{ 
       name: 'Dimmer',
       properties: properties,
       functions: functions,
       statuses: statuses,
-      categories: categories
     }}
 
     context 'when creates the connections' do
@@ -99,7 +95,6 @@ feature 'TypesController' do
         json.properties.should have(2).items
         json.functions.should  have(3).items
         json.statuses.should   have(1).items
-        json.categories.should have(1).items
       end
     end
 

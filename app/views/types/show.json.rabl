@@ -1,6 +1,6 @@
 object TypeDecorator.decorate(@type)
 
-attributes :uri, :id, :name
+attributes :uri, :id, :name, :created_at, :updated_at
 
 node :properties do |type|
   properties = PropertyDecorator.decorate(Property.in(_id: type.property_ids))
@@ -17,9 +17,3 @@ node :statuses do |type|
   partial("statuses/index", object: statuses)
 end
 
-node :categories do |type|
-  categories = CategoryDecorator.decorate(Category.in(_id: type.category_ids))
-  partial("categories/index", object: categories)
-end
-
-attributes :created_at, :updated_at
