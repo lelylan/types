@@ -12,6 +12,12 @@ development:
         - localhost:27017
       options:
         consistency: :strong
+    jobs:
+      database: jobs_development
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
   options:
 test:
   sessions:
@@ -27,6 +33,12 @@ test:
         - localhost:27017
       options:
         consistency: :strong
+    jobs:
+      database: jobs_test
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
   options:
 production:
   sessions:
@@ -34,4 +46,6 @@ production:
       uri: <%= ENV['MONGOLAB_TYPES_URL'] %>
     people:
       uri: <%= ENV['MONGOLAB_PEOPLE_URL'] %>
+    jobs:
+      uri: <%= ENV['MONGOLAB_JOBS_URL'] %>
   options:

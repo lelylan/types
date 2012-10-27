@@ -8,6 +8,8 @@ class TypesController < ApplicationController
   before_filter :search_params,         only: %w(index public)
   before_filter :pagination,            only: %w(index public)
 
+  after_filter :create_event, only: %w(create update destroy)
+
   def index
     @types = @types.limit(params[:per])
   end
@@ -66,5 +68,9 @@ class TypesController < ApplicationController
     params[:per] = Settings.pagination.per if params[:per] == 0 
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @types = @types.gt(_id: find_id(params[:start])) if params[:start]
+  end
+
+  def create_event
+    Event.create(resource: 'type', event: params[:action], data: JSON.parse(response.body))
   end
 end
