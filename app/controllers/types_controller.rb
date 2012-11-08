@@ -1,4 +1,6 @@
 class TypesController < ApplicationController
+  eventable_for :type, resource: 'types', only: %w(create update destroy)
+
   doorkeeper_for :index, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
 
@@ -7,8 +9,6 @@ class TypesController < ApplicationController
   before_filter :find_resource,         only: %w(show update destroy)
   before_filter :search_params,         only: %w(index public)
   before_filter :pagination,            only: %w(index public)
-
-  after_filter :create_event, only: %w(create update destroy)
 
   def index
     @types = @types.limit(params[:per])
@@ -65,12 +65,8 @@ class TypesController < ApplicationController
 
   def pagination
     params[:per] = (params[:per] || Settings.pagination.per).to_i
-    params[:per] = Settings.pagination.per if params[:per] == 0 
+    params[:per] = Settings.pagination.per if params[:per] == 0
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @types = @types.gt(_id: find_id(params[:start])) if params[:start]
-  end
-
-  def create_event
-    Event.create(resource: 'type', event: params[:action], data: JSON.parse(response.body))
   end
 end

@@ -79,7 +79,7 @@ feature 'TypesController' do
     let!(:functions)  { [ a_uri(turn_on), a_uri(turn_off), a_uri(set_intensity) ] }
     let!(:statuses)   { [ a_uri(setting_intensity) ] }
 
-    let(:params) {{ 
+    let(:params) {{
       name: 'Dimmer',
       properties: properties,
       functions: functions,
