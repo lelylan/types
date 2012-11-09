@@ -5,7 +5,7 @@ class Category
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :name
 
-  index({ resource_owner_id: 1 })
+  index({ resource_owner_id: 1 }, { background: true })
 
   attr_protected :resource_owner_id
 

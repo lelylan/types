@@ -7,7 +7,7 @@ class Property
   field :default
   field :values, type: Array
 
-  index({ resource_owner_id: 1 })
+  index({ resource_owner_id: 1 }, { background: true })
 
   attr_protected :resource_owner_id
 
@@ -16,7 +16,7 @@ class Property
 
   before_save :parse_values
 
-  private 
+  private
 
   def parse_values
     values.map!(&:to_s) if values
