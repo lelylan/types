@@ -1,6 +1,6 @@
 # Types API
 
-Types API for Lelylan. [Learn more](http://dev.lelylan.com/rest/types/)
+Types API for Lelylan. [Learn more](http://dev.lelylan.com/api/types/)
 
 
 ## Requirements
@@ -18,12 +18,12 @@ Clone the repository.
 ## Resources
 
 * [Lelylan API](http://dev.lelylan.com)
-* [Lelylan Types API](http://dev.lelylan.com/rest/types/)
+* [Lelylan Types API](http://dev.lelylan.com/api/types/)
 
 
 ## Contributing
 
-Fork the repo on github and send a pull requests with topic branches. Do not forget to 
+Fork the repo on github and send a pull requests with topic branches. Do not forget to
 provide specs to your contribution.
 
 
@@ -37,7 +37,7 @@ provide specs to your contribution.
 
 ## Spec guidelines
 
-Follow [rspec best practices](https://docs.google.com/document/d/1gi00-wwPaLk5VvoAJhBVNh9Htw4Rwmj-Ut88T4M2MwI/edit?hl=en#) guidelines.
+Follow [rspec guidelines](http://betterspecs.org).
 
 
 ## Coding guidelines
@@ -51,7 +51,7 @@ Use the [issue tracker](http://github.com/lelylan/types/issues) for bugs.
 [Mail](mailto:touch@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
 
 
-## Links 
+## Links
 
 * [GIT Repository](http://github.com/lelylan/types)
 * [Lelylan Dev Center](http://dev.lelylan.com)

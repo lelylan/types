@@ -4,6 +4,7 @@ FactoryGirl.define do
     resource_id { FactoryGirl.create(:type).id }
     resource 'status'
     event 'update'
+    source 'lelylan'
     data { JSON.parse('{"json": "ok"}') }
   end
 end

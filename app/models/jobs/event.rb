@@ -9,6 +9,7 @@ class Event
   field :resource_id, type: Moped::BSON::ObjectId
   field :resource
   field :event
+  field :source, default: 'lelylan'
   field :data, type: Hash
   field :callback_processed, type: Boolean, default: false
 
@@ -18,5 +19,6 @@ class Event
   validates :resource_id, presence: true
   validates :resource, presence: true
   validates :event, presence: true
+  validates :source, presence: true, inclusion: { in: %w(lelylan physical) }
   validates :data, presence: true
 end
