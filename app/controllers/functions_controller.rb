@@ -19,7 +19,7 @@ class FunctionsController < ApplicationController
   end
 
   def show
-    render json: @function
+    render json: @function if stale?(@function)
   end
 
   def create

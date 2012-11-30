@@ -21,7 +21,7 @@ class TypesController < ApplicationController
   end
 
   def show
-    render json: @type
+    render json: @type if stale?(@type)
   end
 
   def create

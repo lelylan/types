@@ -19,7 +19,7 @@ class StatusesController < ApplicationController
   end
 
   def show
-    render json: @status
+    render json: @status if stale?(@status)
   end
 
   def create

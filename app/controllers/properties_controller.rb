@@ -19,7 +19,7 @@ class PropertiesController < ApplicationController
   end
 
   def show
-    render json: @property
+    render json: @property if stale?(@property)
   end
 
   def create
