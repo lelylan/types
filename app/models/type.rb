@@ -9,12 +9,11 @@ class Type
   field :property_ids, type: Array, default: []
   field :function_ids, type: Array, default: []
   field :status_ids,   type: Array, default: []
-  field :category_ids, type: Array, default: []
 
   index({ resource_owner_id: 1 }, { background: true })
   index({ name: 1 }, { background: true })
 
-  attr_accessor :properties, :functions, :statuses, :categories
+  attr_accessor :properties, :functions, :statuses
   attr_protected :resource_owner_id
 
   validates :resource_owner_id, presence: true
@@ -25,7 +24,7 @@ class Type
   validates :statuses,   uri: true
   validates :properties, uri: true
 
-  before_save :find_properties, :find_functions, :find_statuses, :find_categories
+  before_save :find_properties, :find_functions, :find_statuses
 
   def find_properties
     self.property_ids = find_ids(properties) if not properties.nil?
@@ -39,8 +38,6 @@ class Type
     self.status_ids = find_ids(statuses) if not statuses.nil?
   end
 
-  def find_categories
-    self.category_ids = find_ids(categories) if not categories.nil?
-  end
+  def active_model_serializer; TypeSerializer; end
 end
 

@@ -10,21 +10,23 @@ class FunctionsController < ApplicationController
 
   def index
     @functions = @functions.limit(params[:per])
+    render json: @functions
   end
 
   def public
     @functions = @functions.limit(params[:per])
-    render 'index'
+    render json: @functions
   end
 
   def show
+    render json: @function
   end
 
   def create
     @function = Function.new(params)
     @function.resource_owner_id = current_user.id
     if @function.save!
-      render 'show', status: 201, location: FunctionDecorator.decorate(@function).uri
+      render json: @function, status: 201, location: FunctionDecorator.decorate(@function).uri
     else
       render_422 'notifications.resource.not_valid', @function.errors
     end
@@ -32,14 +34,14 @@ class FunctionsController < ApplicationController
 
   def update
     if @function.update_attributes!(params)
-      render 'show'
+      render json: @function
     else
       render_422 'notifications.resource.not_valid', @function.errors
     end
   end
 
   def destroy
-    render 'show'
+    render json: @function
     @function.destroy
   end
 
@@ -63,7 +65,7 @@ class FunctionsController < ApplicationController
 
   def pagination
     params[:per] = (params[:per] || Settings.pagination.per).to_i
-    params[:per] = Settings.pagination.per if params[:per] == 0 
+    params[:per] = Settings.pagination.per if params[:per] == 0
     params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
     @functions = @functions.gt(id: find_id(params[:start])) if params[:start]
   end

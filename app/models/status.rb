@@ -17,4 +17,6 @@ class Status
   validates :resource_owner_id, presence: true
 
   embeds_many :properties, class_name: 'StatusProperty', cascade_callbacks: true
+
+  def active_model_serializer; StatusSerializer; end
 end

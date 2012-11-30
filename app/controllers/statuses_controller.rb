@@ -10,21 +10,23 @@ class StatusesController < ApplicationController
 
   def index
     @statuses = @statuses.limit(params[:per])
+    render json: @statuses
   end
 
   def public
     @statuses = @statuses.limit(params[:per])
-    render 'index'
+    render json: @statuses
   end
 
   def show
+    render json: @status
   end
 
   def create
     @status = Status.new(params)
     @status.resource_owner_id = current_user.id
     if @status.save!
-      render 'show', status: 201, location: StatusDecorator.decorate(@status).uri
+      render json: @status, status: 201, location: StatusDecorator.decorate(@status).uri
     else
       render_422 'notifications.resource.not_valid', @status.errors
     end
@@ -32,14 +34,14 @@ class StatusesController < ApplicationController
 
   def update
     if @status.update_attributes!(params)
-      render 'show'
+      render json: @status
     else
       render_422 'notifications.resource.not_valid', @status.errors
     end
   end
 
   def destroy
-    render 'show'
+    render json: @status
     @status.destroy
   end
 
@@ -65,7 +67,7 @@ class StatusesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      params[:per] = Settings.pagination.per if params[:per] == 0 
+      params[:per] = Settings.pagination.per if params[:per] == 0
       params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
       @statuses = @statuses.gt(_id: find_id(params[:start])) if params[:start]
     end

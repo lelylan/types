@@ -11,7 +11,6 @@ feature 'Scope' do
     let(:property) { FactoryGirl.create :property, resource_owner_id: user.id }
     let(:function) { FactoryGirl.create :function, resource_owner_id: user.id }
     let(:status)   { FactoryGirl.create :setting_intensity, resource_owner_id: user.id }
-    let(:category) { FactoryGirl.create :category, resource_owner_id: user.id }
 
     it { should authorize "get /types/public" }
     it { should authorize "get /types/#{type.id}" }
@@ -21,8 +20,6 @@ feature 'Scope' do
     it { should authorize "get /functions/#{function.id}" }
     it { should authorize "get /statuses/public" }
     it { should authorize "get /statuses/#{status.id}" }
-    it { should authorize "get /categories/public" }
-    it { should authorize "get /categories/#{category.id}" }
 
     it { should_not authorize "get    /types" }
     it { should_not authorize "post   /types" }
@@ -40,10 +37,6 @@ feature 'Scope' do
     it { should_not authorize "post   /statuses" }
     it { should_not authorize "put    /statuses/#{status.id}" }
     it { should_not authorize "delete /statuses/#{status.id}" }
-    it { should_not authorize "get    /categories" }
-    it { should_not authorize "post   /categories" }
-    it { should_not authorize "put    /categories/#{category.id}" }
-    it { should_not authorize "delete /categories/#{category.id}" }
   end
 
   %w(types-read resources-read).each do |scope|
@@ -57,7 +50,6 @@ feature 'Scope' do
       let(:property) { FactoryGirl.create :property, resource_owner_id: user.id }
       let(:function) { FactoryGirl.create :function, resource_owner_id: user.id }
       let(:status)   { FactoryGirl.create :setting_intensity, resource_owner_id: user.id }
-      let(:category) { FactoryGirl.create :category, resource_owner_id: user.id }
 
       it { should authorize "get /types/public" }
       it { should authorize "get /types/#{type.id}" }
@@ -71,9 +63,6 @@ feature 'Scope' do
       it { should authorize "get /statuses/public" }
       it { should authorize "get /statuses/#{status.id}" }
       it { should authorize "get /statuses" }
-      it { should authorize "get /categories/public" }
-      it { should authorize "get /categories" }
-      it { should authorize "get /categories/#{category.id}" }
 
       it { should_not authorize "post   /types" }
       it { should_not authorize "put    /types/#{type.id}" }
@@ -87,9 +76,6 @@ feature 'Scope' do
       it { should_not authorize "post   /statuses" }
       it { should_not authorize "put    /statuses/#{status.id}" }
       it { should_not authorize "delete /statuses/#{status.id}" }
-      it { should_not authorize "post   /categories" }
-      it { should_not authorize "put    /categories/#{category.id}" }
-      it { should_not authorize "delete /categories/#{category.id}" }
     end
   end
 
@@ -104,7 +90,6 @@ feature 'Scope' do
       let(:property) { FactoryGirl.create :property, resource_owner_id: user.id }
       let(:function) { FactoryGirl.create :function, resource_owner_id: user.id }
       let(:status)   { FactoryGirl.create :setting_intensity, resource_owner_id: user.id }
-      let(:category) { FactoryGirl.create :category, resource_owner_id: user.id }
 
       it { should authorize "get    /types/public" }
       it { should authorize "get    /types/#{type.id}" }
@@ -133,13 +118,6 @@ feature 'Scope' do
       it { should authorize "post   /statuses" }
       it { should authorize "put    /statuses/#{status.id}" }
       it { should authorize "delete /statuses/#{status.id}" }
-
-      it { should authorize "get    /categories/public" }
-      it { should authorize "get    /categories" }
-      it { should authorize "get    /categories/#{category.id}" }
-      it { should authorize "post   /categories" }
-      it { should authorize "put    /categories/#{category.id}" }
-      it { should authorize "delete /categories/#{category.id}" }
     end
   end
 end

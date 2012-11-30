@@ -11,10 +11,6 @@ Types::Application.routes.draw do
     match :public, via: :get, on: :collection
   end
 
-  resources :categories, defaults: { format: 'json' } do 
-    match :public, via: :get, on: :collection
-  end
-
   resources :types, defaults: { format: 'json' } do
     match :public, via: :get, on: :collection
   end

@@ -10,21 +10,23 @@ class PropertiesController < ApplicationController
 
   def index
     @properties = @properties.limit(params[:per])
+    render json: @properties
   end
 
   def public
     @properties = @properties.limit(params[:per])
-    render 'index'
+    render json: @properties
   end
 
   def show
+    render json: @property
   end
 
   def create
     @property = Property.new(params)
     @property.resource_owner_id = current_user.id
     if @property.save!
-      render 'show', status: 201, location: PropertyDecorator.decorate(@property).uri
+      render json: @property, status: 201, location: PropertyDecorator.decorate(@property).uri
     else
       render_422 'notifications.resource.not_valid', @property.errors
     end
@@ -32,14 +34,14 @@ class PropertiesController < ApplicationController
 
   def update
     if @property.update_attributes!(params)
-      render 'show'
+      render json: @property
     else
       render_422 'notifications.resource.not_valid', @property.errors
     end
   end
 
   def destroy
-    render 'show'
+    render json: @property
     @property.destroy
   end
 
@@ -63,7 +65,7 @@ class PropertiesController < ApplicationController
 
     def pagination
       params[:per] = (params[:per] || Settings.pagination.per).to_i
-      params[:per] = Settings.pagination.per if params[:per] == 0 
+      params[:per] = Settings.pagination.per if params[:per] == 0
       params[:per] = Settings.pagination.max_per if params[:per] > Settings.pagination.max_per
       @properties = @properties.gt(_id: find_id(params[:start])) if params[:start]
     end

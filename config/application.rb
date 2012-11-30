@@ -62,6 +62,7 @@ module Types
 
     # Middlewares
     config.middleware.use 'Hostable'
+    config.middleware.use Rack::MethodOverride
 
     # Set the default Logger in application.rb to STDOUT, otherwise logging with unicorn doesn't work
     config.logger = Logger.new(STDOUT) unless Rails.env.test?

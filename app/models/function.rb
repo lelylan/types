@@ -13,4 +13,6 @@ class Function
   validates :resource_owner_id, presence: true
 
   embeds_many :properties, class_name: 'FunctionProperty', cascade_callbacks: true
+
+  def active_model_serializer; FunctionSerializer; end
 end

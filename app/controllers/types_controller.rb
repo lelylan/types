@@ -12,21 +12,23 @@ class TypesController < ApplicationController
 
   def index
     @types = @types.limit(params[:per])
+    render json: @types
   end
 
   def public
     @types = @types.limit(params[:per])
-    render 'index'
+    render json: @types
   end
 
   def show
+    render json: @type
   end
 
   def create
     @type = Type.new(params)
     @type.resource_owner_id = current_user.id
     if @type.save!
-      render 'show', status: 201, location: TypeDecorator.decorate(@type).uri
+      render json: @type, status: 201, location: TypeDecorator.decorate(@type).uri
     else
       render_422 "notifications.resource.not_valid", @type.errors
     end
@@ -34,14 +36,14 @@ class TypesController < ApplicationController
 
   def update
     if @type.update_attributes!(params)
-      render 'show'
+      render json: @type
     else
       render_422 'notifications.resource.not_valid', @type.errors
     end
   end
 
   def destroy
-    render 'show'
+    render json: @type
     @type.destroy
   end
 

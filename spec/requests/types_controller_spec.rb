@@ -21,15 +21,15 @@ feature 'TypesController' do
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { name: 'My name is resource' }
 
-    context 'when does not show connections' do
+    #context 'when does not show connections' do
 
-      before  { page.driver.get uri }
-      subject { page }
+      #before  { page.driver.get uri }
+      #subject { page }
 
-      it { should_not have_content 'properties' }
-      it { should_not have_content 'functions' }
-      it { should_not have_content 'statuses' }
-    end
+      #it { should_not have_content 'properties' }
+      #it { should_not have_content 'functions' }
+      #it { should_not have_content 'statuses' }
+    #end
   end
 
   context 'GET /types/public' do
@@ -41,15 +41,15 @@ feature 'TypesController' do
     it_behaves_like 'a paginable resource'
     it_behaves_like 'a searchable resource', { name: 'My name is resource' }
 
-    context 'when does not show connections' do
+    #context 'when does not show connections' do
 
-      before  { page.driver.get uri }
-      subject { page }
+      #before  { page.driver.get uri }
+      #subject { page }
 
-      it { should_not have_content 'properties' }
-      it { should_not have_content 'functions' }
-      it { should_not have_content 'statuses' }
-    end
+      #it { should_not have_content 'properties' }
+      #it { should_not have_content 'functions' }
+      #it { should_not have_content 'statuses' }
+    #end
   end
 
   context 'GET /types/:id' do

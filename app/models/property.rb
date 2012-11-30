@@ -16,6 +16,8 @@ class Property
 
   before_save :parse_values
 
+  def active_model_serializer; PropertySerializer; end
+
   private
 
   def parse_values

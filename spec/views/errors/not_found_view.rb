@@ -4,7 +4,7 @@ module ViewNotFoundMethods
     options = not_found_default.merge(options)
     json    = JSON.parse(page.source)
     json    = Hashie::Mash.new json
-    json.status.should     == '404'
+    json.status.should     == 404
     json.error.code.should == options[:code]
     json.error.uri.should match Regexp.escape(options[:uri])
   end

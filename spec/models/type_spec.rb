@@ -30,11 +30,4 @@ describe Type do
     let(:uris)       {[ a_uri(status) ]}
     let(:ids)        {[ status.id.to_s ]}
   end
-  
-  it_behaves_like 'a type connection' do
-    let(:category)   { FactoryGirl.create :category }
-    let(:connection) { 'properties' }
-    let(:uris)       {[ a_uri(category) ]}
-    let(:ids)        {[ category.id.to_s ]}
-  end
 end

@@ -25,6 +25,7 @@ shared_examples_for 'a creatable resource' do
 
   it 'creates the resource' do
     page.driver.post uri, params.to_json
+    #save_and_open_page
     resource = klass.last
     page.status_code.should == 201
     has_resource resource

@@ -5,13 +5,11 @@ FactoryGirl.define do
     property_ids [ 'status', 'intensity' ]
     function_ids [ 'set_intensity', 'turn_on', 'turn_off' ]
     status_ids   [ 'setting_intensity', 'turning_on' ]
-    category_ids [ 'lighting', 'devices' ]
   end
 
   trait :with_no_connections do
     property_ids []
     function_ids []
     status_ids   []
-    category_ids []
   end
 end
