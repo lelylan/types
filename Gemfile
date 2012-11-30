@@ -13,7 +13,7 @@ gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
-gem 'delli'
+gem 'dalli'
 
 group :development, :test do
   gem 'foreman'
