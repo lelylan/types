@@ -1,10 +1,6 @@
 module Viewable
   extend ActiveSupport::Concern
 
-  def doorkeeper_unauthorized_render_options
-    { template: 'shared/401', status: 401 }
-  end
-
   def render_401
     self.class.serialization_scope :request
     render 'show', status: 401, json: {}, serializer: ::UnauthorizedSerializer and return
