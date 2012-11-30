@@ -1,5 +1,5 @@
 class TypesController < ApplicationController
-  eventable_for :type, resource: 'types', only: %w(create update destroy)
+  #eventable_for :type, resource: 'types', only: %w(create update destroy)
 
   doorkeeper_for :index, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)

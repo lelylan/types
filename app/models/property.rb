@@ -15,6 +15,7 @@ class Property
   validates :resource_owner_id, presence: true
 
   before_save :parse_values
+  before_save :touch_types
 
   def active_model_serializer; PropertySerializer; end
 
@@ -22,5 +23,9 @@ class Property
 
   def parse_values
     values.map!(&:to_s) if values
+  end
+
+  def touch_types
+    Type.in(property_ids: id).update_all(updated_at: Time.now)
   end
 end
