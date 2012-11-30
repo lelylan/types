@@ -26,9 +26,9 @@ feature 'TypesController' do
       before  { page.driver.get uri }
       subject { page }
 
-      it { should have_content 'properties' }
-      it { should have_content 'functions' }
-      it { should have_content 'statuses' }
+      it { should_not have_content 'properties' }
+      it { should_not have_content 'functions' }
+      it { should_not have_content 'statuses' }
     end
   end
 
@@ -46,9 +46,9 @@ feature 'TypesController' do
       before  { page.driver.get uri }
       subject { page }
 
-      it { should have_content 'properties' }
-      it { should have_content 'functions' }
-      it { should have_content 'statuses' }
+      it { should_not have_content 'properties' }
+      it { should_not have_content 'functions' }
+      it { should_not have_content 'statuses' }
     end
   end
 

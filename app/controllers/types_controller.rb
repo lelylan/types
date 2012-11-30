@@ -12,12 +12,12 @@ class TypesController < ApplicationController
 
   def index
     @types = @types.limit(params[:per])
-    render json: @types
+    render json: @types, each_serializer: TypeShortSerializer
   end
 
   def public
     @types = @types.limit(params[:per])
-    render json: @types
+    render json: @types, each_serializer: TypeShortSerializer
   end
 
   def show

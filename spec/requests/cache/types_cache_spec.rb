@@ -110,95 +110,90 @@ feature 'Caching' do
     #end
   #end
 
-  #describe 'GET /types' do
+  describe 'GET /types' do
 
-    #let!(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
-    #let(:uri)       { "/types/#{resource.id}" }
+    let!(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
+    let(:uri)       { "/types" }
 
-    #let(:cache_json_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
-    #let(:cache_hash_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'serializable-hash']) }
+    let(:cache_json_key) { ActiveSupport::Cache.expand_cache_key(['type_short_serializer', resource.cache_key, 'to-json']) }
+    let(:cache_hash_key) { ActiveSupport::Cache.expand_cache_key(['type_short_serializer', resource.cache_key, 'serializable-hash']) }
 
-    #before { page.driver.get uri }
+    before { page.driver.get uri }
 
-    #describe 'with fragment caching' do
+    describe 'with fragment caching' do
 
-      #it 'creates the json fragment cache' do
-        #Rails.cache.exist?(cache_json_key).should be_true
-      #end
-
-      #it 'creates the serialized hash fragment cache' do
-        #Rails.cache.exist?(cache_hash_key).should be_true
-      #end
-
-      #it 'saves the JSON resource into the cache' do
-        #cached = JSON.parse Rails.cache.read(cache_json_key)
-        #has_resource resource, cached
-      #end
-    #end
-  #end
-
-  describe 'with a cached type' do
-
-    let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    before           { resource.update_attributes(updated_at: Time.now - 60) }
-    let!(:uri)       { "/types/#{resource.id}" }
-    let!(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
-
-    describe 'when updates a connected property' do
-
-      let!(:connection) { Property.find(resource.property_ids.first).save! }
-      let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
-
-      describe 'GET /types/:id' do
-
-        before { page.driver.get uri }
-
-        it 'refresh the fragment cache' do
-          Rails.cache.exist?(new_key).should be_true
-        end
-
-        it 'creates a new cache key' do
-          new_key.should_not == cache_key
-        end
+      it 'does not create the json fragment cache' do
+        Rails.cache.exist?(cache_json_key).should_not be_true
       end
-    end
 
-    describe 'when updates a connected function' do
-
-      let!(:connection) { Function.find(resource.function_ids.first).save! }
-      let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
-
-      describe 'GET /types/:id' do
-
-        before { page.driver.get uri }
-
-        it 'refresh the fragment cache' do
-          Rails.cache.exist?(new_key).should be_true
-        end
-
-        it 'creates a new cache key' do
-          new_key.should_not == cache_key
-        end
-      end
-    end
-
-    describe 'when updates a connected status' do
-
-      let!(:connection) { Status.find(resource.status_ids.first).save! }
-      let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
-
-      describe 'GET /types/:id' do
-
-        before { page.driver.get uri }
-
-        it 'refresh the fragment cache' do
-          Rails.cache.exist?(new_key).should be_true
-        end
-
-        it 'creates a new cache key' do
-          new_key.should_not == cache_key
-        end
+      it 'creates the serialized hash fragment cache' do
+        Rails.cache.exist?(cache_hash_key).should be_true
       end
     end
   end
+
+  #describe 'with a cached type' do
+
+    #let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
+    #before           { resource.update_attributes(updated_at: Time.now - 60) }
+    #let!(:uri)       { "/types/#{resource.id}" }
+    #let!(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
+
+    #describe 'when updates a connected property' do
+
+      #let!(:connection) { Property.find(resource.property_ids.first).save! }
+      #let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
+
+      #describe 'GET /types/:id' do
+
+        #before { page.driver.get uri }
+
+        #it 'refresh the fragment cache' do
+          #Rails.cache.exist?(new_key).should be_true
+        #end
+
+        #it 'creates a new cache key' do
+          #new_key.should_not == cache_key
+        #end
+      #end
+    #end
+
+    #describe 'when updates a connected function' do
+
+      #let!(:connection) { Function.find(resource.function_ids.first).save! }
+      #let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
+
+      #describe 'GET /types/:id' do
+
+        #before { page.driver.get uri }
+
+        #it 'refresh the fragment cache' do
+          #Rails.cache.exist?(new_key).should be_true
+        #end
+
+        #it 'creates a new cache key' do
+          #new_key.should_not == cache_key
+        #end
+      #end
+    #end
+
+    #describe 'when updates a connected status' do
+
+      #let!(:connection) { Status.find(resource.status_ids.first).save! }
+      #let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
+
+      #describe 'GET /types/:id' do
+
+        #before { page.driver.get uri }
+
+        #it 'refresh the fragment cache' do
+          #Rails.cache.exist?(new_key).should be_true
+        #end
+
+        #it 'creates a new cache key' do
+          #new_key.should_not == cache_key
+        #end
+      #end
+    #end
+  #end
 end
