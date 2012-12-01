@@ -25,7 +25,7 @@ class StatusesController < ApplicationController
   def create
     @status = Status.new(params)
     @status.resource_owner_id = current_user.id
-    if @status.save!
+    if @status.save
       render json: @status, status: 201, location: StatusDecorator.decorate(@status).uri
     else
       render_422 'notifications.resource.not_valid', @status.errors
@@ -33,7 +33,7 @@ class StatusesController < ApplicationController
   end
 
   def update
-    if @status.update_attributes!(params)
+    if @status.update_attributes(params)
       render json: @status
     else
       render_422 'notifications.resource.not_valid', @status.errors

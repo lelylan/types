@@ -27,15 +27,15 @@ class TypesController < ApplicationController
   def create
     @type = Type.new(params)
     @type.resource_owner_id = current_user.id
-    if @type.save!
+    if @type.save
       render json: @type, status: 201, location: TypeDecorator.decorate(@type).uri
     else
-      render_422 "notifications.resource.not_valid", @type.errors
+      render_422 'notifications.resource.not_valid', @type.errors
     end
   end
 
   def update
-    if @type.update_attributes!(params)
+    if @type.update_attributes(params)
       render json: @type
     else
       render_422 'notifications.resource.not_valid', @type.errors
