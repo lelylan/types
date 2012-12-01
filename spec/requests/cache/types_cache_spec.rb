@@ -16,99 +16,99 @@ feature 'Caching' do
   let(:controller) { 'types' }
   let(:factory)    { 'type' }
 
-  #describe 'GET /types/:id' do
+  describe 'GET /types/:id' do
 
-    #let!(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
-    #let(:uri)       { "/types/#{resource.id}" }
-    #let(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
+    let!(:resource) { FactoryGirl.create :type, resource_owner_id: user.id }
+    let(:uri)       { "/types/#{resource.id}" }
+    let(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
 
-    #before { page.driver.get uri }
+    before { page.driver.get uri }
 
-    #describe 'with fragment caching' do
+    describe 'with fragment caching' do
 
-      #it 'creates the fragment cache' do
-        #Rails.cache.exist?(cache_key).should be_true
-      #end
+      it 'creates the fragment cache' do
+        Rails.cache.exist?(cache_key).should be_true
+      end
 
-      #it 'saves the JSON resource into the cache' do
-        #cached = JSON.parse Rails.cache.read(cache_key)
-        #has_resource resource, cached
-      #end
-    #end
+      it 'saves the JSON resource into the cache' do
+        cached = JSON.parse Rails.cache.read(cache_key)
+        has_resource resource, cached
+      end
+    end
 
-    #describe 'with HTTP caching' do
+    describe 'with HTTP caching' do
 
-      #describe 'when sends the If-Modified-Since header' do
+      describe 'when sends the If-Modified-Since header' do
 
-        #describe 'when the resource does not change' do
+        describe 'when the resource does not change' do
 
-          #before { page.driver.header 'If-Modified-Since', resource.updated_at.httpdate }
-          #before { page.driver.get uri }
+          before { page.driver.header 'If-Modified-Since', resource.updated_at.httpdate }
+          before { page.driver.get uri }
 
-          #it 'returns a not modified response' do
-            #page.status_code.should == 304
-          #end
-        #end
+          it 'returns a not modified response' do
+            page.status_code.should == 304
+          end
+        end
 
-        #describe 'when the resource changes' do
+        describe 'when the resource changes' do
 
-          #let!(:timestamp) { resource.updated_at }
+          let!(:timestamp) { resource.updated_at }
 
-          #before { resource.updated_at = resource.updated_at + 1; resource.save }
-          #before { page.driver.header 'If-Modified-Since', (timestamp).httpdate }
-          #before { page.driver.get uri }
+          before { resource.updated_at = resource.updated_at + 1; resource.save }
+          before { page.driver.header 'If-Modified-Since', (timestamp).httpdate }
+          before { page.driver.get uri }
 
-          #it 'executes the action' do
-            #page.status_code.should == 200
-          #end
+          it 'executes the action' do
+            page.status_code.should == 200
+          end
 
-          #it 'creates a new fragment cache' do
-            #new_key = ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json'])
-            #Rails.cache.exist?(new_key).should be_true
-          #end
+          it 'creates a new fragment cache' do
+            new_key = ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json'])
+            Rails.cache.exist?(new_key).should be_true
+          end
 
-          #it 'returns the Last-Modified header' do
-            #page.response_headers['Last-Modified'].should == resource.updated_at.httpdate
-          #end
-        #end
-      #end
+          it 'returns the Last-Modified header' do
+            page.response_headers['Last-Modified'].should == resource.updated_at.httpdate
+          end
+        end
+      end
 
-      #describe 'when sends the If-None-Match header' do
+      describe 'when sends the If-None-Match header' do
 
-        #let(:etag) { page.response_headers['ETag'] }
+        let(:etag) { page.response_headers['ETag'] }
 
-        #describe 'when the resource does not change' do
+        describe 'when the resource does not change' do
 
-          #before { page.driver.header 'If-None-Match', etag }
-          #before { page.driver.get uri }
+          before { page.driver.header 'If-None-Match', etag }
+          before { page.driver.get uri }
 
-          #it 'returns a not modified response' do
-            #page.status_code.should == 304
-          #end
-        #end
+          it 'returns a not modified response' do
+            page.status_code.should == 304
+          end
+        end
 
-        #describe 'when the resource changes' do
+        describe 'when the resource changes' do
 
-          #before { resource.updated_at = resource.updated_at + 1; resource.save }
-          #before { page.driver.header 'If-None-Match', etag }
-          #before { page.driver.get uri }
+          before { resource.updated_at = resource.updated_at + 1; resource.save }
+          before { page.driver.header 'If-None-Match', etag }
+          before { page.driver.get uri }
 
-          #it 'executes the action' do
-            #page.status_code.should == 200
-          #end
+          it 'executes the action' do
+            page.status_code.should == 200
+          end
 
-          #it 'creates a new fragment cache' do
-            #new_key = ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json'])
-            #Rails.cache.exist?(new_key).should be_true
-          #end
+          it 'creates a new fragment cache' do
+            new_key = ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json'])
+            Rails.cache.exist?(new_key).should be_true
+          end
 
-          #it 'returns the ETag header' do
-            #page.response_headers['ETag'].should_not == etag
-          #end
-        #end
-      #end
-    #end
-  #end
+          it 'returns the ETag header' do
+            page.response_headers['ETag'].should_not == etag
+          end
+        end
+      end
+    end
+  end
 
   describe 'GET /types' do
 
@@ -132,68 +132,68 @@ feature 'Caching' do
     end
   end
 
-  #describe 'with a cached type' do
+  describe 'with a cached type' do
 
-    #let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    #before           { resource.update_attributes(updated_at: Time.now - 60) }
-    #let!(:uri)       { "/types/#{resource.id}" }
-    #let!(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
+    let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
+    before           { resource.update_attributes(updated_at: Time.now - 60) }
+    let!(:uri)       { "/types/#{resource.id}" }
+    let!(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
 
-    #describe 'when updates a connected property' do
+    describe 'when updates a connected property' do
 
-      #let!(:connection) { Property.find(resource.property_ids.first).save! }
-      #let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
+      let!(:connection) { Property.find(resource.property_ids.first).save! }
+      let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
 
-      #describe 'GET /types/:id' do
+      describe 'GET /types/:id' do
 
-        #before { page.driver.get uri }
+        before { page.driver.get uri }
 
-        #it 'refresh the fragment cache' do
-          #Rails.cache.exist?(new_key).should be_true
-        #end
+        it 'refresh the fragment cache' do
+          Rails.cache.exist?(new_key).should be_true
+        end
 
-        #it 'creates a new cache key' do
-          #new_key.should_not == cache_key
-        #end
-      #end
-    #end
+        it 'creates a new cache key' do
+          new_key.should_not == cache_key
+        end
+      end
+    end
 
-    #describe 'when updates a connected function' do
+    describe 'when updates a connected function' do
 
-      #let!(:connection) { Function.find(resource.function_ids.first).save! }
-      #let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
+      let!(:connection) { Function.find(resource.function_ids.first).save! }
+      let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
 
-      #describe 'GET /types/:id' do
+      describe 'GET /types/:id' do
 
-        #before { page.driver.get uri }
+        before { page.driver.get uri }
 
-        #it 'refresh the fragment cache' do
-          #Rails.cache.exist?(new_key).should be_true
-        #end
+        it 'refresh the fragment cache' do
+          Rails.cache.exist?(new_key).should be_true
+        end
 
-        #it 'creates a new cache key' do
-          #new_key.should_not == cache_key
-        #end
-      #end
-    #end
+        it 'creates a new cache key' do
+          new_key.should_not == cache_key
+        end
+      end
+    end
 
-    #describe 'when updates a connected status' do
+    describe 'when updates a connected status' do
 
-      #let!(:connection) { Status.find(resource.status_ids.first).save! }
-      #let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
+      let!(:connection) { Status.find(resource.status_ids.first).save! }
+      let!(:new_key)    { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.reload.cache_key, 'to-json']) }
 
-      #describe 'GET /types/:id' do
+      describe 'GET /types/:id' do
 
-        #before { page.driver.get uri }
+        before { page.driver.get uri }
 
-        #it 'refresh the fragment cache' do
-          #Rails.cache.exist?(new_key).should be_true
-        #end
+        it 'refresh the fragment cache' do
+          Rails.cache.exist?(new_key).should be_true
+        end
 
-        #it 'creates a new cache key' do
-          #new_key.should_not == cache_key
-        #end
-      #end
-    #end
-  #end
+        it 'creates a new cache key' do
+          new_key.should_not == cache_key
+        end
+      end
+    end
+  end
 end

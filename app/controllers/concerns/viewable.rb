@@ -3,7 +3,7 @@ module Viewable
 
   def render_401
     self.class.serialization_scope :request
-    render 'show', status: 401, json: {}, serializer: ::UnauthorizedSerializer and return
+    render 'show', status: 401, json: {}, serializer: ::NotAuthorizedSerializer and return
   end
 
   def render_404(code = 'notifications.resource.not_found', uri = nil)
