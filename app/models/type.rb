@@ -42,8 +42,8 @@ class Type
   end
 
   def update_devices
-    TypeWorker.add(id, ids_to_add)       if ids_to_add    != []
-    TypeWorker.remove(id, ids_to_remove) if ids_to_remove != []
+    AddPropertiesWorker.perform_async(id, ids_to_add)       if ids_to_add    != []
+    RemovePropertiesWorker.perform_async(id, ids_to_remove) if ids_to_remove != []
   end
 
   private

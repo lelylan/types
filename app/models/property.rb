@@ -32,6 +32,6 @@ class Property
   end
 
   def update_devices
-    TypeWorker.update(self) if default_changed?
+    UpdatePropertyWorker.perform_async(id, default: default) if default_changed?
   end
 end

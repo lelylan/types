@@ -14,6 +14,7 @@ gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'dalli'
+gem 'sidekiq'
 
 group :development, :test do
   gem 'foreman'

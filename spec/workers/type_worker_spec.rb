@@ -1,14 +1,14 @@
 require 'spec_helper'
+require 'sidekiq/testing/inline'
 
 describe Type do
 
-  let!(:light1)    { FactoryGirl.create :device }
+  let!(:light1)   { FactoryGirl.create :device }
   let(:type)      { Type.find light1.type_id }
   let(:status)    { Property.find(type.property_ids.first) }
   let(:intensity) { Property.find(type.property_ids.last) }
-  let!(:light2)    { FactoryGirl.create :device, type_id: type.id }
-  let!(:alarm)     { FactoryGirl.create :device }
-
+  let!(:light2)   { FactoryGirl.create :device, type_id: type.id }
+  let!(:alarm)    { FactoryGirl.create :device }
 
   describe 'when updating a property' do
 

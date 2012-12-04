@@ -14,9 +14,10 @@ class TypeWorker
     end
   end
 
-  def self.update(property)
-    Device.where('properties._id' => property.id, activated_at: nil).each do |device|
-      device.properties.find(property.id).update_attributes(value: property.default)
+  def self.updates(property_id, options)
+    property_id = Moped::BSON::ObjectId(property_id)
+    Device.where('properties._id' => property_id, activated_at: nil).each do |device|
+      device.properties.find(property_id).update_attributes(value: options['default'])
     end
   end
 
