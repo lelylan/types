@@ -87,5 +87,22 @@ describe Type do
   end
 
   describe 'when adding and removing a property' do
+    let(:random) { FactoryGirl.create(:property) }
+    before       { type.update_attributes(property_ids: [status.id, random.id]) }
+
+    it 'adds the new property to all lights' do
+      light1.reload.properties.last.id.should == random.id
+      light2.reload.properties.last.id.should == random.id
+    end
+
+    it 'sets the light properties to three' do
+      light1.reload.properties.should have(2).properties
+      light2.reload.properties.should have(2).properties
+    end
+
+    it 'does not add the new property to the alarm' do
+      alarm.properties.last.id.should_not == random.id
+      alarm.reload.properties.should have(2).properties
+    end
   end
 end

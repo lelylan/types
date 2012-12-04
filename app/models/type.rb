@@ -42,36 +42,13 @@ class Type
   end
 
   def update_devices
-    add_properties    if properties_id_to_add    != []
-    remove_properties if properties_id_to_remove != []
-  end
-
-  def add_properties
-    Device.where(type_id: id).push_all(:properties, properties_to_add)
-  end
-
-  def remove_properties
-    Device.where(type_id: id).each do |device|
-      Property.in(id: properties_id_to_remove).each do |property|
-        device.properties.find(property.id).delete
-      end
-    end
+    ::TypeWorker.add(id, ids_to_add)    if ids_to_add    != []
+    ::TypeWorker.add(id, ids_to_remove) if ids_to_remove != []
   end
 
   private
 
-  def properties_to_add
-    Property.in(id: properties_id_to_add).map do |property|
-      { id: property.id, property_id: property.id, value: property.default }
-    end
-  end
-
-  def properties_id_to_add
-    property_ids - property_ids_was
-  end
-
-  def properties_id_to_remove
-    property_ids_was - property_ids
-  end
+  def ids_to_add; property_ids - property_ids_was; end
+  def ids_to_remove; property_ids_was - property_ids; end
 end
 
