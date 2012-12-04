@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'spork'
-require 'sidekiq/testing/inline'
 
 # This code runs once when you run your test suite
 Spork.prefork do
