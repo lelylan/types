@@ -6,6 +6,12 @@ development:
         - localhost:27017
       options:
         consistency: :strong
+    devices:
+      database: devices_development
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
     people:
       database: people_development
       hosts:
@@ -27,6 +33,12 @@ test:
         - localhost:27017
       options:
         consistency: :strong
+    devices:
+      database: devices_test
+      hosts:
+        - localhost:27017
+      options:
+        consistency: :strong
     people:
       database: people_test
       hosts:
@@ -44,6 +56,8 @@ production:
   sessions:
     default:
       uri: <%= ENV['MONGOLAB_TYPES_URL'] %>
+    devices:
+      uri: <%= ENV['MONGOLAB_DEVICES_URL'] %>
     people:
       uri: <%= ENV['MONGOLAB_PEOPLE_URL'] %>
     jobs:

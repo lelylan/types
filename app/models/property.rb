@@ -17,6 +17,8 @@ class Property
   before_save :parse_values
   before_save :touch_types
 
+  before_update :update_devices
+
   def active_model_serializer; PropertySerializer; end
 
   private
@@ -27,5 +29,13 @@ class Property
 
   def touch_types
     Type.in(property_ids: id).update_all(updated_at: Time.now)
+  end
+
+  def update_devices
+    if default_changed?
+      Device.where('properties._id' => id, activated_at: nil).each do |device|
+        device.properties.find(id).update_attributes(value: default)
+      end
+    end
   end
 end
