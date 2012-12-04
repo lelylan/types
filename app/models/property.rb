@@ -32,10 +32,6 @@ class Property
   end
 
   def update_devices
-    if default_changed?
-      Device.where('properties._id' => id, activated_at: nil).each do |device|
-        device.properties.find(id).update_attributes(value: default)
-      end
-    end
+    TypeWorker.update(self) if default_changed?
   end
 end

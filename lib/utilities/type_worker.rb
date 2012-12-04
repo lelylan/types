@@ -9,9 +9,15 @@ class TypeWorker
 
   # Remove the old type properties to all devices having the specific type
   def self.remove(type_id, property_ids)
-    Device.where(type_id: type_id).each { |device|
+    Device.where(type_id: type_id).each do |device|
       TypeWorker.properties_to_remove(device, property_ids)
-    }
+    end
+  end
+
+  def self.update(property)
+    Device.where('properties._id' => property.id, activated_at: nil).each do |device|
+      device.properties.find(property.id).update_attributes(value: property.default)
+    end
   end
 
   private
