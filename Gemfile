@@ -15,6 +15,9 @@ gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'dalli'
 gem 'sidekiq'
+gem 'slim'
+gem 'sinatra', :require => nil
+
 
 group :development, :test do
   gem 'foreman'
