@@ -3,12 +3,18 @@ require 'sidekiq/testing/inline'
 
 describe Type do
 
-  let!(:light1)   { FactoryGirl.create :device }
-  let(:type)      { Type.find light1.type_id }
-  let(:status)    { Property.find(type.property_ids.first) }
-  let(:intensity) { Property.find(type.property_ids.last) }
-  let!(:light2)   { FactoryGirl.create :device, type_id: type.id }
-  let!(:alarm)    { FactoryGirl.create :device }
+  # resources
+  let!(:light1)    { FactoryGirl.create :device }
+  let!(:type)      { Type.find light1.type_id }
+  let!(:status)    { Property.find(type.property_ids.first) }
+  let!(:intensity) { Property.find(type.property_ids.last) }
+  let!(:light2)    { FactoryGirl.create :device, type_id: type.id }
+  let!(:alarm)     { FactoryGirl.create :device }
+
+  # timings
+  let!(:light1_updated_at) { light1.update_attributes(updated_at: Time.now-60); light1.updated_at }
+  let!(:light2_updated_at) { light2.update_attributes(updated_at: Time.now-60); light2.updated_at }
+
 
   describe 'when updating a property' do
 
@@ -24,6 +30,10 @@ describe Type do
           light1.reload.properties.where(id: status.id).first.value.should == 'updated'
         end
 
+        it 'touches the device changing updated_at' do
+          light1.reload.updated_at.should be_within(1).of(Time.now)
+        end
+
         it 'does not update devices with different properties' do
           alarm.reload.properties.first.value.should_not == 'updated'
           alarm.reload.properties.last.value.should_not  == 'updated'
@@ -31,7 +41,7 @@ describe Type do
       end
     end
 
-    # when a device is already activated its value is independent
+    # when a device is already activated its value is can't be changed
     describe 'when a device is active' do
 
       context 'when the default field of a property is updated' do
@@ -55,6 +65,11 @@ describe Type do
       light2.reload.properties.last.id.should == random.id
     end
 
+    it 'touches the device changing updated_at' do
+      light1.reload.updated_at.should be_within(1).of(Time.now)
+      light2.reload.updated_at.should be_within(1).of(Time.now)
+    end
+
     it 'sets the light properties to three' do
       light1.reload.properties.should have(3).properties
       light2.reload.properties.should have(3).properties
@@ -75,6 +90,11 @@ describe Type do
       light2.reload.properties.last.id.should == status.id
     end
 
+    it 'touches the device changing updated_at' do
+      light1.reload.updated_at.should be_within(1).of(Time.now)
+      light2.reload.updated_at.should be_within(1).of(Time.now)
+    end
+
     it 'sets the light properties to three' do
       light1.reload.properties.should have(1).properties
       light2.reload.properties.should have(1).properties
@@ -93,6 +113,11 @@ describe Type do
     it 'adds the new property to all lights' do
       light1.reload.properties.last.id.should == random.id
       light2.reload.properties.last.id.should == random.id
+    end
+
+    it 'touches the device changing updated_at' do
+      light1.reload.updated_at.should be_within(1).of(Time.now)
+      light2.reload.updated_at.should be_within(1).of(Time.now)
     end
 
     it 'sets the light properties to three' do
