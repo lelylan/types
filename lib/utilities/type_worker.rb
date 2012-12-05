@@ -4,7 +4,7 @@ class TypeWorker
   def self.add(type_id, property_ids)
     TypeWorker.touch_devices(type_id)
     Device.where(type_id: type_id).push_all(:properties,
-      TypeWorker.properties_to_add(property_ids)
+      TypeWorker.properties_to_add(type_id, property_ids)
     )
   end
 
@@ -18,7 +18,6 @@ class TypeWorker
 
   def self.updates(property_id, options)
     property_id = Moped::BSON::ObjectId(property_id)
-    TypeWorker.inactive_devices(property_id).update_all(updated_at: Time.now)
     TypeWorker.inactive_devices(property_id).each do |device|
       device.properties.find(property_id).update_attributes(value: options['default'])
     end
@@ -26,16 +25,16 @@ class TypeWorker
 
   private
 
-  def self.properties_to_add(property_ids)
+  def self.properties_to_add(type_id, property_ids)
+    puts ':::: Adding properties', property_ids, 'to devices having type' + type_id if ENV['DEBUG']
     Property.in(id: property_ids).map do |property|
-      { id: property.id, property_id: property.id, value: property.default }
+      { _id: property.id, property_id: property.id, value: property.default }
     end
   end
 
   def self.properties_to_remove(device, property_ids)
-    Property.in(id: property_ids).each do |property|
-      device.properties.find(property.id).delete
-    end
+    pp ':::: Removing properties', property_ids, 'from device', device.id if ENV['DEBUG']
+    device.properties.in(_id: property_ids).delete_all
   end
 
   def self.inactive_devices(property_id)
