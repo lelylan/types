@@ -19,4 +19,6 @@ guard 'rspec', cli: '--drb --format Fuubar --color', all_on_start: false, all_af
   watch(%r{^app/decorators/(.+)_decorator\.rb$})      { |m| "spec/requests/#{m[1]}_controller_spec.rb" }
   watch('app/controllers/application_controller.rb')     { "spec/requests" }
   watch(%r{^spec/requests/support/views/(.+)_view\.rb$}) { |m| "spec/requests/#{m[1]}_controller_spec.rb" }
+
+  watch(%r{^lib/utilities/type_worker.rb}) { |m| "spec/workers/type_worker_spec.rb" }
 end
