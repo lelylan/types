@@ -26,7 +26,7 @@ class TypeWorker
   private
 
   def self.properties_to_add(type_id, property_ids)
-    puts ':::: Adding properties', property_ids, 'to devices having type' + type_id if ENV['DEBUG']
+    pp ':::: Adding properties', property_ids, 'to devices having type', type_id if ENV['DEBUG']
     Property.in(id: property_ids).map do |property|
       { _id: property.id, property_id: property.id, value: property.default }
     end
