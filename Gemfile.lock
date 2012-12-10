@@ -1,4 +1,16 @@
 GIT
+  remote: git://github.com/andreareginato/redis-throttle.git
+  revision: 02822a446e2bde8660a80bddd352b8a993ae5f1e
+  specs:
+    redis-throttle (0.0.1)
+      activesupport
+      hiredis
+      rack
+      rack-throttle
+      redis
+      redis-namespace
+
+GIT
   remote: git://github.com/rails-api/active_model_serializers.git
   revision: 3c9831dc56e773a4d6e1f1e15cb6508aeb0026d1
   specs:
@@ -120,6 +132,7 @@ GEM
       sys-proctable
     hashie (1.2.0)
     hike (1.2.1)
+    hiredis (0.4.5)
     httpclient (2.3.0.1)
     i18n (0.6.1)
     journey (1.0.4)
@@ -137,6 +150,7 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.1)
     mime-types (1.19)
+    mock_redis (0.6.1)
     mongoid (3.0.11)
       activemodel (~> 3.1)
       moped (~> 1.1)
@@ -161,6 +175,8 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    rack-throttle (0.3.0)
+      rack (>= 1.0.0)
     rails (3.2.8)
       actionmailer (= 3.2.8)
       actionpack (= 3.2.8)
@@ -298,12 +314,14 @@ DEPENDENCIES
   guard-spork
   hashie
   launchy
+  mock_redis
   mongoid (~> 3.0.0.rc)
   rails (~> 3.2.6)
   rails-api
   rails_best_practices
   rails_config
   rb-fsevent
+  redis-throttle!
   rspec-rails (~> 2.6)
   sass-rails (~> 3.2.3)
   shoulda
