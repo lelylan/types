@@ -23,10 +23,11 @@ class TypeWorker
   def self.updates(property_id, options)
     pp ':::: Updating all devices with property', property_id if ENV['DEBUG']
 
+    attributes  = TypeWorker.attributes_updated(options)
     property_id = Moped::BSON::ObjectId(property_id)
     TypeWorker.inactive_devices(property_id).update_all(updated_at: Time.now)
     TypeWorker.inactive_devices(property_id).each do |device|
-      device.properties.find(property_id).update_attributes(value: options['default'])
+      device.properties.find(property_id).update_attributes(attributes)
     end
   end
 
@@ -48,5 +49,11 @@ class TypeWorker
 
   def self.touch_devices(type_id)
     Device.where(type_id: type_id).update_all(updated_at: Time.now)
+  end
+
+  def self.attributes_updated(options, result = {})
+    result['value']     = options['default']   if options['default']
+    result['suggested'] = options['suggested'] if options['suggested']
+    return result
   end
 end

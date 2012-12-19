@@ -8,7 +8,8 @@ class DeviceProperty
   field :_id, default: ->{ property_id }, type: Moped::BSON::ObjectId
   field :property_id, type: Moped::BSON::ObjectId
   field :value
-  field :physical
-
+  field :expected_value
+  field :pending
+  field :suggested, type: Hash
   embedded_in :device
 end

@@ -41,6 +41,8 @@ end
 # This code will be run each time you run your specs.
 Spork.each_run do
   require 'factory_girl_rails'
+  require 'sidekiq/testing/inline'
+
   FactoryGirl.reload
   I18n.backend.reload!
   Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}

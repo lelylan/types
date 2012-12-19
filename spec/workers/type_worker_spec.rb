@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'sidekiq/testing/inline'
+#require 'sidekiq/testing/inline'
 
 describe Type do
 
@@ -11,7 +11,7 @@ describe Type do
   let!(:light2)    { FactoryGirl.create :device, type_id: type.id }
   let!(:alarm)     { FactoryGirl.create :device }
 
-  # timings
+  # back in time
   let!(:light1_updated_at) { light1.update_attributes(updated_at: Time.now-60); light1.updated_at }
   let!(:light2_updated_at) { light2.update_attributes(updated_at: Time.now-60); light2.updated_at }
 
@@ -37,6 +37,24 @@ describe Type do
         it 'does not update devices with different properties' do
           alarm.reload.properties.first.value.should_not == 'updated'
           alarm.reload.properties.last.value.should_not  == 'updated'
+        end
+      end
+
+      context 'when the suggested field of a property is updated' do
+
+        before { status.update_attributes(suggested: { updated: 'updated' }) }
+
+        it 'updates the suggested field in the property device' do
+          light1.reload.properties.where(id: status.id).first.suggested.should == { 'updated' => 'updated' }
+        end
+
+        it 'touches the device changing updated_at' do
+          light1.reload.updated_at.should be_within(1).of(Time.now)
+        end
+
+        it 'does not update devices with different properties' do
+          alarm.reload.properties.first.value.should_not == { updated: 'updated' }
+          alarm.reload.properties.last.value.should_not  == { updated: 'updated' }
         end
       end
     end

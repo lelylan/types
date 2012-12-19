@@ -3,8 +3,8 @@ module HelpersViewMethods
     json.uri.should  == property.uri
     json.id.should   == property.id.as_json
     json.name.should == property.name
-    json[:default].should  == property.default
-    json[:values].should   == property.values
+    json[:default].should == property.default
+    json.suggested.should == Hashie::Mash.new(property.suggested)
     json.created_at.should_not be_nil
     json.updated_at.should_not be_nil
   end
