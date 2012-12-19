@@ -14,8 +14,8 @@ describe StatusProperty do
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { uri: a_uri(status), values: ['on'] },
-      { uri: a_uri(intensity), range: { min: '75', max: '100' } }
+      { uri: a_uri(status),    matches: ['on'] },
+      { uri: a_uri(intensity), matches: ['1..75'] }
     ]}
 
     let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
@@ -29,7 +29,7 @@ describe StatusProperty do
       end
 
       it 'sets the value' do
-        property.values.should == ['on']
+        property.matches.should == ['on']
       end
     end
 
@@ -42,8 +42,7 @@ describe StatusProperty do
       end
 
       it 'sets the range' do
-        property.min.should == '75'
-        property.max.should == '100'
+        property.matches.should == ['1..75']
       end
     end
   end
