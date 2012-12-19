@@ -3,7 +3,7 @@ FactoryGirl.define do
     resource_owner_id Settings.resource_owner_id
     name 'Status'
     default 'off'
-    suggested { { on: 'On', off: 'Off' } }
+    suggested { { 'on' => 'On', 'off' => 'Off' } }
   end
 
   factory :intensity, parent: :property do
