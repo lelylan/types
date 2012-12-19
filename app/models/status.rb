@@ -4,16 +4,13 @@ class Status
 
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :name
-  field :pending, type: Boolean
 
   index({ resource_owner_id: 1 }, { background: true })
 
-  attr_accessor :properties
-  attr_accessible :pending, :name, :properties
+  attr_accessor  :properties
+  attr_protected :resource_owner_id
 
-  validates :name, presence: true
-  validates :pending, inclusion: { in: [true, false], allow_nil: true }
-
+  validates :name,              presence: true
   validates :resource_owner_id, presence: true
 
   embeds_many :properties, class_name: 'StatusProperty', cascade_callbacks: true

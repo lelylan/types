@@ -5,6 +5,7 @@ class StatusProperty
 
   field :property_id, type: Moped::BSON::ObjectId
   field :matches, type: Array, default: []
+  field :pending, type: Boolean, default: false
 
   attr_accessor :uri
   attr_protected :property_id

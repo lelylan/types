@@ -1,5 +1,4 @@
 class TypesController < ApplicationController
-  #eventable_for :type, resource: 'types', only: %w(create update destroy)
 
   doorkeeper_for :index, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
@@ -9,6 +8,7 @@ class TypesController < ApplicationController
   before_filter :find_resource,         only: %w(show update destroy)
   before_filter :search_params,         only: %w(index public)
   before_filter :pagination,            only: %w(index public)
+
 
   def index
     @types = @types.limit(params[:per])
@@ -46,6 +46,7 @@ class TypesController < ApplicationController
     render json: @type
     @type.destroy
   end
+
 
   private
 

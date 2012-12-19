@@ -5,25 +5,19 @@ describe Status do
   it { should validate_presence_of :name }
   it { should validate_presence_of :resource_owner_id }
 
-  it_behaves_like 'a boolean' do
-    let(:field)       { 'pending' }
-    let(:accepts_nil) { true }
-    let(:resource)    { FactoryGirl.create :setting_intensity }
-  end
-
   context 'when creates status properties' do
 
     let(:status)    { FactoryGirl.create :status }
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { uri: a_uri(status), values: ['on'] },
-      { uri: a_uri(intensity),  range: { min: '75', max: '100' } }
+      { uri: a_uri(status), matches: ['on'] },
+      { uri: a_uri(intensity), matches: ['75..100'] }
     ]}
 
     context 'with valid properties' do
 
-      let(:resource) { FactoryGirl.create :setting_intensity, :with_no_properties, properties: properties }
+      let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
 
       it 'creates properties' do
         resource.properties.should have(2).items

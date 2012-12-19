@@ -1,4 +1,5 @@
 class FunctionsController < ApplicationController
+
   doorkeeper_for :index, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
 
@@ -7,6 +8,7 @@ class FunctionsController < ApplicationController
   before_filter :find_resource,         only: %w(show update destroy)
   before_filter :search_params,         only: %w(index public)
   before_filter :pagination,            only: %w(index public)
+
 
   def index
     @functions = @functions.limit(params[:per])
@@ -44,6 +46,7 @@ class FunctionsController < ApplicationController
     render json: @function
     @function.destroy
   end
+
 
   private
 

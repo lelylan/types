@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  include Eventable
   include Resourceable
   include Rescueable
   include Viewable

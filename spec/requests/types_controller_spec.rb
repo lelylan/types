@@ -100,7 +100,6 @@ feature 'TypesController' do
 
     it_behaves_like 'a creatable resource'
     it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
-    #it_behaves_like 'a registered event', 'page.driver.post(uri, params.to_json)', {}
   end
 
   context 'PUT /types/:id' do
@@ -113,7 +112,6 @@ feature 'TypesController' do
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource',  'page.driver.put(uri)'
     it_behaves_like 'a validated resource',  'page.driver.put(uri, { name: "" }.to_json)', { method: 'PUT', error: 'can\'t be blank' }
-    #it_behaves_like 'a registered event', 'page.driver.put(uri, params.to_json)', { name: '' }
   end
 
   context 'DELETE /types/:id' do
@@ -123,6 +121,5 @@ feature 'TypesController' do
     it_behaves_like 'a deletable resource'
     it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
     it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
-    #it_behaves_like 'a registered event', 'page.driver.delete(uri)'
   end
 end

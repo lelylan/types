@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe StatusProperty do
 
+  its(:pending) { should_not be_true }
+
   it { should_not allow_mass_assignment_of :property_id }
   it { should validate_presence_of :uri }
 
@@ -15,35 +17,27 @@ describe StatusProperty do
 
     let(:properties) {[
       { uri: a_uri(status),    matches: ['on'] },
-      { uri: a_uri(intensity), matches: ['1..75'] }
+      { uri: a_uri(intensity), matches: ['1..75'], pending: true }
     ]}
 
     let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
 
     context 'status property' do
 
-      let(:property) { resource.properties.where(property_id: status.id).first }
+      subject { resource.properties.where(property_id: status.id).first }
 
-      it 'sets the property_id' do
-        property.property_id.should == status.id
-      end
-
-      it 'sets the value' do
-        property.matches.should == ['on']
-      end
+      its(:property_id) { should == status.id }
+      its(:matches)     { should == ['on'] }
+      its(:pending)     { should_not be_true }
     end
 
     context 'intensity property' do
 
-      let(:property) { resource.properties.where(property_id: intensity.id).first }
+      subject { resource.properties.where(property_id: intensity.id).first }
 
-      it 'sets the property_id' do
-        property.property_id.should == intensity.id
-      end
-
-      it 'sets the range' do
-        property.matches.should == ['1..75']
-      end
+      its(:property_id) { should == intensity.id }
+      its(:matches)     { should == ['1..75'] }
+      its(:pending)     { should be_true }
     end
   end
 end

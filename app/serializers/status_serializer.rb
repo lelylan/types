@@ -1,7 +1,7 @@
 class StatusSerializer < ApplicationSerializer
   cached true
 
-  attributes :uri, :id, :name, :pending, :properties, :created_at, :updated_at
+  attributes :uri, :id, :name, :properties, :created_at, :updated_at
 
   def uri
     StatusDecorator.decorate(object).uri
@@ -10,9 +10,7 @@ class StatusSerializer < ApplicationSerializer
   def properties
     object.properties.map do |property|
       property = StatusPropertyDecorator.decorate(property)
-      result = { uri: property.uri, values: property.values }
-      result[:range] = (property.max or property.min) ? {min: property.min, max: property.max} : nil
-      result
+      { uri: property.uri, id: property.id, matches: property.matches, pending: property.pending }
     end
   end
 end
