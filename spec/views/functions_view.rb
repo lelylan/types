@@ -8,8 +8,8 @@ module HelpersViewMethods
 
     json.properties.each_with_index do |json_property, i|
       property = FunctionPropertyDecorator.decorate function.properties[i]
-      json_property.uri.should   == property.uri
-      json_property.value.should == property.value
+      json_property.uri.should      == property.uri
+      json_property.expected.should == property.expected
     end
   end
 end
