@@ -11,12 +11,12 @@ class FunctionsController < ApplicationController
 
 
   def index
-    @functions = @functions.limit(params[:per])
+    @functions = @functions.desc(:id).limit(params[:per])
     render json: @functions
   end
 
   def public
-    @functions = @functions.limit(params[:per])
+    @functions = @functions.desc(:id).limit(params[:per])
     render json: @functions
   end
 

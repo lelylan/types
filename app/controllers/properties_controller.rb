@@ -11,12 +11,12 @@ class PropertiesController < ApplicationController
 
 
   def index
-    @properties = @properties.limit(params[:per])
+    @properties = @properties.desc(:id).limit(params[:per])
     render json: @properties
   end
 
   def public
-    @properties = @properties.limit(params[:per])
+    @properties = @properties.desc(:id).limit(params[:per])
     render json: @properties
   end
 

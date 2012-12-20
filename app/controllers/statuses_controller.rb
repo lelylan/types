@@ -11,12 +11,12 @@ class StatusesController < ApplicationController
 
 
   def index
-    @statuses = @statuses.limit(params[:per])
+    @statuses = @statuses.desc(:id).limit(params[:per])
     render json: @statuses
   end
 
   def public
-    @statuses = @statuses.limit(params[:per])
+    @statuses = @statuses.desc(:id).limit(params[:per])
     render json: @statuses
   end
 
