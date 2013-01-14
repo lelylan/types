@@ -4,7 +4,7 @@ class FunctionProperty
   include Resourceable
 
   field :property_id, type: Moped::BSON::ObjectId
-  field :expected, default: '{{expected}}'
+  field :expected, default: '{{}}'
 
   attr_accessor :uri
   attr_protected :property_id

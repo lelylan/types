@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe FunctionProperty do
-  its(:expected) { should == '{{expected}}'}
+  its(:expected) { should == '{{}}'}
 
   it { should_not allow_mass_assignment_of :property_id }
   it { should validate_presence_of :uri }
