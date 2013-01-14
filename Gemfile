@@ -18,6 +18,7 @@ gem 'dalli'
 gem 'sinatra', :require => nil
 gem 'slim'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
+gem 'rack-cors', require: 'rack/cors'
 
 group :development, :test do
   gem 'foreman'
