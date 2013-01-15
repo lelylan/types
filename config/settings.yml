@@ -4,9 +4,9 @@ pagination:
 scopes:
   read:
     - resources
-    - resources-read
+    - resources:read
     - types
-    - types-read
+    - types:read
   write:
     - resources
     - types

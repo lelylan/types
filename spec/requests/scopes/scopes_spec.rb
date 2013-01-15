@@ -39,7 +39,7 @@ feature 'Scope' do
     it { should_not authorize "delete /statuses/#{status.id}" }
   end
 
-  %w(types-read resources-read).each do |scope|
+  %w(types:read resources:read).each do |scope|
 
     context "with token #{scope}" do
 
