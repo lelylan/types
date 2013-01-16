@@ -27,12 +27,12 @@ describe Function do
     context 'with pre-existing properties' do
 
       let(:resource)       { FactoryGirl.create :function }
-      let!(:old_status)    { resource.properties.where(property_id: 'status').first }
-      let!(:old_intensity) { resource.properties.where(property_id: 'intensity').first }
+      let!(:old_status)    { resource.properties.first }
+      let!(:old_intensity) { resource.properties.last }
 
       before               { resource.update_attributes properties: properties }
-      let!(:new_status)    { resource.properties.where(property_id: status.id).first }
-      let!(:new_intensity) { resource.properties.where(property_id: intensity.id).first }
+      let!(:new_status)    { resource.properties.first }
+      let!(:new_intensity) { resource.properties.last }
 
       it 'replaces previous properties' do
         new_status.id.should_not    == old_status.id

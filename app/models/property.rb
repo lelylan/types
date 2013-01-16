@@ -15,8 +15,8 @@ class Property
   validates :resource_owner_id, presence: true
 
   before_save :touch_types
-
   before_update :update_devices
+  before_destroy :destroy_dependant
 
   def active_model_serializer
     PropertySerializer
@@ -33,5 +33,11 @@ class Property
     attributes['suggested'] = suggested if suggested_changed?
 
     UpdatePropertyWorker.perform_async(id, attributes)
+  end
+
+  def destroy_dependant
+    Function.where('properties.property_id' => id).each { |f| f.properties.where(property_id: id).delete_all }
+    Status.where('properties.property_id' => id).each { |s| s.properties.where(property_id: id).delete_all }
+    Type.in(property_ids: id).each { |t| t.update_attributes(property_ids: t.property_ids - [id] ) }
   end
 end

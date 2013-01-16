@@ -48,7 +48,12 @@ class Type
 
   private
 
-  def ids_to_add; property_ids - property_ids_was; end
-  def ids_to_remove; property_ids_was - property_ids; end
+  def ids_to_add
+    property_ids - property_ids_was
+  end
+
+  def ids_to_remove
+    property_ids_was - property_ids
+  end
 end
 
