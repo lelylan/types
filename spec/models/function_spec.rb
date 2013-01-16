@@ -78,5 +78,21 @@ describe Function do
       end
     end
   end
+
+  describe 'when connected to a type' do
+
+    let!(:function) { FactoryGirl.create(:function) }
+    let!(:type)     { FactoryGirl.create :type, function_ids: [function.id ] }
+
+    describe 'when the function is destroyed' do
+
+      before { function.destroy }
+      before { type.reload }
+
+      it 'removes the property from the type' do
+        type.function_ids.should be_empty
+      end
+    end
+  end
 end
 

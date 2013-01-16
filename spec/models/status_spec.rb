@@ -78,4 +78,20 @@ describe Status do
       end
     end
   end
+
+  describe 'when connected to a type' do
+
+    let!(:status) { FactoryGirl.create(:setting_intensity) }
+    let!(:type)   { FactoryGirl.create :type, status_ids: [status.id ] }
+
+    describe 'when the status is destroyed' do
+
+      before { status.destroy }
+      before { type.reload }
+
+      it 'removes the property from the type' do
+        type.status_ids.should be_empty
+      end
+    end
+  end
 end

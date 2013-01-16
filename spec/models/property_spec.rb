@@ -51,7 +51,7 @@ describe Property do
 
     describe 'when the property is destroyed' do
 
-      before { Property.find(property.id).destroy }
+      before { property.destroy }
       before { type.reload }
 
       it 'removes the property from the type' do

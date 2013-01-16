@@ -16,6 +16,7 @@ class Status
   embeds_many :properties, class_name: 'StatusProperty', cascade_callbacks: true
 
   before_save :touch_types
+  before_destroy :destroy_dependant
 
   def active_model_serializer; StatusSerializer; end
 
@@ -23,5 +24,9 @@ class Status
 
   def touch_types
     Type.in(status_ids: id).update_all(updated_at: Time.now)
+  end
+
+  def destroy_dependant
+    Type.in(status_ids: id).each { |t| t.update_attributes(status_ids: t.status_ids - [id] ) }
   end
 end

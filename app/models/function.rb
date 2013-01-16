@@ -15,6 +15,7 @@ class Function
   embeds_many :properties, class_name: 'FunctionProperty', cascade_callbacks: true
 
   before_save :touch_types
+  before_destroy :destroy_dependant
 
   def active_model_serializer; FunctionSerializer; end
 
@@ -22,5 +23,9 @@ class Function
 
   def touch_types
     Type.in(function_ids: id).update_all(updated_at: Time.now)
+  end
+
+  def destroy_dependant
+    Type.in(function_ids: id).each { |t| t.update_attributes(function_ids: t.function_ids - [id] ) }
   end
 end
