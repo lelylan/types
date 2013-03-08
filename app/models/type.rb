@@ -14,7 +14,7 @@ class Type
   index({ name: 1 }, { background: true })
 
   attr_accessor :properties, :functions, :statuses
-  attr_protected :resource_owner_id
+  attr_accessible :name, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
 
   validates :resource_owner_id, presence: true
   validates :name,              presence: true

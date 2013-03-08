@@ -135,7 +135,7 @@ feature 'Caching' do
   describe 'with a cached type' do
 
     let!(:resource)  { FactoryGirl.create :type, resource_owner_id: user.id }
-    before           { resource.update_attributes(updated_at: Time.now - 60) }
+    before           { resource.updated_at = Time.now - 60; resource.save }
     let!(:uri)       { "/types/#{resource.id}" }
     let!(:cache_key) { ActiveSupport::Cache.expand_cache_key(['type_serializer', resource.cache_key, 'to-json']) }
 

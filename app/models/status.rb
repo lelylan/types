@@ -7,8 +7,8 @@ class Status
 
   index({ resource_owner_id: 1 }, { background: true })
 
-  attr_accessor  :properties
-  attr_protected :resource_owner_id
+  attr_accessor :properties
+  attr_accessible :name, :properties
 
   validates :name,              presence: true
   validates :resource_owner_id, presence: true

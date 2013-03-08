@@ -7,7 +7,7 @@ class FunctionProperty
   field :expected, default: '{{}}'
 
   attr_accessor :uri
-  attr_protected :property_id
+  attr_accessible :uri, :expected
 
   validates :uri, presence: true, uri: true, on: :create
 

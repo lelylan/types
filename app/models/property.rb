@@ -9,7 +9,7 @@ class Property
 
   index({ resource_owner_id: 1 }, { background: true })
 
-  attr_protected :resource_owner_id
+  attr_accessible :name, :default, :suggested
 
   validates :name, presence: true
   validates :resource_owner_id, presence: true

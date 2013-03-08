@@ -8,7 +8,7 @@ class StatusProperty
   field :pending, type: Boolean, default: false
 
   attr_accessor :uri
-  attr_protected :property_id
+  attr_accessible :value, :pending, :uri
 
   validates :uri, presence: true, uri: true, on: :create
 
