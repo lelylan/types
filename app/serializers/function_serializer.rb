@@ -10,7 +10,7 @@ class FunctionSerializer < ApplicationSerializer
   def properties
     object.properties.map do |property|
       property = FunctionPropertyDecorator.decorate property
-      { uri: property.uri, expected: property.expected }
+      { uri: property.uri, value: property.value, pending: property.pending }
     end
   end
 end
