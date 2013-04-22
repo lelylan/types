@@ -1,8 +1,9 @@
 module HelpersViewMethods
   def has_status(status, json = nil)
-    json.uri.should  == status.uri
-    json.id.should   == status.id.as_json
+    json.uri.should == status.uri
+    json.id.should == status.id.as_json
     json.name.should == status.name
+    json.function.id.should == (status.function_id ? status.function_id.as_json : nil)
     json.created_at.should_not be_nil
     json.updated_at.should_not be_nil
 

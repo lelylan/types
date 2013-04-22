@@ -1,10 +1,14 @@
 class StatusSerializer < ApplicationSerializer
   cached true
 
-  attributes :uri, :id, :name, :properties, :created_at, :updated_at
+  attributes :uri, :id, :name, :function, :properties, :created_at, :updated_at
 
   def uri
     StatusDecorator.decorate(object).uri
+  end
+
+  def function
+    { id: object.function_id, uri: object.decorate.function_uri }
   end
 
   def properties

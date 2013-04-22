@@ -5,6 +5,25 @@ describe Status do
   it { should validate_presence_of :name }
   it { should validate_presence_of :resource_owner_id }
 
+  describe 'when sets the defualt function' do
+
+    let(:function) { FactoryGirl.create(:function) }
+    let(:status)   { FactoryGirl.create(:setting_intensity, function: { id: function.id }) }
+
+    it 'sets the function_id field' do
+      status.function_id = function.id
+    end
+  end
+
+  describe 'when does not set the defualt function' do
+
+    let(:status)   { FactoryGirl.create(:setting_intensity) }
+
+    it 'leave the function_id field to nil' do
+      status.function_id = nil
+    end
+  end
+
   context 'when creates status properties' do
 
     let(:status)    { FactoryGirl.create :status }
@@ -89,7 +108,7 @@ describe Status do
       before { status.destroy }
       before { type.reload }
 
-      it 'removes the property from the type' do
+      it 'removes the status from the type' do
         type.status_ids.should be_empty
       end
     end

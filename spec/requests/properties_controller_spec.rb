@@ -12,32 +12,32 @@ feature 'PropertiesController' do
   let(:controller) { 'properties' }
   let(:factory)    { 'property' }
 
-  #describe 'GET /properties' do
+  describe 'GET /properties' do
 
-    #let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
-    #let(:uri)        { '/properties' }
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let(:uri)        { '/properties' }
 
-    #it_behaves_like 'a listable resource'
-    #it_behaves_like 'a paginable resource'
-    #it_behaves_like 'a searchable resource', { name: 'My name is resource' }
-  #end
+    it_behaves_like 'a listable resource'
+    it_behaves_like 'a paginable resource'
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
+  end
 
-  #context 'GET /properties/public' do
+  context 'GET /properties/public' do
 
-    #let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
-    #let(:uri)        { '/properties/public' }
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let(:uri)        { '/properties/public' }
 
-    #it_behaves_like 'a public listable resource'
-    #it_behaves_like 'a paginable resource'
-    #it_behaves_like 'a searchable resource', { name: 'My name is resource' }
-  #end
+    it_behaves_like 'a public listable resource'
+    it_behaves_like 'a paginable resource'
+    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
+  end
 
   context 'GET /properties/:id' do
 
     let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
     let(:uri)        { "/properties/#{resource.id}" }
 
-    context 'when shows intensity' do
+    context 'when shows a propery with type=range' do
       let!(:resource) { FactoryGirl.create :intensity, resource_owner_id: user.id }
 
       before { page.driver.get uri }
@@ -51,35 +51,35 @@ feature 'PropertiesController' do
     it_behaves_like 'a public resource', 'page.driver.get(uri)'
   end
 
-  #context 'POST /properties' do
+  context 'POST /properties' do
 
-    #let(:uri)      { '/properties' }
-    #let(:params)   { { name: 'Status' } }
-    #before         { page.driver.post uri, params.to_json }
-    #let(:resource) { Property.last }
+    let(:uri)      { '/properties' }
+    let(:params)   { { name: 'Status' } }
+    before         { page.driver.post uri, params.to_json }
+    let(:resource) { Property.last }
 
-    #it_behaves_like 'a creatable resource'
-    #it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
-  #end
+    it_behaves_like 'a creatable resource'
+    it_behaves_like 'a validated resource', 'page.driver.post(uri, {}.to_json)', { method: 'POST', error: 'can\'t be blank' }
+  end
 
-  #context 'PUT /properties/:id' do
+  context 'PUT /properties/:id' do
 
-    #let!(:resource) { FactoryGirl.create :property, resource_owner_id: user.id }
-    #let(:uri)       { "/properties/#{resource.id}" }
-    #let(:params)    { {name: 'Updated' } }
+    let!(:resource) { FactoryGirl.create :property, resource_owner_id: user.id }
+    let(:uri)       { "/properties/#{resource.id}" }
+    let(:params)    { {name: 'Updated' } }
 
-    #it_behaves_like 'an updatable resource'
-    #it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
-    #it_behaves_like 'a not found resource',  'page.driver.put(uri)'
-    #it_behaves_like 'a validated resource',  'page.driver.put(uri, {name: ""}.to_json)', { method: 'PUT', error: 'can\'t be blank' }
-  #end
+    it_behaves_like 'an updatable resource'
+    it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
+    it_behaves_like 'a not found resource',  'page.driver.put(uri)'
+    it_behaves_like 'a validated resource',  'page.driver.put(uri, {name: ""}.to_json)', { method: 'PUT', error: 'can\'t be blank' }
+  end
 
-  #context 'DELETE /properties/:id' do
-    #let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
-    #let(:uri)        { "/properties/#{resource.id}" }
+  context 'DELETE /properties/:id' do
+    let!(:resource)  { FactoryGirl.create :property, resource_owner_id: user.id }
+    let(:uri)        { "/properties/#{resource.id}" }
 
-    #it_behaves_like 'a deletable resource'
-    #it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
-    #it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
-  #end
+    it_behaves_like 'a deletable resource'
+    it_behaves_like 'a not owned resource', 'page.driver.put(uri)'
+    it_behaves_like 'a not found resource', 'page.driver.delete(uri)'
+  end
 end
