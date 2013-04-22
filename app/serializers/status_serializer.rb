@@ -8,7 +8,7 @@ class StatusSerializer < ApplicationSerializer
   end
 
   def function
-    { id: object.function_id, uri: object.decorate.function_uri }
+    object.function_id ? { id: object.function_id, uri: object.decorate.function_uri } : nil
   end
 
   def properties

@@ -38,14 +38,14 @@ feature 'StatusesController' do
     let!(:not_owned) { FactoryGirl.create :setting_intensity }
     let(:uri)        { "/statuses/#{resource.id}" }
 
-    context 'when shows a status wit a default function' do
-
+    context 'with a default function' do
       let(:function) { FactoryGirl.create :function }
       let!(:resource) { FactoryGirl.create :setting_intensity, function: { id: function.id }, resource_owner_id: user.id }
-
       before { page.driver.get uri }
-      it     { save_and_open_page; has_resource resource }
+
+      it { has_resource resource }
     end
+
     it_behaves_like 'a showable resource'
     it_behaves_like 'a proxiable resource'
     it_behaves_like 'a crossable resource'
