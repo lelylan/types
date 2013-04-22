@@ -5,6 +5,7 @@ class Type
 
   field :name
   field :description
+  field :categories, type: Array, default: []
   field :resource_owner_id, type: Moped::BSON::ObjectId
 
   field :property_ids, type: Array, default: []
@@ -15,7 +16,7 @@ class Type
   index({ name: 1 }, { background: true })
 
   attr_accessor :properties, :functions, :statuses
-  attr_accessible :name, :description, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
+  attr_accessible :name, :description, :categories, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
 
   validates :resource_owner_id, presence: true
   validates :name, presence: true

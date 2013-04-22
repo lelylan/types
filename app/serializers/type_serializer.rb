@@ -1,7 +1,7 @@
 class TypeSerializer < ApplicationSerializer
   cached true
 
-  attributes :id, :uri, :owner, :name, :description, :created_at, :updated_at
+  attributes :id, :uri, :owner, :name, :description, :categories, :created_at, :updated_at
   has_many :properties, :functions, :statuses
 
   def uri
