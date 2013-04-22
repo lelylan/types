@@ -34,8 +34,8 @@ class Property
 
   def update_devices(attributes = {})
     attributes['default']   = default   if default_changed?
-    attributes['suggested'] = suggested if suggested_changed?
-    attributes['range']     = range     if range_changed? and type == 'range'
+    attributes['suggested'] = suggested if suggested_changed? and type != 'range'
+    attributes['range']     = range     if range_changed?     and type == 'range'
 
     UpdatePropertyWorker.perform_async(id, attributes)
   end

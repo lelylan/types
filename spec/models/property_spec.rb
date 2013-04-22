@@ -9,6 +9,22 @@ describe Property do
   it { should validate_presence_of :name }
   it { Settings.property.types.each { |type| should allow_value(type).for(:type) } }
 
+  describe 'with suggested values' do
+    subject(:property) { FactoryGirl.build(:property) }
+
+    its(:type)      { should == 'text' }
+    its(:suggested) { should == { 'on' => 'On', 'off' => 'Off' } }
+    its(:range)     { should == nil }
+  end
+
+  describe 'with range values' do
+    subject(:property) { FactoryGirl.build(:property, range: { 'min' => '0', 'max' => '100', 'step' => '1' }, suggested: nil) }
+
+    its(:type)      { should == 'text' }
+    its(:range)     { should == { 'min' => '0', 'max' => '100', 'step' => '1' } }
+    its(:suggested) { should == nil }
+  end
+
   describe 'when connected to a function' do
 
     let!(:function_property) { FactoryGirl.build(:status_for_function) }
