@@ -4,8 +4,11 @@ class Property
 
   field :name
   field :resource_owner_id
-  field :default, default: ''
-  field :suggested, type: Hash, default: {}
+  field :default
+  field :type, default: 'text'
+
+  field :suggested, type: Hash
+  field :range, type: Hash
 
   index({ resource_owner_id: 1 }, { background: true })
 
@@ -13,6 +16,7 @@ class Property
 
   validates :name, presence: true
   validates :resource_owner_id, presence: true
+  validates :type, inclusion: { in: Settings.property.types }
 
   before_save :touch_types
   before_update :update_devices
@@ -31,6 +35,7 @@ class Property
   def update_devices(attributes = {})
     attributes['default']   = default   if default_changed?
     attributes['suggested'] = suggested if suggested_changed?
+    attributes['range']     = range     if range_changed? and type == 'range'
 
     UpdatePropertyWorker.perform_async(id, attributes)
   end

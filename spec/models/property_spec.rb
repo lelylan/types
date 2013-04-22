@@ -7,7 +7,7 @@ describe Property do
 
   it { should validate_presence_of :resource_owner_id }
   it { should validate_presence_of :name }
-
+  it { Settings.property.types.each { |type| should allow_value(type).for(:type) } }
 
   describe 'when connected to a function' do
 

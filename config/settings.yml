@@ -10,3 +10,14 @@ scopes:
   write:
     - resources
     - types
+property:
+  types:
+    - text
+    - number
+    - range
+    - color
+    - password
+    - date
+    - time
+    - datetime
+    - url
