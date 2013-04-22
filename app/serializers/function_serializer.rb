@@ -1,7 +1,7 @@
 class FunctionSerializer < ApplicationSerializer
   cached true
 
-  attributes :uri, :id, :name, :properties, :created_at, :updated_at
+  attributes :id, :uri, :name, :properties, :created_at, :updated_at
 
   def uri
     FunctionDecorator.decorate(object).uri
@@ -10,7 +10,7 @@ class FunctionSerializer < ApplicationSerializer
   def properties
     object.properties.map do |property|
       property = FunctionPropertyDecorator.decorate property
-      { uri: property.uri, expected: property.expected }
+      { id: property.id, uri: property.uri, value: property.value, pending: property.pending }
     end
   end
 end

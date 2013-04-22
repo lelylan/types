@@ -76,9 +76,9 @@ feature 'TypesController' do
     let(:setting_intensity) { FactoryGirl.create :setting_intensity }
     let(:lighting)          { FactoryGirl.create :lighting }
 
-    let!(:properties) { [ a_uri(status), a_uri(intensity) ] }
-    let!(:functions)  { [ a_uri(turn_on), a_uri(turn_off), a_uri(set_intensity) ] }
-    let!(:statuses)   { [ a_uri(setting_intensity) ] }
+    let!(:properties) { [ status.id, intensity.id ] }
+    let!(:functions)  { [ turn_on.id, turn_off.id, set_intensity.id ] }
+    let!(:statuses)   { [ setting_intensity.id ] }
 
     let(:params) {{
       name: 'Dimmer',

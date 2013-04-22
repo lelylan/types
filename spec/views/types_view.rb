@@ -1,8 +1,11 @@
 module HelpersViewMethods
   def has_type(type, json = nil)
-    json.uri.should  == type.uri
-    json.id.should   == type.id.as_json
+    json.uri.should == type.uri
+    json.id.should == type.id.as_json
     json.name.should == type.name
+    json.description.should == type.description
+    json.owner.id.should == type.resource_owner_id.as_json
+    json.owner.uri.should == type.resource_owner_uri
     json.created_at.should_not be_nil
     json.updated_at.should_not be_nil
 

@@ -59,7 +59,7 @@ feature 'StatusesController' do
 
     let(:status)     { FactoryGirl.create :status }
     let(:intensity)  { FactoryGirl.create :intensity }
-    let(:properties) { [ { uri: a_uri(status), values: ['on'] }, { uri: a_uri(intensity), range: { min: '75', max: '100' } } ] }
+    let(:properties) { [ { id: status.id, values: ['on'] }, { id: intensity.id, range: { min: '75', max: '100' } } ] }
     let(:params)     { { name: 'Setting intensity', properties: properties } }
 
     before         { page.driver.post uri, params.to_json }

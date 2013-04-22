@@ -11,7 +11,7 @@ class UriValidator < ActiveModel::EachValidator
     value.each { |uri| validate_uri(record, attribute, uri) } if value.kind_of? Array
   end
 
-  def validate_uri(record, attribute, value) 
+  def validate_uri(record, attribute, value)
     schemes = [*options.fetch(:schemes)].map(&:to_s)
     if URI::regexp(schemes).match(value)
       begin
@@ -30,9 +30,10 @@ module ClassMethods
   #
   #   class Unicorn
   #     include ActiveModel::Validations
-  #     attr_accessor :homepage, :ftpsite
-  #     validates_url :homepage, :allow_blank => true
-  #     validates_url :ftpsite, :schemes => ['ftp']
+  #     attr_accessor :homepage, :properties
+  #
+  #     validates :homepage, uri: true
+  #     validates :properties, uri: true
   #   end
   # Configuration options:
   # * <tt>:message</tt> - A custom error message (default is: 'is not a valid URL').

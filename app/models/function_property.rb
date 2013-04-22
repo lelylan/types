@@ -4,12 +4,13 @@ class FunctionProperty
   include Resourceable
 
   field :property_id, type: Moped::BSON::ObjectId
-  field :expected, default: '{{}}'
+  field :value
+  field :pending, type: Boolean, default: true
 
-  attr_accessor :uri
-  attr_accessible :uri, :expected
+  attr_accessor :id
+  attr_accessible :id, :value, :pending
 
-  validates :uri, presence: true, uri: true, on: :create
+  validates :id, presence: true, on: :create
 
   embedded_in :function
 
@@ -18,6 +19,6 @@ class FunctionProperty
   private
 
   def set_property_id
-    self.property_id = find_id(uri)
+    self.property_id = id
   end
 end
