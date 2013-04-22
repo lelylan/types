@@ -30,8 +30,8 @@ describe Status do
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { uri: a_uri(status), matches: ['on'] },
-      { uri: a_uri(intensity), matches: ['75..100'] }
+      { id: status.id, matches: ['on'] },
+      { id: intensity.id, matches: ['75..100'] }
     ]}
 
     context 'with valid properties' do
@@ -78,9 +78,9 @@ describe Status do
       end
     end
 
-    context 'with not valid property uri' do
+    context 'with not valid property id' do
 
-      let(:properties) { [{uri: 'not-valid', values: 'value'}] }
+      let(:properties) { [{ id: nil, values: 'value' }] }
       let(:resource)   { FactoryGirl.create :setting_intensity, properties: properties, name: 'Status' }
 
       it 'raises an error' do

@@ -8,10 +8,10 @@ class StatusProperty
   field :pending, type: Boolean, default: false
   field :range, type: Hash
 
-  attr_accessor :uri
-  attr_accessible :values, :pending, :range, :uri
+  attr_accessor :id
+  attr_accessible :values, :pending, :range, :id
 
-  validates :uri, presence: true, uri: true, on: :create
+  validates :id, presence: true, on: :create
 
   embedded_in :status
 
@@ -20,7 +20,7 @@ class StatusProperty
   private
 
   def set_property_id
-    self.property_id = find_id(uri)
+    self.property_id = id
   end
 
   def parse_values
