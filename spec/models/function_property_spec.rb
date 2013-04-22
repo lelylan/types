@@ -1,22 +1,19 @@
 require 'spec_helper'
 
 describe FunctionProperty do
-  its(:expected) { should == '{{}}'}
+  its(:value) { should == nil }
 
   it { should_not allow_mass_assignment_of :property_id }
-  it { should validate_presence_of :uri }
+  it { should validate_presence_of :id }
 
-  it { Settings.uris.valid.each     {|uri| should allow_value(uri).for(:uri)} }
-  it { Settings.uris.not_valid.each {|uri| should_not allow_value(uri).for(:uri)} }
-
-  context 'with valid property uris' do
+  context 'with valid property ids' do
 
     let(:status)    { FactoryGirl.create :status }
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { uri: a_uri(status),    expected: 'on' },
-      { uri: a_uri(intensity), expected: '0.0' }
+      { id: status.id,    value: 'on' },
+      { id: intensity.id, value: '0.0' }
     ]}
 
     let(:resource) { FactoryGirl.create :function, properties: properties }
@@ -29,8 +26,8 @@ describe FunctionProperty do
         property.property_id.should == status.id
       end
 
-      it 'sets the expected value' do
-        property.expected.should == 'on'
+      it 'sets the value' do
+        property.value.should == 'on'
       end
     end
 
@@ -42,8 +39,8 @@ describe FunctionProperty do
         property.property_id.should == intensity.id
       end
 
-      it 'sets the expected value' do
-        property.expected.should == '0.0'
+      it 'sets the value' do
+        property.value.should == '0.0'
       end
     end
   end
