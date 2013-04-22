@@ -14,7 +14,7 @@ class StatusSerializer < ApplicationSerializer
   def properties
     object.properties.map do |property|
       property = StatusPropertyDecorator.decorate(property)
-      result = { uri: property.uri, id: property.id, pending: property.pending }
+      result = { id: property.id, uri: property.uri, pending: property.pending }
       result[:values] = property.values if property.values
       result[:range] = property.range if property.range
       result

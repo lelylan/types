@@ -1,7 +1,7 @@
 class PropertySerializer < ApplicationSerializer
   cached true
 
-  attributes :uri, :id, :name, :type, :default, :suggested, :range, :created_at, :updated_at
+  attributes :id, :uri, :name, :type, :default, :suggested, :range, :created_at, :updated_at
 
   def uri
     PropertyDecorator.decorate(property).uri
