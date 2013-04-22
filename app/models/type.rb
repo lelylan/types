@@ -4,6 +4,7 @@ class Type
   include Resourceable
 
   field :name
+  field :description
   field :resource_owner_id, type: Moped::BSON::ObjectId
 
   field :property_ids, type: Array, default: []
@@ -14,15 +15,10 @@ class Type
   index({ name: 1 }, { background: true })
 
   attr_accessor :properties, :functions, :statuses
-  attr_accessible :name, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
+  attr_accessible :name, :description, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
 
   validates :resource_owner_id, presence: true
-  validates :name,              presence: true
-
-  validates :properties, uri: true
-  validates :functions,  uri: true
-  validates :statuses,   uri: true
-  validates :properties, uri: true
+  validates :name, presence: true
 
   before_save   :find_properties, :find_functions, :find_statuses
   before_update :update_devices
@@ -30,15 +26,15 @@ class Type
   def active_model_serializer; TypeSerializer; end
 
   def find_properties
-    self.property_ids = find_ids(properties) if not properties.nil?
+    self.property_ids = properties if not properties.nil?
   end
 
   def find_functions
-    self.function_ids = find_ids(functions) if not functions.nil?
+    self.function_ids = functions if not functions.nil?
   end
 
   def find_statuses
-    self.status_ids = find_ids(statuses) if not statuses.nil?
+    self.status_ids = statuses if not statuses.nil?
   end
 
   def update_devices
