@@ -80,7 +80,7 @@ describe Status do
 
     context 'with not valid property uri' do
 
-      let(:properties) { [{uri: 'not-valid', value: 'value'}] }
+      let(:properties) { [{uri: 'not-valid', values: 'value'}] }
       let(:resource)   { FactoryGirl.create :setting_intensity, properties: properties, name: 'Status' }
 
       it 'raises an error' do

@@ -4,18 +4,18 @@ class StatusProperty
   include Resourceable
 
   field :property_id, type: Moped::BSON::ObjectId
-  field :value, type: Array
+  field :values, type: Array
   field :pending, type: Boolean, default: false
   field :range, type: Hash
 
   attr_accessor :uri
-  attr_accessible :value, :pending, :range, :uri
+  attr_accessible :values, :pending, :range, :uri
 
   validates :uri, presence: true, uri: true, on: :create
 
   embedded_in :status
 
-  before_create :set_property_id, :parse_value
+  before_create :set_property_id, :parse_values
 
   private
 
@@ -23,7 +23,7 @@ class StatusProperty
     self.property_id = find_id(uri)
   end
 
-  def parse_value
-    self.value.map!(&:to_s) if value_changed?
+  def parse_values
+    self.values.map!(&:to_s) if values_changed?
   end
 end

@@ -16,8 +16,8 @@ describe StatusProperty do
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { uri: a_uri(status),    value: ['on'] },
-      { uri: a_uri(intensity), value: ['1..75'], pending: true }
+      { uri: a_uri(status),    values: [ 'on' ] },
+      { uri: a_uri(intensity), range: { 'min' => '1', 'max' => '75' }, pending: true }
     ]}
 
     let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
@@ -27,7 +27,7 @@ describe StatusProperty do
       subject { resource.properties.where(property_id: status.id).first }
 
       its(:property_id) { should == status.id }
-      its(:value)     { should == ['on'] }
+      its(:values)      { should == ['on'] }
       its(:pending)     { should_not be_true }
     end
 
@@ -36,7 +36,7 @@ describe StatusProperty do
       subject { resource.properties.where(property_id: intensity.id).first }
 
       its(:property_id) { should == intensity.id }
-      its(:value)     { should == ['1..75'] }
+      its(:range)       { should == { 'min' => '1', 'max' => '75' } }
       its(:pending)     { should be_true }
     end
   end
