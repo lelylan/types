@@ -7,7 +7,7 @@ FactoryGirl.define do
 
   factory :intensity_for_status, class: StatusProperty do
     uri { "https://api.lelylan.com/properties/#{FactoryGirl.create(:intensity).id}" }
-    value ['0..100']
+    range { { 'min' => '0', 'max' => '10'} }
     pending true
   end
 end

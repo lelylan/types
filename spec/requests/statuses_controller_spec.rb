@@ -39,7 +39,7 @@ feature 'StatusesController' do
     let(:uri)        { "/statuses/#{resource.id}" }
 
     context 'with a default function' do
-      let(:function) { FactoryGirl.create :function }
+      let(:function)  { FactoryGirl.create :function }
       let!(:resource) { FactoryGirl.create :setting_intensity, function: { id: function.id }, resource_owner_id: user.id }
       before { page.driver.get uri }
 
