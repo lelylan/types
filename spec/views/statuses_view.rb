@@ -10,6 +10,7 @@ module HelpersViewMethods
 
     json.properties.each_with_index do |json_property, i|
       property = StatusPropertyDecorator.decorate(status.properties[i])
+      json_property.id.should == property.property_id.as_json
       json_property.uri.should == property.uri
       json_property[:values].should == property.values if property.values
       json_property.range.should == property.range if property.range
