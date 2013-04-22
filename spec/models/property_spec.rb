@@ -10,7 +10,7 @@ describe Property do
   it { Settings.property.types.each { |type| should allow_value(type).for(:type) } }
 
   describe 'with suggested values' do
-    subject(:property) { FactoryGirl.build(:property) }
+    subject(:property) { FactoryGirl.build(:status) }
 
     its(:type)      { should == 'text' }
     its(:suggested) { should == { 'on' => 'On', 'off' => 'Off' } }
@@ -18,9 +18,9 @@ describe Property do
   end
 
   describe 'with range values' do
-    subject(:property) { FactoryGirl.build(:property, range: { 'min' => '0', 'max' => '100', 'step' => '1' }, suggested: nil) }
+    subject(:property) { FactoryGirl.build(:intensity) }
 
-    its(:type)      { should == 'text' }
+    its(:type)      { should == 'range' }
     its(:range)     { should == { 'min' => '0', 'max' => '100', 'step' => '1' } }
     its(:suggested) { should == nil }
   end
