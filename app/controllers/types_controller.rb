@@ -64,6 +64,7 @@ class TypesController < ApplicationController
 
   def search_params
     @types = @types.where('name' => /.*#{params[:name]}.*/i) if params[:name]
+    @types = @types.in(categories: params[:categories])      if params[:categories]
   end
 
   def pagination
