@@ -19,4 +19,6 @@ Types::Application.routes.draw do
   resources :types, defaults: { format: 'json' } do
     match :public, via: :get, on: :collection
   end
+
+  get '/categories' => 'categories#index'
 end

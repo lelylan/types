@@ -21,3 +21,15 @@ property:
     - time
     - datetime
     - url
+categories:
+  - lights
+  - locks
+  - thermostats
+  - alarms
+  - meters
+  - cameras
+  - windows
+  - appliances
+  - garddenings
+  - sensors
+  - others
