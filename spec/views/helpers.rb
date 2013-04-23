@@ -15,7 +15,7 @@ module HelperViewMethods
     has_valid_json
 
     resource = get_decorator.decorate(resource)
-    json     = JSON.parse(page.source) unless json 
+    json     = JSON.parse(page.source) unless json
     json     = Hashie::Mash.new json
 
     eval "has_#{controller.singularize}(resource, json)"

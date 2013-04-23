@@ -3,6 +3,9 @@ class Type
   include Mongoid::Timestamps
   include Resourceable
 
+  # TODO Move to Settings
+  CATEGORIES = [{name: 'lights'}, {name: 'locks'}, {name: 'thermostats'}, {name: 'alarms'}, {name: 'meters'}, {name: 'cameras'}, {name: 'windows'}, {name: 'appliances'}, {name: 'garddenings'}, {name: 'sensors'}, {name: 'others'}]
+
   field :name
   field :description
   field :categories, type: Array, default: []
@@ -55,9 +58,9 @@ class Type
     property_ids_was - property_ids
   end
 
-  # TODO create validator for lists
+  # TODO create proper validator
   def validate_categories
-    if (invalid_categories = (categories - Settings.categories))
+    if (invalid_categories = (categories - CATEGORIES.map{ |category| category[:name]}))
       invalid_categories.each do |category|
         errors.add(:category, category + ' is not valid')
       end

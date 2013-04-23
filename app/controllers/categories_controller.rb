@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
   def index
-    render json: Settings.categories
+    render json: Type::CATEGORIES
   end
 end
