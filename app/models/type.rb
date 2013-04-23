@@ -25,21 +25,21 @@ class Type
   validates :name, presence: true
   validate  :validate_categories
 
-  before_save   :find_properties, :find_functions, :find_statuses
+  before_save :find_properties, :find_functions, :find_statuses
   before_update :update_devices
 
   def active_model_serializer; TypeSerializer; end
 
   def find_properties
-    self.property_ids = properties if not properties.nil?
+    self.property_ids = properties.map { |p| Moped::BSON::ObjectId(p) } if not properties.nil?
   end
 
   def find_functions
-    self.function_ids = functions if not functions.nil?
+    self.function_ids = functions.map { |f| Moped::BSON::ObjectId(f) } if not functions.nil?
   end
 
   def find_statuses
-    self.status_ids = statuses if not statuses.nil?
+    self.status_ids = statuses.map { |s| Moped::BSON::ObjectId(s) } if not statuses.nil?
   end
 
   def update_devices
