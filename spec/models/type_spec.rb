@@ -4,9 +4,16 @@ require 'sidekiq/testing/inline'
 describe Type do
 
   it { should_not allow_mass_assignment_of :resource_owner_id }
-
   it { should validate_presence_of :name }
   it { should validate_presence_of :resource_owner_id }
+
+  it 'accepts valid categories' do
+    expect{ FactoryGirl.create(:type, categories: ['lights']) }.to_not raise_error
+  end
+
+  it 'does not accept invalid categories' do
+    expect{ FactoryGirl.create(:type, categories: ['not-defined']) }.to raise_error
+  end
 
   it_behaves_like 'a type connection' do
     let(:property)   { FactoryGirl.create :property }

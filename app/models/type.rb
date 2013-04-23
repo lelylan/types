@@ -20,7 +20,7 @@ class Type
 
   validates :resource_owner_id, presence: true
   validates :name, presence: true
-  #validates :categories, inclusion: { in: Settings.categories }
+  validate  :validate_categories
 
   before_save   :find_properties, :find_functions, :find_statuses
   before_update :update_devices
@@ -53,6 +53,15 @@ class Type
 
   def ids_to_remove
     property_ids_was - property_ids
+  end
+
+  # TODO create validator for lists
+  def validate_categories
+    if (invalid_categories = (categories - Settings.categories))
+      invalid_categories.each do |category|
+        errors.add(:category, category + ' is not valid')
+      end
+    end
   end
 end
 

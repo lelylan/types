@@ -1,6 +1,6 @@
 pagination:
   per: 25
-  max_per: 100
+  max_per: 250
 scopes:
   read:
     - resources
