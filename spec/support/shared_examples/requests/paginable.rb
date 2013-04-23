@@ -1,9 +1,12 @@
 shared_examples_for 'a paginable resource' do
 
+  before { Settings.pagination.per = 1 }
+  before { Settings.pagination.max_per = 2 }
+
   let(:decorator)  { "#{controller.classify}Decorator".constantize }
 
   let!(:resource)  { decorator.decorate(FactoryGirl.create(factory, resource_owner_id: user.id)) }
-  let!(:resources) { FactoryGirl.create_list(factory, Settings.pagination.per + 5, name: 'Extra resource', resource_owner_id: user.id) }
+  let!(:resources) { FactoryGirl.create_list(factory, Settings.pagination.per + 1, name: 'Extra resource', resource_owner_id: user.id) }
 
   describe '?start=:uri' do
 
@@ -19,25 +22,24 @@ shared_examples_for 'a paginable resource' do
 
     it 'shows the default number of resources' do
       page.driver.get uri
-      JSON.parse(page.source).should have(Settings.pagination.per).items
+      JSON.parse(page.source).should have(1).items
     end
   end
 
-  describe '?per=5' do
+  describe '?per=1' do
 
-    it 'shows 5 resources' do
-      page.driver.get uri, per: 5
-      JSON.parse(page.source).should have(5).items
+    it 'shows 1 resources' do
+      page.driver.get uri, per: 1
+      JSON.parse(page.source).should have(1).items
     end
   end
 
   context '?per=100000' do
 
-    before { Settings.pagination.max_per = 30 }
 
     it 'shows the max number of allowed resources' do
       page.driver.get uri, per: 100000
-      JSON.parse(page.source).should have(30).items
+      JSON.parse(page.source).should have(2).items
     end
   end
 
@@ -45,7 +47,7 @@ shared_examples_for 'a paginable resource' do
 
     it 'shows the default number of resources' do
       page.driver.get uri, per: 'not-valid'
-      JSON.parse(page.source).should have(Settings.pagination.per).items
+      JSON.parse(page.source).should have(1).items
     end
   end
 end

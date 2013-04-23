@@ -39,7 +39,7 @@ feature 'TypesController' do
 
     it_behaves_like 'a public listable resource'
     it_behaves_like 'a paginable resource'
-    it_behaves_like 'a searchable resource', { name: 'My name is resource' }
+    it_behaves_like 'a searchable resource', { name: 'My name is resource', categories: ['locks'] }
 
     context 'when does not show connections' do
 

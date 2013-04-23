@@ -1,5 +1,7 @@
 shared_examples_for 'a public listable resource' do
 
+  before { Settings.pagination.per = 2 }
+
   let!(:not_owned) { FactoryGirl.create factory }
 
   it 'shows all resources (owned and not owned)' do
