@@ -17,6 +17,7 @@ describe Type do
 
   describe 'when updating a property' do
 
+    # when a device is not activated its value changes
     describe 'when a device is not active' do
 
       before { light1.update_attributes(activated_at: nil) }
@@ -38,27 +39,9 @@ describe Type do
           alarm.reload.properties.last.value.should_not  == 'updated'
         end
       end
-
-      context 'when the suggested field of a property is updated' do
-
-        before { status.update_attributes(suggested: { updated: 'updated' }) }
-
-        it 'updates the suggested field in the property device' do
-          light1.reload.properties.where(id: status.id).first.suggested.should == { 'updated' => 'updated' }
-        end
-
-        it 'touches the device changing updated_at' do
-          light1.reload.updated_at.should be_within(1).of(Time.now)
-        end
-
-        it 'does not update devices with different properties' do
-          alarm.reload.properties.first.value.should_not == { updated: 'updated' }
-          alarm.reload.properties.last.value.should_not  == { updated: 'updated' }
-        end
-      end
     end
 
-    # when a device is already activated its value is can't be changed
+    # when a device is activated its value doesn't change
     describe 'when a device is active' do
 
       context 'when the default field of a property is updated' do
@@ -145,6 +128,27 @@ describe Type do
     it 'does not add the new property to the alarm' do
       alarm.properties.last.id.should_not == random.id
       alarm.reload.properties.should have(2).properties
+    end
+  end
+
+  describe 'when updating categories' do
+
+    let(:categories) { [ 'lights', 'others' ] }
+    before { type.update_attributes(categories: categories) }
+
+    it 'adds the new property to all lights' do
+      light1.reload.categories.should == categories
+      light2.reload.categories.should == categories
+    end
+
+    it 'touches the device changing updated_at' do
+      light1.reload.updated_at.should be_within(1).of(Time.now)
+      light2.reload.updated_at.should be_within(1).of(Time.now)
+    end
+
+    it 'does not update the categories to the alarm' do
+      alarm.reload.categories.should_not == categories
+      alarm.reload.categories.should == [ 'lights' ]
     end
   end
 end

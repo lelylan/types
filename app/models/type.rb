@@ -20,6 +20,7 @@ class Type
 
   validates :resource_owner_id, presence: true
   validates :name, presence: true
+  #validates :categories, inclusion: { in: Settings.categories }
 
   before_save   :find_properties, :find_functions, :find_statuses
   before_update :update_devices
@@ -41,6 +42,7 @@ class Type
   def update_devices
     AddPropertiesWorker.perform_async(id, ids_to_add)       if ids_to_add    != []
     RemovePropertiesWorker.perform_async(id, ids_to_remove) if ids_to_remove != []
+    UpdateCategoriesWorker.perform_async(id, categories)    if categories_changed?
   end
 
   private

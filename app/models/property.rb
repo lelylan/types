@@ -33,11 +33,10 @@ class Property
   end
 
   def update_devices(attributes = {})
-    attributes['default']   = default   if default_changed?
-    attributes['suggested'] = suggested if suggested_changed?
-    attributes['range']     = range     if range_changed? and type == 'range'
-
-    UpdatePropertyWorker.perform_async(id, attributes)
+    if default_changed?
+      attributes['default'] = default
+      UpdatePropertyWorker.perform_async(id, attributes)
+    end
   end
 
   def destroy_dependant

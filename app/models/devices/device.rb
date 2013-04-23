@@ -8,6 +8,7 @@ class Device
   field :resource_owner_id, type: Moped::BSON::ObjectId
   field :creator_id, type: Moped::BSON::ObjectId
   field :name
+  field :categories, type: Array, default: []
   field :secret
   field :type_id, type: Moped::BSON::ObjectId
   field :physical

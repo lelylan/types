@@ -31,6 +31,13 @@ class TypeWorker
     end
   end
 
+  def self.categories(type_id, categories)
+    pp ':::: Upadating categories', categories, 'to devices having type', type_id if ENV['DEBUG']
+
+    TypeWorker.touch_devices(type_id)
+    Device.where(type_id: type_id).update_all(categories: categories)
+  end
+
   private
 
   def self.properties_to_add(type_id, property_ids)
@@ -52,8 +59,7 @@ class TypeWorker
   end
 
   def self.attributes_updated(options, result = {})
-    result['value']     = options['default']   if options['default']
-    result['suggested'] = options['suggested'] if options['suggested']
+    result['value'] = options['default'] if options['default']
     return result
   end
 end
