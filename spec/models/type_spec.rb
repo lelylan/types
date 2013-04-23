@@ -18,18 +18,18 @@ describe Type do
   it_behaves_like 'a type connection' do
     let(:property)   { FactoryGirl.create :property }
     let(:connection) { 'properties' }
-    let(:ids)        {[ property.id.to_s ]}
+    let(:ids)        {[ property.id ]}
   end
 
   it_behaves_like 'a type connection' do
     let(:function)   { FactoryGirl.create :function }
     let(:connection) { 'functions' }
-    let(:ids)        {[ function.id.to_s ]}
+    let(:ids)        {[ function.id ]}
   end
 
   it_behaves_like 'a type connection' do
     let(:status)     { FactoryGirl.create :setting_intensity }
     let(:connection) { 'properties' }
-    let(:ids)        {[ status.id.to_s ]}
+    let(:ids)        {[ status.id ]}
   end
 end
