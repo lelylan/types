@@ -10,7 +10,6 @@ feature 'CategoriesController' do
 
     it 'view the categories list' do
       page.driver.get '/categories'
-      save_and_open_page
       page.status_code.should == 200
       json = JSON.parse(page.source) unless json
       json.first['name'].should == 'lights'
