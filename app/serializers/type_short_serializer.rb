@@ -1,7 +1,7 @@
 class TypeShortSerializer < ApplicationSerializer
   cached true
 
-  attributes :id, :uri, :name, :owner, :description, :created_at, :updated_at
+  attributes :id, :uri, :name, :categories, :owner, :description, :created_at, :updated_at
 
   def uri
     TypeDecorator.decorate(object).uri
