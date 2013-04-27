@@ -5,7 +5,7 @@ module HelpersViewMethods
     json.name.should == property.name
     json.type.should == property.type
     json[:default].should == property.default
-    json.suggested.should == (property.suggested ? Hashie::Mash.new(property.suggested) : nil)
+    json.accepted.should == (property.suggested ? Hashie::Mash.new(property.suggested) : nil)
     json.range.should == Hashie::Mash.new(property.range) if (property.range)
     json.created_at.should_not be_nil
     json.updated_at.should_not be_nil

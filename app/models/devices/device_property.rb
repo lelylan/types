@@ -10,6 +10,6 @@ class DeviceProperty
   field :value
   field :expected
   field :pending
-  field :suggested, type: Hash
+  field :accepted, type: Hash
   embedded_in :device
 end

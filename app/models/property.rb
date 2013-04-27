@@ -7,12 +7,12 @@ class Property
   field :default
   field :type, default: 'text'
 
-  field :suggested, type: Hash
+  field :accepted, type: Hash
   field :range, type: Hash
 
   index({ resource_owner_id: 1 }, { background: true })
 
-  attr_accessible :name, :default, :suggested
+  attr_accessible :name, :default, :accepted
 
   validates :name, presence: true
   validates :resource_owner_id, presence: true

@@ -9,11 +9,11 @@ describe Property do
   it { should validate_presence_of :name }
   it { Settings.property.types.each { |type| should allow_value(type).for(:type) } }
 
-  describe 'with suggested values' do
+  describe 'with accepted values' do
     subject(:property) { FactoryGirl.build(:status) }
 
     its(:type)      { should == 'text' }
-    its(:suggested) { should == { 'on' => 'On', 'off' => 'Off' } }
+    its(:accepted) { should == { 'on' => 'On', 'off' => 'Off' } }
     its(:range)     { should == nil }
   end
 
@@ -22,7 +22,7 @@ describe Property do
 
     its(:type)      { should == 'range' }
     its(:range)     { should == { 'min' => '0', 'max' => '100', 'step' => '1' } }
-    its(:suggested) { should == nil }
+    its(:accepted) { should == nil }
   end
 
   describe 'when connected to a function' do
