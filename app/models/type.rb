@@ -7,7 +7,7 @@ class Type
   CATEGORIES = [{name: 'lights'}, {name: 'locks'}, {name: 'thermostats'}, {name: 'alarms'}, {name: 'meters'}, {name: 'cameras'}, {name: 'windows'}, {name: 'appliances'}, {name: 'garddenings'}, {name: 'sensors'}, {name: 'others'}]
 
   field :name
-  field :description
+  field :description, default: ''
   field :categories, type: Array, default: []
   field :resource_owner_id, type: Moped::BSON::ObjectId
 
