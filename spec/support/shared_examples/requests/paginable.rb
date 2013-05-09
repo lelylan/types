@@ -22,13 +22,13 @@ shared_examples_for 'a paginable resource' do
 
     it 'shows the default number of resources' do
       page.driver.get uri
-      JSON.parse(page.source).should have(1).items
+      JSON.parse(page.source).should have(Settings.pagination.per).items
     end
   end
 
   describe '?per=1' do
 
-    it 'shows 1 resources' do
+    it 'shows 1 resource' do
       page.driver.get uri, per: 1
       JSON.parse(page.source).should have(1).items
     end
@@ -36,10 +36,9 @@ shared_examples_for 'a paginable resource' do
 
   context '?per=100000' do
 
-
     it 'shows the max number of allowed resources' do
       page.driver.get uri, per: 100000
-      JSON.parse(page.source).should have(2).items
+      JSON.parse(page.source).should have(Settings.pagination.max_per).items
     end
   end
 
@@ -47,7 +46,7 @@ shared_examples_for 'a paginable resource' do
 
     it 'shows the default number of resources' do
       page.driver.get uri, per: 'not-valid'
-      JSON.parse(page.source).should have(1).items
+      JSON.parse(page.source).should have(Settings.pagination.per).items
     end
   end
 end
