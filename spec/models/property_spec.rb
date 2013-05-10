@@ -7,21 +7,23 @@ describe Property do
 
   it { should validate_presence_of :resource_owner_id }
   it { should validate_presence_of :name }
+
   it { Settings.property.types.each { |type| should allow_value(type).for(:type) } }
+  it { ['not-valid'].each { |type| should_not allow_value(type).for(:type) } }
 
   describe 'with accepted values' do
     subject(:property) { FactoryGirl.build(:status) }
 
-    its(:type)      { should == 'text' }
+    its(:type)     { should == 'text' }
     its(:accepted) { should == { 'on' => 'On', 'off' => 'Off' } }
-    its(:range)     { should == nil }
+    its(:range)    { should == nil }
   end
 
   describe 'with range values' do
     subject(:property) { FactoryGirl.build(:intensity) }
 
-    its(:type)      { should == 'range' }
-    its(:range)     { should == { 'min' => '0', 'max' => '100', 'step' => '1' } }
+    its(:type)     { should == 'range' }
+    its(:range)    { should == { 'min' => '0', 'max' => '100', 'step' => '1' } }
     its(:accepted) { should == nil }
   end
 
