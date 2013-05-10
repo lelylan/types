@@ -4,7 +4,7 @@ class Type
   include Resourceable
 
   # TODO Move to Settings
-  CATEGORIES = [{ name: 'lights' }, { name: 'locks' }, { name: 'thermostats' }, { name: 'alarms' }, { name: 'meters' }, { name: 'cameras' }, { name: 'windows' }, { name: 'appliances' }, { name: 'garddenings' }, { name: 'sensors' }, { name: 'others' }]
+  CATEGORIES = [{ name: 'lights' }, { name: 'locks' }, { name: 'thermostats' }, { name: 'alarms' }, { name: 'meters' }, { name: 'cameras' }, { name: 'windows' }, { name: 'appliances' }, { name: 'gardenings' }, { name: 'sensors' }, { name: 'others' }]
 
   field :name
   field :description, default: ''
