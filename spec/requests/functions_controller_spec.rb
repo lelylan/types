@@ -50,7 +50,7 @@ feature 'FunctionsController' do
 
     let(:status)     { FactoryGirl.create :status }
     let(:intensity)  { FactoryGirl.create :intensity }
-    let(:properties) { [ { id: status.id, value: 'on' }, { id: intensity.id } ] }
+    let(:properties) { [ { id: status.id, expected: 'on' }, { id: intensity.id } ] }
     let(:params)     { { name: 'Set intensity', properties: properties } }
 
     before         { page.driver.post uri, params.to_json }

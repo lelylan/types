@@ -11,8 +11,8 @@ describe Function do
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { id: status.id, value: 'on' },
-      { id: intensity.id, value: '0.0' }
+      { id: status.id, expected: 'on' },
+      { id: intensity.id, expected: '0.0' }
     ]}
 
     context 'with valid properties' do
@@ -61,7 +61,7 @@ describe Function do
 
     context 'with not valid property id' do
 
-      let(:properties) { [{ id: nil, value: 'value' }] }
+      let(:properties) { [{ id: nil, expected: 'value' }] }
       let(:resource)   { FactoryGirl.create :function, properties: properties, name: 'Function' }
 
       it 'raises an error' do

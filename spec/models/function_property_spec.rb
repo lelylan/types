@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe FunctionProperty do
-  its(:value) { should == nil }
+  its(:expected) { should == nil }
 
   it { should_not allow_mass_assignment_of :property_id }
   it { should validate_presence_of :id }
@@ -12,8 +12,8 @@ describe FunctionProperty do
     let(:intensity) { FactoryGirl.create :intensity }
 
     let(:properties) {[
-      { id: status.id,    value: 'on' },
-      { id: intensity.id, value: '0.0' }
+      { id: status.id,    expected: 'on' },
+      { id: intensity.id, expected: '0.0' }
     ]}
 
     let(:resource) { FactoryGirl.create :function, properties: properties }
@@ -26,8 +26,8 @@ describe FunctionProperty do
         property.property_id.should == status.id
       end
 
-      it 'sets the value' do
-        property.value.should == 'on'
+      it 'sets #expected' do
+        property.expected.should == 'on'
       end
     end
 
@@ -39,8 +39,8 @@ describe FunctionProperty do
         property.property_id.should == intensity.id
       end
 
-      it 'sets the value' do
-        property.value.should == '0.0'
+      it 'sets #expected' do
+        property.expected.should == '0.0'
       end
     end
   end

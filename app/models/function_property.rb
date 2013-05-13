@@ -4,11 +4,11 @@ class FunctionProperty
   include Resourceable
 
   field :property_id, type: Moped::BSON::ObjectId
-  field :value
+  field :expected
   field :pending, type: Boolean, default: true
 
   attr_accessor :id
-  attr_accessible :id, :value, :pending
+  attr_accessible :id, :expected
 
   validates :id, presence: true, on: :create
 

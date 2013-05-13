@@ -10,8 +10,8 @@ module HelpersViewMethods
       property = FunctionPropertyDecorator.decorate function.properties[i]
       json_property.id.should == property.property_id.as_json
       json_property.uri.should == property.uri
-      json_property.value.should == property.value
-      json_property.pending.should == property.pending
+      json_property.expected.should == property.expected
+      json_property.pending.should == true
     end
   end
 end
