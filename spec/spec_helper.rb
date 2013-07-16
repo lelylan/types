@@ -48,4 +48,3 @@ Spork.each_run do
   Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
   Dir[Rails.root.join('spec/views/**/*.rb')].each   {|f| require f}
 end
-
