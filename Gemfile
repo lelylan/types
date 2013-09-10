@@ -19,6 +19,7 @@ gem 'sinatra', :require => nil
 gem 'slim'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'foreman'
