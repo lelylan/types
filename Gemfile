@@ -21,6 +21,7 @@ gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
 gem 'bundler'
 gem 'newrelic_rpm'
+gem 'rails_12factor'
 
 group :development, :test do
   gem 'foreman'
