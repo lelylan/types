@@ -8,7 +8,7 @@ describe Type do
   let!(:status)    { Property.find(type.property_ids.first) }
   let!(:intensity) { Property.find(type.property_ids.last) }
   let!(:light2)    { FactoryGirl.create :device, type_id: type.id }
-  let!(:alarm)     { FactoryGirl.create :device }
+  let!(:alarm)     { FactoryGirl.create :device, category: 'alarms' }
 
   # back in time
   let!(:light1_updated_at) { light1.update_attributes(updated_at: Time.now-60); light1.updated_at }
@@ -131,14 +131,14 @@ describe Type do
     end
   end
 
-  describe 'when updating categories' do
+  describe 'when updating category' do
 
-    let(:categories) { [ 'lights', 'others' ] }
-    before { type.update_attributes(categories: categories) }
+    let(:category) { 'locks' }
+    before { type.update_attributes(category: category) }
 
     it 'adds the new property to all lights' do
-      light1.reload.categories.should == categories
-      light2.reload.categories.should == categories
+      light1.reload.category.should == category
+      light2.reload.category.should == category
     end
 
     it 'touches the device changing updated_at' do
@@ -146,9 +146,8 @@ describe Type do
       light2.reload.updated_at.should be_within(1).of(Time.now)
     end
 
-    it 'does not update the categories to the alarm' do
-      alarm.reload.categories.should_not == categories
-      alarm.reload.categories.should == [ 'lights' ]
+    it 'does not update the category to the alarm' do
+      alarm.reload.category.should == 'alarms'
     end
   end
 end

@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :type, aliases: %w(dimmer) do
     name 'Dimmer'
     description 'Description'
-    categories ['lights']
+    category 'lights'
     resource_owner_id Settings.resource_owner_id
     property_ids {[ FactoryGirl.create('status').id, FactoryGirl.create('intensity').id ]}
     function_ids {[ FactoryGirl.create('set_intensity').id, FactoryGirl.create('turn_on').id, FactoryGirl.create('turn_off').id ]}

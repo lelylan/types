@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 ruby '1.9.3'
 
@@ -13,12 +13,13 @@ gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
 gem 'rails-api'
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
-gem 'sidekiq'
+gem 'sidekiq', '2.6.0'
 gem 'dalli'
 gem 'sinatra', :require => nil
 gem 'slim'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
+gem 'bundler'
 gem 'newrelic_rpm'
 
 group :development, :test do

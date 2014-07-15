@@ -12,8 +12,11 @@ feature 'CategoriesController' do
       page.driver.get '/categories'
       page.status_code.should == 200
       json = JSON.parse(page.source) unless json
-      json.first['name'].should == 'lights'
-      json.last['name'].should  == 'others'
+
+      json.first['tag'].should == 'lights'
+      json.first['name'].should == 'Lights'
+      json.last['tag'].should  == 'others'
+      json.last['name'].should  == 'Other categories'
     end
   end
 end

@@ -4,12 +4,13 @@ class Type
   include Resourceable
 
   # TODO Move to Settings
-  CATEGORIES = [{ name: 'lights' }, { name: 'locks' }, { name: 'thermostats' }, { name: 'alarms' }, { name: 'meters' }, { name: 'cameras' }, { name: 'windows' }, { name: 'appliances' }, { name: 'gardenings' }, { name: 'sensors' }, { name: 'others' }]
+  CATEGORIES = [{ tag: 'lights', name: 'Lights' }, { tag: 'locks', name: 'Locks' }, { tag: 'thermostat', name: 'Thermostats' }, { tag: 'alarms', name: 'Alarms' }, { tag: 'meters', name: 'Meters' }, { tag: 'cameras', name: 'IP Cameras' }, { tag: 'windows', name: 'Windows' }, { tag: 'appliances', name: 'Appliances' }, { tag: 'gardenings', name: 'Gardenings' }, { tag: 'sensors', name: 'Sensors' }, { tag: 'others', name: 'Other categories' }]
 
   field :name
   field :description, default: ''
-  field :categories, type: Array, default: []
+  field :category
   field :resource_owner_id, type: Moped::BSON::ObjectId
+  field :popular, type: Boolean, default: false
 
   field :property_ids, type: Array, default: []
   field :function_ids, type: Array, default: []
@@ -19,11 +20,11 @@ class Type
   index({ name: 1 }, { background: true })
 
   attr_accessor :properties, :functions, :statuses
-  attr_accessible :name, :description, :categories, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
+  attr_accessible :name, :description, :category, :properties, :functions, :statuses, :property_ids, :function_ids, :status_ids
 
   validates :resource_owner_id, presence: true
   validates :name, presence: true
-  validate  :validate_categories
+  validate  :validate_category
 
   before_save :find_properties, :find_functions, :find_statuses
   before_update :update_devices
@@ -45,7 +46,7 @@ class Type
   def update_devices
     AddPropertiesWorker.perform_async(id, ids_to_add)       if ids_to_add    != []
     RemovePropertiesWorker.perform_async(id, ids_to_remove) if ids_to_remove != []
-    UpdateCategoriesWorker.perform_async(id, categories)    if categories_changed?
+    UpdateCategoryWorker.perform_async(id, category)        if category_changed?
   end
 
   private
@@ -58,13 +59,10 @@ class Type
     property_ids_was - property_ids
   end
 
-  # TODO create proper validator
-  def validate_categories
-    if (invalid_categories = (categories - CATEGORIES.map{ |category| category[:name]}))
-      invalid_categories.each do |category|
-        errors.add(:category, category + ' is not valid')
-      end
-    end
+  # TODO create proper validator to check if CATEGORIES contains the type category
+  def validate_category
+    invalid = ([category] - CATEGORIES.map{ |category| category[:tag]})[0]
+    errors.add(:category, category + ' is not valid') if (invalid)
   end
 end
 

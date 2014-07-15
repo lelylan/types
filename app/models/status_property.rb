@@ -4,12 +4,12 @@ class StatusProperty
   include Resourceable
 
   field :property_id, type: Moped::BSON::ObjectId
-  field :values, type: Array
   field :pending, type: Boolean, default: false
+  field :values, type: Array
   field :range, type: Hash
 
   attr_accessor :id
-  attr_accessible :values, :pending, :range, :id
+  attr_accessible :pending, :values, :range, :id
 
   validates :id, presence: true, on: :create
 

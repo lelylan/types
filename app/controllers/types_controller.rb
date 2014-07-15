@@ -3,8 +3,8 @@ class TypesController < ApplicationController
   doorkeeper_for :index, scopes: Settings.scopes.read.map(&:to_sym)
   doorkeeper_for :create, :update, :destroy, scopes: Settings.scopes.write.map(&:to_sym)
 
-  before_filter :find_owned_resources,  except: %w(public show)
-  before_filter :find_public_resources, only: %w(public show)
+  before_filter :find_owned_resources,  except: %w(public popular show)
+  before_filter :find_public_resources, only: %w(public popular show)
   before_filter :find_resource,         only: %w(show update destroy)
   before_filter :search_params,         only: %w(index public)
   before_filter :pagination,            only: %w(index public)
@@ -17,6 +17,11 @@ class TypesController < ApplicationController
 
   def public
     @types = @types.desc(:id).limit(params[:per])
+    render json: @types, each_serializer: TypeShortSerializer
+  end
+
+  def popular
+    @types = @types.where(popular: true).desc(:id).limit(params[:per])
     render json: @types, each_serializer: TypeShortSerializer
   end
 
@@ -64,7 +69,7 @@ class TypesController < ApplicationController
 
   def search_params
     @types = @types.where('name' => /.*#{params[:name]}.*/i) if params[:name]
-    @types = @types.in(categories: params[:categories])      if params[:categories]
+    @types = @types.where(category: params[:category]) if params[:category]
   end
 
   def pagination

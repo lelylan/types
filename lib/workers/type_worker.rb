@@ -31,11 +31,11 @@ class TypeWorker
     end
   end
 
-  def self.categories(type_id, categories)
-    pp ':::: Upadating categories', categories, 'to devices having type', type_id if ENV['DEBUG']
+  def self.category(type_id, category)
+    pp ':::: Upadating category', category, 'to devices having type', type_id if ENV['DEBUG']
 
     TypeWorker.touch_devices(type_id)
-    Device.where(type_id: type_id).update_all(categories: categories)
+    Device.where(type_id: type_id).update_all(category: category)
   end
 
   private

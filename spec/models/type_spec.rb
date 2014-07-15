@@ -7,12 +7,12 @@ describe Type do
   it { should validate_presence_of :name }
   it { should validate_presence_of :resource_owner_id }
 
-  it 'accepts valid categories' do
-    expect{ FactoryGirl.create(:type, categories: ['lights']) }.to_not raise_error
+  it 'accepts valid category' do
+    expect{ FactoryGirl.create(:type, category: 'lights') }.to_not raise_error
   end
 
-  it 'does not accept invalid categories' do
-    expect{ FactoryGirl.create(:type, categories: ['not-defined']) }.to raise_error
+  it 'does not accept invalid category' do
+    expect{ FactoryGirl.create(:type, category: 'not-defined') }.to raise_error
   end
 
   it_behaves_like 'a type connection' do
