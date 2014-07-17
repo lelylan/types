@@ -16,7 +16,7 @@ class TypesController < ApplicationController
   end
 
   def public
-    @types = @types.desc(:id).limit(params[:per])
+    @types = @types.asc(:id).limit(params[:per])
     render json: @types, each_serializer: TypeShortSerializer
   end
 
