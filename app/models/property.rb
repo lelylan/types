@@ -7,7 +7,7 @@ class Property
   field :default
   field :type, default: 'text'
 
-  field :accepted, type: Hash
+  field :accepted, type: Array, default: []
   field :range, type: Hash
 
   index({ resource_owner_id: 1 }, { background: true })

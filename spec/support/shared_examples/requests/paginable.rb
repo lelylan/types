@@ -13,7 +13,7 @@ shared_examples_for 'a paginable resource' do
     it 'shows the next page' do
       page.driver.get uri, start: resource.id
       page.status_code.should == 200
-      contains_resource resources.last
+      contains_resource resources.last # because ordered by last updated
       page.should_not have_content resource.name
     end
   end

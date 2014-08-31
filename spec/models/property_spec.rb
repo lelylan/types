@@ -15,7 +15,7 @@ describe Property do
     subject(:property) { FactoryGirl.build(:status) }
 
     its(:type)     { should == 'text' }
-    its(:accepted) { should == { 'on' => 'On', 'off' => 'Off' } }
+    its(:accepted) { should == [ { key: 'on', value: 'On' }, { key: 'off', value: 'Off' } ] }
     its(:range)    { should == nil }
   end
 
@@ -24,7 +24,7 @@ describe Property do
 
     its(:type)     { should == 'range' }
     its(:range)    { should == { 'min' => '0', 'max' => '100', 'step' => '1' } }
-    its(:accepted) { should == nil }
+    its(:accepted) { should == [] }
   end
 
   describe 'when connected to a function' do
