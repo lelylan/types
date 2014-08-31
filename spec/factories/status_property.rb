@@ -7,7 +7,7 @@ FactoryGirl.define do
 
   factory :intensity_for_status, class: StatusProperty do
     id { FactoryGirl.create(:intensity).id }
-    range { { 'min' => 0, 'max' => 10} }
+    ranges { [ { 'min' => 0, 'max' => 10 } ] }
     pending true
   end
 end

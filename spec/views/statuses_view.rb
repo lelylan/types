@@ -13,7 +13,7 @@ module HelpersViewMethods
       json_property.id.should == property.property_id.as_json
       json_property.uri.should == property.uri
       json_property[:values].should == property.values if property.values
-      json_property.range.should == property.range if property.range
+      json_property.ranges.should == property.ranges if property.ranges
       json_property[:pending].should == property.pending
     end
   end

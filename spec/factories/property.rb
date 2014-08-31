@@ -3,7 +3,7 @@ FactoryGirl.define do
     resource_owner_id { FactoryGirl.create(:user).id }
     name 'Status'
     default 'off'
-    accepted { [ { key: 'on', value: 'On' }, { key: 'off', value: 'Off' } ] }
+    accepted { [ { 'key' => 'on', 'value' => 'On' }, { 'key'=> 'off', 'value' => 'Off' } ] }
   end
 
   factory :intensity, parent: :property do

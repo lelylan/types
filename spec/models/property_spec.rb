@@ -15,7 +15,7 @@ describe Property do
     subject(:property) { FactoryGirl.build(:status) }
 
     its(:type)     { should == 'text' }
-    its(:accepted) { should == [ { key: 'on', value: 'On' }, { key: 'off', value: 'Off' } ] }
+    its(:accepted) { should == [ { 'key' => 'on', 'value' => 'On' }, { 'key' => 'off', 'value' => 'Off' } ] }
     its(:range)    { should == nil }
   end
 

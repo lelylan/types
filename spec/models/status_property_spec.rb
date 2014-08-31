@@ -14,7 +14,7 @@ describe StatusProperty do
 
     let(:properties) {[
       { id: status.id, values: [ 'on' ] },
-      { id: intensity.id, range: { 'min' => '1', 'max' => '75' }, pending: true }
+      { id: intensity.id, ranges: [ { min: '1', max: '75' } ], pending: true }
     ]}
 
     let(:resource) { FactoryGirl.create :setting_intensity, properties: properties }
@@ -33,7 +33,7 @@ describe StatusProperty do
       subject { resource.properties.where(property_id: intensity.id).first }
 
       its(:property_id) { should == intensity.id }
-      its(:range)       { should == { 'min' => '1', 'max' => '75' } }
+      its(:ranges)      { should == [ { min: '1', max: '75' } ] }
       its(:pending)     { should be_true }
     end
   end

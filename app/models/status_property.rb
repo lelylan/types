@@ -5,11 +5,11 @@ class StatusProperty
 
   field :property_id, type: Moped::BSON::ObjectId
   field :pending, type: Boolean, default: false
-  field :values, type: Array
-  field :range, type: Hash
+  field :values, type: Array, default: []
+  field :ranges, type: Array, default: []
 
   attr_accessor :id
-  attr_accessible :pending, :values, :range, :id
+  attr_accessible :pending, :values, :ranges, :id
 
   validates :id, presence: true, on: :create
 
