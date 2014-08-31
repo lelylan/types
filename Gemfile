@@ -2,26 +2,25 @@ source 'http://rubygems.org'
 
 ruby '1.9.3'
 
-gem 'rails', '~> 3.2.9'
+gem 'rails', '~> 3.2.13'
+gem 'rails-api'
+gem 'mongoid', '~> 3.1.4'
+gem 'doorkeeper'
 gem 'unicorn'
-gem 'mongoid', '~> 3.0.0.rc'
-gem 'doorkeeper', '~> 0.6.1'
-gem 'draper', '~> 0.15.0'
+gem 'draper'
 gem 'yajl-ruby'
 gem 'rails_config'
 gem 'addressable'
 gem 'bcrypt-ruby', require: 'bcrypt'
-gem 'rails-api'
-gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
-gem 'sidekiq', '2.6.0'
+gem 'bundler'
 gem 'dalli'
-gem 'sinatra', :require => nil
-gem 'slim'
+gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'redis-throttle', git: 'git://github.com/andreareginato/redis-throttle.git'
 gem 'rack-cors', require: 'rack/cors'
-gem 'bundler'
+gem 'sidekiq', '2.6.0'
+gem 'sinatra', :require => nil
+gem 'slim'
 gem 'newrelic_rpm'
-gem 'rails_12factor'
 
 group :development, :test do
   gem 'foreman'
@@ -48,6 +47,10 @@ group :test do
   gem 'growl'
   gem 'rb-fsevent'
   gem 'launchy'
+end
+
+group :production do
+  gem 'rails_12factor'
 end
 
 group :assets do

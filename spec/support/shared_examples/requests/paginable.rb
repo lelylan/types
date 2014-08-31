@@ -5,13 +5,13 @@ shared_examples_for 'a paginable resource' do
 
   let(:decorator)  { "#{controller.classify}Decorator".constantize }
 
-  let!(:resource)  { decorator.decorate(FactoryGirl.create(factory, resource_owner_id: user.id)) }
+  let!(:resource)  { FactoryGirl.create(factory, resource_owner_id: user.id) }
   let!(:resources) { FactoryGirl.create_list(factory, Settings.pagination.per + 1, name: 'Extra resource', resource_owner_id: user.id) }
 
   describe '?start=:uri' do
 
     it 'shows the next page' do
-      page.driver.get uri, start: resource.uri
+      page.driver.get uri, start: resource.id
       page.status_code.should == 200
       contains_resource resources.last
       page.should_not have_content resource.name

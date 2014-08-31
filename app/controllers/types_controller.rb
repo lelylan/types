@@ -6,22 +6,22 @@ class TypesController < ApplicationController
   before_filter :find_owned_resources,  except: %w(public popular show)
   before_filter :find_public_resources, only: %w(public popular show)
   before_filter :find_resource,         only: %w(show update destroy)
-  before_filter :search_params,         only: %w(index public)
-  before_filter :pagination,            only: %w(index public)
+  before_filter :search_params,         only: %w(index public popular)
+  before_filter :pagination,            only: %w(index public popular)
 
 
   def index
-    @types = @types.desc(:id).limit(params[:per])
+    @types = @types.desc(:updated_at).limit(params[:per])
     render json: @types, each_serializer: TypeShortSerializer
   end
 
   def public
-    @types = @types.asc(:id).limit(params[:per])
+    @types = @types.desc(:updated_at).limit(params[:per])
     render json: @types, each_serializer: TypeShortSerializer
   end
 
   def popular
-    @types = @types.where(popular: true).desc(:id).limit(params[:per])
+    @types = @types.where(popular: true).desc(:updated_at).limit(params[:per])
     render json: @types, each_serializer: TypeShortSerializer
   end
 
