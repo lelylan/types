@@ -1,6 +1,6 @@
 # Types API
 
-Types API for Lelylan. [Learn more](http://dev.lelylan.com/api/types/)
+Types API to define device properties, functions ans stutuses.
 
 
 ## Requirements
@@ -17,8 +17,8 @@ Clone the repository.
 
 ## Resources
 
+* [Lelylan Types API](http://dev.lelylan.com/types)
 * [Lelylan API](http://dev.lelylan.com)
-* [Lelylan Types API](http://dev.lelylan.com/api/types/)
 
 
 ## Contributing
@@ -37,7 +37,7 @@ provide specs to your contribution.
 
 ## Spec guidelines
 
-Follow [rspec guidelines](http://betterspecs.org).
+Follow [betterspecs.org](http://betterspecs.org) guidelines.
 
 
 ## Coding guidelines
@@ -47,8 +47,8 @@ Follow [github](https://github.com/styleguide/) guidelines.
 
 ## Feedback
 
-Use the [issue tracker](http://github.com/lelylan/types/issues) for bugs.
-[Mail](mailto:touch@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
+Use the [issue tracker](http://github.com/lelylan/types/issues) for bugs or [stack overflow](http://stackoverflow.com/questions/tagged/lelylan) for questions.
+[Mail](mailto:dev@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
 
 
 ## Links
@@ -60,19 +60,19 @@ Use the [issue tracker](http://github.com/lelylan/types/issues) for bugs.
 
 ## Authors
 
-[Andrea Reginato](http://twitter.com/andreareginato)
+[Andrea Reginato](https://www.linkedin.com/in/andreareginato)
 
 
 ## Contributors
 
-Special thanks to the following people for submitting patches.
+Special thanks to [all people](https://github.com/lelylan/types/graphs/contributors) helping to make the project real.
 
 
 ## Changelog
 
-See [CHANGELOG](types/blob/master/CHANGELOG.md)
+See [CHANGELOG](https://github.com/lelylan/types/blob/master/CHANGELOG.md)
 
 
-## Copyright
+## License
 
-Copyright (c) 2013 [Lelylan](http://lelylan.com). See [LICENSE](types/blob/master/LICENSE.md) for details.
+Lelylan is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
