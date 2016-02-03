@@ -9,7 +9,7 @@ Types API is tested against MRI 1.9.3.
 
 
 ## Installation 
-        
+ 
         $ redis-server
         $ git clone git@github.com:lelylan/types.git
         $ cd types
