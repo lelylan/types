@@ -11,8 +11,7 @@ Types API is tested against MRI 1.9.3.
 ## Installation 
  
         $ redis-server
-        $ git clone git@github.com:lelylan/types.git
-        $ cd types
+        $ git clone git@github.com:lelylan/types.git  && cd types
         $ gem install bundler
         $ bundle install 
         $ foreman start
@@ -22,7 +21,7 @@ When installing the service in production set [lelylan environment variables](ht
 
 ## Resources
 
-* [Lelylan Types API](http://dev.lelylan.com/types)
+* [Lelylan Types API](http://dev.lelylan.com/api#api-type)
 
 
 ## Contributing
@@ -33,10 +32,11 @@ provide specs to your contribution.
 
 ### Running specs
 
-        $ gem install bundler
+		$ gem install bundler
         $ bundle install 
         $ bundle exec guard
 
+Press enter to execute all specs.
 
 ## Spec guidelines
 
