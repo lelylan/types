@@ -5,16 +5,15 @@ Device type API (properties, functions ans statuses).
 
 ## Requirements
 
-Types API is tested against MRI 1.9.3.
+Types API is tested against MRI 1.9.3 and Redis 2.6.
 
 
 ## Installation 
  
-        $ redis-server
-        $ git clone git@github.com:lelylan/types.git  && cd types
-        $ gem install bundler
-        $ bundle install 
-        $ foreman start
+ 	$ git clone git@github.com:lelylan/types.git  && cd types
+    $ gem install bundler
+    $ bundle install 
+    $ foreman start
 
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
@@ -32,9 +31,9 @@ provide specs to your contribution.
 
 ### Running specs
 
-		$ gem install bundler
-        $ bundle install 
-        $ bundle exec guard
+	$ gem install bundler
+    $ bundle install 
+    $ bundle exec guard
 
 Press enter to execute all specs.
 
