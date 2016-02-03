@@ -9,8 +9,10 @@ Types API is tested against MRI 1.9.3.
 
 
 ## Installation 
-
-        $ git clone git@github.com:lelylan/devices.git && cd $_
+        
+        $ redis-server
+        $ git clone git@github.com:lelylan/types.git
+        $ cd types
         $ gem install bundler
         $ bundle install 
         $ foreman start
@@ -31,7 +33,6 @@ provide specs to your contribution.
 
 ### Running specs
 
-        $ git clone git@github.com:lelylan/devices.git && cd $_
         $ gem install bundler
         $ bundle install 
         $ bundle exec guard
