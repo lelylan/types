@@ -1,6 +1,6 @@
 # Types API
 
-Types API to define device properties, functions ans stutuses.
+Device type API (properties, functions ans stutuses).
 
 
 ## Requirements
@@ -8,17 +8,19 @@ Types API to define device properties, functions ans stutuses.
 Types API is tested against MRI 1.9.3.
 
 
-## Installation
+## Installation 
 
-Clone the repository.
+        $ git clone git@github.com:lelylan/devices.git && cd $_
+        $ gem install bundler
+        $ bundle install 
+        $ foreman start
 
-    git clone git@github.com:lelylan/types.git
+When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
 
 ## Resources
 
 * [Lelylan Types API](http://dev.lelylan.com/types)
-* [Lelylan API](http://dev.lelylan.com)
 
 
 ## Contributing
@@ -29,10 +31,10 @@ provide specs to your contribution.
 
 ### Running specs
 
-* Fork and clone the repository.
-* Run `gem install bundler` to get the latest for the gemset.
-* Run `bundle install` for dependencies.
-* Run `bundle exec guard` and press enter to execute all specs.
+        $ git clone git@github.com:lelylan/devices.git && cd $_
+        $ gem install bundler
+        $ bundle install 
+        $ bundle exec guard
 
 
 ## Spec guidelines
