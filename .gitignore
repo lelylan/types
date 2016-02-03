@@ -20,18 +20,12 @@
 /log/*.log
 /tmp
 
-# Ignore .rvmrc file.
-.ruby-gemset
-.ruby-version
-
-
 # Config files
 /config/settings.local.yml
 /config/settings/*.local.yml
 /config/environments/*.local.yml
 
 # Procfile config
-.env
 .production.env
 
 # Redis
