@@ -1,6 +1,6 @@
 # Types API
 
-Device type API (properties, functions ans stutuses).
+Device type API (properties, functions ans statuses).
 
 
 ## Requirements
