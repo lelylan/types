@@ -10,10 +10,15 @@ Types API is tested against MRI 1.9.3 and Redis 2.6.
 
 ## Installation 
  
- 	$ git clone git@github.com:lelylan/types.git  && cd types
+    $ git clone git@github.com:lelylan/types.git  && cd types
     $ gem install bundler
     $ bundle install 
     $ foreman start
+
+## Install with docker
+
+    $ docker build --tag=types .
+    $ docker run -d -it --name types types
 
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
