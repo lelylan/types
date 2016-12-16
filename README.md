@@ -8,12 +8,32 @@ Device type API (properties, functions ans statuses).
 Types API is tested against MRI 1.9.3 and Redis 2.6.
 
 
-## Installation 
- 
- 	$ git clone git@github.com:lelylan/types.git  && cd types
-    $ gem install bundler
-    $ bundle install 
-    $ foreman start
+## Installation
+
+```bash
+$ git clone git@github.com:lelylan/types.git  && cd types
+$ gem install bundler
+$ bundle install
+$ foreman start
+```
+
+## Install with docker
+
+#### Badges
+Docker image: [lelylanlab/types](https://hub.docker.com/r/lelylanlab/types/)
+
+[![](https://images.microbadger.com/badges/version/lelylanlab/types:latest.svg)](http://microbadger.com/images/lelylanlab/types:latest "Get your own version badge on microbadger.com")  [![](https://images.microbadger.com/badges/image/lelylanlab/types:latest.svg)](http://microbadger.com/images/lelylanlab/types:latest "Get your own image badge on microbadger.com")
+
+### Use docker hub image
+```bash
+$ docker run -d -it --name types lelylanlab/types
+```
+
+### Generate local image
+```bash
+$ docker build --tag=types .
+$ docker run -d -it --name types types
+```
 
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
@@ -31,9 +51,11 @@ provide specs to your contribution.
 
 ### Running specs
 
-	$ gem install bundler
-    $ bundle install 
-    $ bundle exec guard
+```bash
+$ gem install bundler
+$ bundle install
+$ bundle exec guard
+```
 
 Press enter to execute all specs.
 
