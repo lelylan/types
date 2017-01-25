@@ -1,29 +1,13 @@
 development:
   sessions:
     default:
-      database: types_development
-      hosts:
-        - localhost:27017
-      options:
-        consistency: :strong
+      uri: <%= ENV['MONGOLAB_TYPES_URL'] || 'mongodb://localhost:27017/types_development' %>
     devices:
-      database: devices_development
-      hosts:
-        - localhost:27017
-      options:
-        consistency: :strong
+      uri: <%= ENV['MONGOLAB_DEVICES_URL'] || 'mongodb://localhost:27017/devices_development' %>
     people:
-      database: people_development
-      hosts:
-        - localhost:27017
-      options:
-        consistency: :strong
+      uri: <%= ENV['MONGOLAB_PEOPLE_URL'] || 'mongodb://localhost:27017/people_development' %>
     jobs:
-      database: jobs_development
-      hosts:
-        - localhost:27017
-      options:
-        consistency: :strong
+      uri: <%= ENV['MONGOLAB_JOBS_URL'] || 'mongodb://localhost:27017/jobs_development' %>
   options:
 test:
   sessions:
