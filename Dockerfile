@@ -25,7 +25,7 @@ WORKDIR /usr/src/app
 ADD Gemfile /usr/src/app/
 ADD Gemfile.lock /usr/src/app/
 ADD config* /usr/src/app/
-RUN bundle install
+RUN bundle install --full-index
 ADD . /usr/src/app
 
 CMD [ "foreman", "start" ]
